@@ -19,7 +19,7 @@ const JobSeekerNavbar = () => {
       </div>
 
       <ul className="hidden md:flex flex-1 gap-10 items-center justify-center absolute left-1/2 -translate-x-1/2 top-1/3 ">
-        <Link href={"/jobseeker/Dashboard"}>
+        <Link href={""}>
           <li className="playfair font-semibold text-xl cursor-pointer hover:underline ">
             Dashboard
           </li>
