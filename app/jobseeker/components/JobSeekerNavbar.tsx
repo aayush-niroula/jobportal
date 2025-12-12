@@ -3,12 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Bell, Cross, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import { useState } from "react";
 
 const JobSeekerNavbar = () => {
   const [open, setOpen] = useState(false);
+  const router = useRouter()
   return (
-    <div className="relative flex justify-between max-h-[147px] w-full  bg-[#F8F9FA] text-black font-playfair">
+    <div className="relative flex justify-between max-h-[147px] w-full  bg-[#F8F9FA] text-black font-playfair md:hidden lg:block">
       <div className="flex gap-4 items-center w-1/3 ">
         <img
           src="/Talent.png"
@@ -27,9 +30,9 @@ const JobSeekerNavbar = () => {
         <li className="playfair font-semibold text-xl cursor-pointer hover:underline">
         My applications
         </li>
-        <li className="playfair font-semibold text-xl cursor-pointer hover:underline">
+       <Link href={'/jobseeker/uploadresume'}> <li className="playfair font-semibold text-xl cursor-pointer hover:underline">
           Resume Analysis
-        </li>
+        </li></Link>
         <Link href={"/findjobs"}>
           
           <li className="playfair font-semibold text-xl cursor-pointer hover:underline">
@@ -43,13 +46,13 @@ const JobSeekerNavbar = () => {
       <h1 className="text-2xl font-medium">Username</h1>
       </ul>
       <div className="flex justify-center items-center mr-25">
-      <Button className="hidden md:block text-xl pb-4">
+      <Button onClick={()=>router.push('/')} className="hidden md:block text-xl pb-4">
         Logout
       </Button>
       </div>
 
       <button
-        className="md:hidden flex items-cente w-1/3"
+        className="md:hidden flex items-center justify-center w-1/3"
         onClick={() => setOpen(!open)}
       >
         {open ? <Cross /> : <Menu />}

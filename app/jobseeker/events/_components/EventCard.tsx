@@ -4,7 +4,7 @@ import React from 'react'
 
 const EventCard = () => {
   return (
-    <div className='bg-white border border-black max-h-[323px] max-w-[775px] flex p-4 font-playfair gap-4'>
+    <div className='bg-white border border-black lg:max-h-[323px] lg:max-w-[775px] w-auto h-auto flex p-4 font-playfair gap-4'>
         <div className='flex flex-col gap-4'>
             <div className='flex justify-between items-center '>
                 <h1 className='font-bold text-2xl'>Event Name - Carrier Fair</h1>

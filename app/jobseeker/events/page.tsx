@@ -10,9 +10,9 @@ const page = () => {
   return (
     <div className='flex flex-col justify-center items-center bg-[#F1F5F9] font-playfair p-10'>
         <EventSearchBar/>
-        <div className='flex justify-between mt-10 gap-20'>
+        <div className='lg:flex justify-between mt-10 gap-20'>
             <div className='bg-white rounded-2xl h-auto min-w-[885px] p-10'>
-                <div className='flex justify-between items-center'>
+                <div className='flex justify-between items-center max-w-[775px]'>
                 <h1 className='font-medium text-2xl'>Upcomming Events</h1>
                 <Button variant={'outline'} className='p-6 border-black mb-2'>View All</Button>
                 </div>
@@ -24,8 +24,8 @@ const page = () => {
                 </div>
             </div>
             {/* right section  */}
-            <div className='flex flex-col gap-4'>
-            <div className='bg-white border border-black min-w-[372] max-h-[414px] rounded-2xl p-8 flex flex-col  gap-4'>
+            <div className='flex flex-col gap-4 items-center'>
+            <div className='bg-white border border-black w-100 lg:min-w-[372] max-h-[414px] rounded-2xl p-8 flex flex-col  gap-4'>
                 <h1 className='font-bold text-2xl'>Event Categories</h1>
                 <div className='p-3 border border-black min-w-[290] '>
                     <p className='flex justify-between'>Carrier fair <span>(5)</span></p>
@@ -109,7 +109,7 @@ const page = () => {
 {/* next section start vayo  */}
   <div className='w-full h-auto bg-white p-10 rounded-2xl mt-6'>
     <p className='flex justify-between items-center text-xl font-bold mb-4'>Past Events <Button>View All</Button></p>
-    <div className='grid grid-cols-3 gap-4'>
+    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 
     <PastEventCard/>
     <PastEventCard/>

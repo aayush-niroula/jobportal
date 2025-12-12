@@ -2,7 +2,7 @@ import { Apple } from "lucide-react"
 
 const Footer = () => {
   return (
-    <div className="w-full max-h-[462px] flex justify-evenly items-center p-4 font-playfair pb-20 bg-white">
+    <div className="w-full flex flex-col gap-4 justify-center items-center lg:max-h-[462px] lg:flex lg:justify-evenly lg:items-center p-4 font-playfair pb-20 bg-white">
         <div className="flex flex-col justify-center gap-2">
             <h1 className="text-2xl font-medium">About Company</h1>
             <h3>Contact us</h3>

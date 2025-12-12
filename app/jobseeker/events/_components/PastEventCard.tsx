@@ -3,7 +3,7 @@ import React from 'react'
 
 const PastEventCard = () => {
   return (
-    <div className='max-h-[404px] min-w-[361px] p-4 border border-black flex flex-col gap-2'>
+    <div className='lg:max-h-[404px] lg:min-w-[361px] w-auto p-6 border border-black flex flex-col gap-2'>
     <div className='flex justify-center items-center'>
      <img src="/why.jpg" alt="" className='max-h-[141px] min-w-[310px] object-contain'/>
         </div>

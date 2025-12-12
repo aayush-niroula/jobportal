@@ -6,6 +6,7 @@ import JobPostingCard from "./JobPostingCard"
 import QuickActions from "./_components/QuickActions"
 import RecentApplications from "./_components/RecentApplications"
 import Footer from "../_components/Footer"
+import VerificationPending from "./_components/VerificationPending"
 
 const page = () => {
   return (
@@ -13,15 +14,7 @@ const page = () => {
         <div className="flex justify-center items-center gap-40 mt-8">
         <h1 className="text-2xl font-bold">JobFacilator Dashboard</h1>
         {/* verification pending  */}
-        <div className="max-w-[597px] h-auto roundend-2xl border-2 border-amber-300 flex justify-between p-6 gap-2">
-            <div className="flex flex-col gap-2">
-                <p className="flex gap-2 font-medium text-xl"> <span><Clock/></span>Verification Pending</p>
-                <p className="font-light text-sm">Please complete the verification process to post a job</p>
-            </div>
-            <div>
-                <Button>View Status</Button>
-            </div>
-        </div>
+       <VerificationPending/>
         {/* close  */}
         </div>
 

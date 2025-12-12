@@ -3,10 +3,14 @@
 import { Button } from "@/components/ui/button";
 import { Bell, Menu, X } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import React, { useState } from "react";
 
 const JobFacilatorNavbar = () => {
   const [open, setOpen] = useState(false);
+  const id = "1"
+  const router = useRouter()
 
   return (
     <nav className="w-full bg-[#F8F9FA] text-black font-playfair px-6 py-4 shadow-sm relative">    
@@ -22,12 +26,12 @@ const JobFacilatorNavbar = () => {
           </h1>
         </div>
         <div className="hidden md:flex flex-1 justify-center">
-          <ul className="flex items-center gap-10 text-lg font-semibold">
+          <ul className="flex items-center gap-4 lg:gap-10 text-sm md:text-base lg:text-lg font-semibold whitespace-nowrap">
            <Link href={'/jobfacilator'}> <li className="cursor-pointer hover:underline">Dashboard</li></Link>
             <li className="cursor-pointer hover:underline">My Jobs</li>
         <Link href={'/jobfacilator/candidates'}><li className="cursor-pointer hover:underline">Candidates</li></Link> 
           <Link href={'/jobseeker/events'}><li className="cursor-pointer hover:underline">Events</li></Link>
-            <li className="cursor-pointer hover:underline">Post a New Job</li>
+           <Link href={`/jobfacilator/postajob/${id}`}><li className="cursor-pointer hover:underline">Post a New Job</li></Link>
 
            
             <div className="flex items-center gap-3 ml-4">
@@ -46,7 +50,7 @@ const JobFacilatorNavbar = () => {
 
       
         <div className="hidden md:flex items-center">
-          <Button className="text-lg px-6">Logout</Button>
+          <Button onClick={()=>router.push('/')} className="text-lg px-6">Logout</Button>
         </div>
 
 

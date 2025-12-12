@@ -6,6 +6,7 @@ import Skills from "./_components/Skills";
 import Availability from "./_components/Availability";
 import { Button } from "@/components/ui/button";
 import WorkExperience from "./_components/WorkExperience";
+import Footer from "@/app/_components/Footer";
 
 const page = () => {
   return (
@@ -34,15 +35,28 @@ const page = () => {
         </div>
       </div>
 
-      <div className="flex justify-center gap-40">
-        <div>
+      <div className="flex justify-center gap-40 h-auto p-10">
+        <div className="min-w-[775px]  bg-white rounded-2xl p-6">
            <h1 className="text-4xl font-bold font-playfair">Work Experience</h1>
             <WorkExperience/>
         </div>
-        <div>
-            Education
+        <div className="bg-white p-8 rounded-2xl w-auto max-h-[440px] font-playfair flex flex-col gap-2 ">
+            <h1 className="text-2xl font-bold ">Education</h1>
+
+            <div className="border border-black p-4 rounded-2xl flex flex-col gap-2">
+              <h1 className="font-medium text-md"> Bsc Csit</h1>
+              <p className="font-medium text-light">Tribhuwan University</p>
+              <p>2021-2025</p>
+            </div>
+            <div className="border border-black p-4 rounded-2xl flex flex-col gap-2">
+              <h1 className="font-medium text-md"> Bsc Csit</h1>
+              <p className="font-medium text-light">Tribhuwan University</p>
+              <p>2021-2025</p>
+            </div>
+
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };
