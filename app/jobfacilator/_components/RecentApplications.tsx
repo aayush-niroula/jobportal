@@ -4,10 +4,10 @@ import RecentApplicationCard from "./RecentApplicationCard";
 
 const RecentApplications = () => {
   return (
-    <div className="min-w-[1269px] h-auto bg-white p-10 rounded-2xl">
-      <div className="flex justify-between mb-">
+    <div className="w-full bg-white p-6 sm:p-8 lg:p-10 rounded-2xl shadow-sm border border-gray-200">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
         <h1>Recent Applications</h1>
-        <Button>View All</Button>
+        <Button className="w-fit lg:w-auto md:w-auto">View All</Button>
       </div>
       <div className="flex flex-col gap-4">
       <RecentApplicationCard

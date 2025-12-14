@@ -11,6 +11,13 @@ import JobPostCard from "../../_components/JobPostCard";
 import FilterSection from "../../_components/FilterSection";
 import { Button } from "@/components/ui/button";
 import Footer from "../../_components/Footer";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 const page = () => {
   return (
@@ -20,8 +27,8 @@ const page = () => {
       </div>
 
       {/* card section starts here  */}
-      <div className="flex  gap-20 mt-10">
-        <div className="flex flex-col gap-10">
+      <div className="flex gap-20 mt-10 ">
+        <div className="hidden lg:flex flex-col gap-10 shrink-0 ">
           <div className="flex justify-between mt-6 ">
             <h1>Advance Filter</h1>
             <Button>Reset</Button>
@@ -60,8 +67,64 @@ const page = () => {
             ]}
           />
         </div>
-        <div className="">
-          <div className="flex gap-4 ">
+        <div className="flex-1">
+           <div className="flex justify-between items-center lg:hidden  mb-4">
+            <p>
+              SHOW: <span className="font-bold text-xl">24</span>
+            </p>
+
+            {/* Mobile filter drawer */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline">Filters</Button>
+              </SheetTrigger>
+
+              <SheetContent side="left" className="w-72 sm:w-80">
+                <SheetHeader>
+                  <SheetTitle>Advance Filters</SheetTitle>
+                </SheetHeader>
+
+                <div className="flex flex-col gap-6 mt-6">
+                  <FilterSection
+                    title="Industry"
+                    showLocation={true}
+                    options={[
+                      { label: "All", count: 180 },
+                      { label: "0-25k", count: 42 },
+                      { label: "25k-50k", count: 30 },
+                      { label: "50k-100k", count: 20 },
+                      { label: "100k above", count: 15 },
+                    ]}
+                  />
+
+                  <FilterSection
+                    title="Job Type"
+                    showLocation={false}
+                    options={[
+                      { label: "All", count: 180 },
+                      { label: "Developer", count: 42 },
+                      { label: "Medicine", count: 30 },
+                      { label: "Automobile", count: 20 },
+                      { label: "Hardware", count: 15 },
+                    ]}
+                  />
+
+                  <FilterSection
+                    title="Work Mode"
+                    showLocation={false}
+                    options={[
+                      { label: "All", count: 180 },
+                      { label: "Onsite", count: 42 },
+                      { label: "Remote", count: 30 },
+                      { label: "Hybrid", count: 20 },
+                    ]}
+                  />
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          <div className="hidden lg:flex gap-4 mb-4">
             <div>
               <p>
                 SHOW: <span className="font-bold text-xl">24</span>
@@ -80,7 +143,7 @@ const page = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1  md:grid-cols-3  gap-4 mt-40">
+          <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3  gap-4 mt-40">
             <JobPostCard />
             <JobPostCard />
             <JobPostCard />
