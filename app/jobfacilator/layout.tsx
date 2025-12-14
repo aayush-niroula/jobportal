@@ -33,10 +33,9 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased`}
-      ><main>
+      >
        <JobFacilatorNavbar/>
         {children}
-      </main>
       </body>
     </html>
   );

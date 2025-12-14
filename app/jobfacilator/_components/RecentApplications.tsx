@@ -9,27 +9,15 @@ const RecentApplications = () => {
         <h1>Recent Applications</h1>
         <Button className="w-fit lg:w-auto md:w-auto">View All</Button>
       </div>
-      <div className="flex flex-col gap-4">
-      <RecentApplicationCard
-        name="John Doe"
-        appliedfor="Applied for HR interns"
-        appliedtime={2}
-      />
-      <RecentApplicationCard
-        name="John Doe"
-        appliedfor="Applied for HR interns"
-        appliedtime={2}
-      />
-      <RecentApplicationCard
-        name="John Doe"
-        appliedfor="Applied for HR interns"
-        appliedtime={2}
-      />
-      <RecentApplicationCard
-        name="John Doe"
-        appliedfor="Applied for HR interns"
-        appliedtime={2}
-      />
+ <div className="flex flex-col gap-4">
+        {[1, 2, 3, 4].map((_, i) => (
+          <RecentApplicationCard
+            key={i}
+            name="John Doe"
+            appliedfor="Applied for HR Interns"
+            appliedtime={2}
+          />
+        ))}
       </div>
       
     </div>

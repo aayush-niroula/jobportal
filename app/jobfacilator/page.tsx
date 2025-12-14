@@ -10,12 +10,10 @@ import VerificationPending from "./_components/VerificationPending";
 
 const page = () => {
   return (
-    <div className="min-h0screen font-playfair bg-[#F1F5F9]">
-      <div className="flex-row gap-4 justify-center items-center lg:flex lg:gap-40">
-        <h1 className="text-2xl font-bold ">JobFacilator Dashboard</h1>
-        {/* verification pending  */}
+    <div className="min-h-screen font-playfair bg-[#F1F5F9]">
+      <div className="flex flex-col gap-8 justify-center items-center lg:flex-row lg:gap-40">
+        <h1 className="text-2xl text-center font-bold ">JobFacilator Dashboard</h1>
         <VerificationPending />
-        {/* close  */}
       </div>
 
       {/* Information wala section start  */}
@@ -90,7 +88,7 @@ const page = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 mt-4">
           <QuickActions />
           {/* company profile starts */}
 
@@ -113,7 +111,7 @@ const page = () => {
         </div>
       </div>
 
-      <div className="flex flex-col justify-center items-center mb-4">
+      <div className="flex flex-col justify-center items-center mb-4 mt-4">
         <div className="max-w-7xl mx-auto">
         <RecentApplications />
 

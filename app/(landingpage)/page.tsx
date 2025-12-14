@@ -14,7 +14,7 @@ export default function Home() {
         <p className="font-medium ">Popular Searches: <span className="font-light text-sm">Designer</span> <span className="font-light text-sm">Web Developer</span></p>
 
         <h1 className="text-4xl font-bold font-playfair">Categories</h1>
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-3 md:grid-cols-2 ">
+        <div className="grid grid-cols-1 p-4 gap-10 lg:grid-cols-3 md:grid-cols-2 ">
         <CategoryBox/>
         <CategoryBox/>
         <CategoryBox/>
@@ -29,7 +29,7 @@ export default function Home() {
         </div>
 
         <h1 className="text-4xl font-bold pt-4 font-playfair">Why choose us ?</h1>
-        <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-4  gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-4 lg:max-auto gap-6">
           <ChooseUsBox/>
           <ChooseUsBox/>
           <ChooseUsBox/>

@@ -7,19 +7,19 @@ const JobPostCard = () => {
        <div className='flex items-center gap-4'>
         <img src="Logo.jpg" alt="" className='object-contain max-h-[76px] min-w-[90px] min-w-'/>
         <div className='flex flex-col gap-2'>
-            <h1 className='text-xl font-medium'>Linkedin</h1>
-            <p className='text-sm font-light '>newyork us</p>
+            <h1 className='lg:text-xl font-medium'>Linkedin</h1>
+            <p className='lg:text-sm text-xs font-light '>newyork us</p>
         </div>
         
        </div>
        <div>
         <div className='flex flex-wrap gap-2'>
-            <h1>UI/UX designer</h1>
-            <p>full time</p>
+            <h1 className='md:text-xl text-sm'>UI/UX designer</h1>
+            <p className='md:text-xl text-sm'>full time</p>
         </div>
         <div className='flex gap-4'>
-            <p>Salary</p>
-            <p>4 minutes ago</p>
+            <p className='md:xl text-sm'>Salary</p>
+            <p className='md:xl text-sm'>4 minutes ago</p>
         </div>
         <div className='bg-[#FAF2F2] h-auto p-4 sm:p-4 text-xs sm:text-sm'>
           <p className=''>We are hiring an energetic UI/UX designer to join our company .You can send your CV by clicking Apply Now</p>

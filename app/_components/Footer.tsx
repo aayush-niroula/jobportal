@@ -3,7 +3,7 @@ import { Apple } from "lucide-react"
 const Footer = () => {
   return (
     <footer className="w-full bg-white py-12 px-6 md:px-10 lg:px-16 xl:px-24">
-    <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-16">
+    <div className="max-w-7xl mx-auto grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-16">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold text-gray-900 font-playfair">
             About Company
@@ -15,27 +15,31 @@ const Footer = () => {
             <li className="hover:text-black transition cursor-pointer">Help Center</li>
           </ul>
         </div>
-        <div>
-            <div className="flex flex-col justify-center gap-2">
-                <h1 className="text-2xl font-medium">For Job Seeker</h1>
-                <h3>upload resume</h3>
-                <h3>Seeker Dashboard</h3>
-                <h3>Browse Jobs</h3>
-                <h3>Contact us</h3>
-            </div>
-        </div>
-        <div>
-            <div className="flex flex-col justify-center gap-2">
-                <h1 className="text-2xl font-medium">For Job Facilitator</h1>
-                <h3>Contact us</h3>
-                <h3>Terms and Conditions</h3>
-                <h3>Privacy & Policy</h3>
-                <h3>Contact us</h3>
-            </div>
-        </div>
-<div className="space-y-6">
+       <div className="space-y-4">
           <h2 className="text-2xl font-semibold text-gray-900 font-playfair">
-            Download App
+           For Job Seeker
+          </h2>
+          <ul className="space-y-3 text-gray-600">
+            <li className="hover:text-black transition cursor-pointer">Upload resume</li>
+            <li className="hover:text-black transition cursor-pointer">Seeker Dashboard</li>
+            <li className="hover:text-black transition cursor-pointer">Browse Jobs</li>
+            <li className="hover:text-black transition cursor-pointer">Contact us</li>
+          </ul>
+        </div>
+        <div className="space-y-4">
+          <h2 className="text-2xl font-semibold text-gray-900 font-playfair">
+           For Job Facilator
+          </h2>
+          <ul className="space-y-3 text-gray-600">
+            <li className="hover:text-black transition cursor-pointer">Contact us</li>
+            <li className="hover:text-black transition cursor-pointer">Terms & Conditions</li>
+            <li className="hover:text-black transition cursor-pointer">Privacy Policy</li>
+            <li className="hover:text-black transition cursor-pointer">Help Center</li>
+          </ul>
+        </div>
+      <div className="space-y-6">
+          <h2 className="text-2xl font-semibold text-gray-900 font-playfair">
+            Download Ap
           </h2>
 
           <div className="flex flex-col gap-4">

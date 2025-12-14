@@ -1,0 +1,180 @@
+
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  email           String   @unique
+  phone           String?
+  password        String?  
+  created_at      DateTime @default(now())
+  role_id         String   @db.ObjectId
+  role            Role     @relation(fields: [role_id], references: [id])
+  userRoles       UserRoles[]
+  facilitator     JobFacilitator?   
+  seeker          JobSeeker?       
+  notifications   Notifications[]
+
+  @@map("User")
+}
+
+model Role {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  role_name       String   @unique
+
+  users           User[]
+  userRoles       UserRoles[]
+  facilitators    JobFacilitator[]
+  seekers         JobSeeker[]
+
+  @@map("Roles")
+}
+
+model UserRoles {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  user_id  String @db.ObjectId
+  role_id  String @db.ObjectId
+  user     User @relation(fields: [user_id], references: [id])
+  role     Role @relation(fields: [role_id], references: [id])
+
+  @@unique([user_id, role_id])
+  @@map("UserRoles")
+}
+
+model JobFacilitator {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  company_name    String   
+  company_email   String
+  user_id         String   @unique @db.ObjectId
+  role_id         String   @db.ObjectId
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  user            User     @relation(fields: [user_id], references: [id])
+  role            Role     @relation(fields: [role_id], references: [id])
+  verification    Facilitator_verification?
+  jobs            Jobs[]
+
+  @@map("Job_facilitator")
+}
+
+model Facilitator_verification {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  facilitator_id    String   @unique @db.ObjectId
+  document_url      String
+  registration_no   String
+  status            String
+  submitted_at      DateTime
+
+  facilitator       JobFacilitator @relation(fields: [facilitator_id], references: [id])
+
+  @@map("facilitator_verification")
+}
+
+model JobSeeker {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  user_id          String   @unique @db.ObjectId
+  role_id          String   @db.ObjectId
+  location         String?
+  education_level  String?
+  analyzer_vector  String?  
+  resume_url       String?
+
+  user             User      @relation(fields: [user_id], references: [id])
+  role             Role      @relation(fields: [role_id], references: [id])
+  applications     Applications[]
+  recommendations  Recommendations[]
+
+  @@map("Job_Seeker")
+}
+
+model Job_Category {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  category_name String
+  description  String?
+  created_at   DateTime @default(now())
+
+  jobs         Jobs[]
+
+  @@map("Job_Category")
+}
+
+model Jobs {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  job_name        String
+  description     String
+  location        String
+  salary          String?
+  deadline        DateTime?
+  time            DateTime? 
+  facilitator_id  String   @db.ObjectId
+  category_id     String   @db.ObjectId
+
+  facilitator     JobFacilitator     @relation(fields: [facilitator_id], references: [id])
+  category        Job_Category       @relation(fields: [category_id], references: [id])
+
+  applications    Applications[]
+  recommendations Recommendations[]
+  expirationLog   Job_expiration_log[]
+
+  @@map("Jobs")
+}
+
+model Applications {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  job_id          String    @db.ObjectId
+  jobseeker_id    String    @db.ObjectId
+  status          String
+  applied_at      DateTime  @default(now())
+  reviewed_at     DateTime?
+  message         String?
+
+  job             Jobs      @relation(fields: [job_id], references: [id])
+  seeker          JobSeeker @relation(fields: [jobseeker_id], references: [id])
+
+  @@map("Applications")
+}
+
+model Recommendations {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  jobseeker_id     String   @db.ObjectId  
+  job_id          String   @db.ObjectId
+  score           Float
+  reason          String?
+  seeker          JobSeeker @relation(fields: [jobseeker_id], references: [id])
+  job             Jobs      @relation(fields: [job_id], references: [id])
+
+  @@map("Recommendations")
+}
+
+model Notifications {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  user_id     String   @db.ObjectId
+  message     String
+  type        String
+  is_read     Boolean  @default(false)
+  created_at  DateTime @default(now())
+
+  user        User     @relation(fields: [user_id], references: [id])
+
+  @@map("Notifications")
+}
+
+model Job_expiration_log {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  job_id      String   @db.ObjectId
+  expired_at  DateTime
+
+  job         Jobs     @relation(fields: [job_id], references: [id])
+
+  @@map("Job_expiration_log")
+}

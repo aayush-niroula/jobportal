@@ -3,11 +3,16 @@ import { Briefcase, CircleDollarSign, Clock, MapPin } from "lucide-react"
 
 const FeaturedJob = () => {
   return (
-    <div className="lg:min-w-[1156px] lg:max-h-[311px] bg-white font-playfair border border-black lg:flex-row lg:gap-10  lg:justify-between  lg:items-center p-8 w-[300px] flex flex-col gap-2 sm:gap-4 md:gap-6 ">
-      <img src="Logo.jpg" alt="" className="object-contain min-w-[205px] max-h-[170px]" />
+    <div className="bg-white font-playfair border border-black
+        flex flex-col gap-4
+        w-[320px] sm:w-[420px] md:w-[700px] lg:min-w-[1156px]
+        p-4 sm:p-6 md:p-8
+        md:gap-8 lg:gap-10
+        lg:flex-row lg:items-center lg:justify-between ">
+      <img src="Logo.jpg" alt="" className="object-contain min-w-40 md:min-w-[250px] lg:min-w-[205px] max-h-[170px]" />
       <div className="flex flex-col gap-4">
         <h1 className="text-2xl font-medium ">Frontend Developer</h1>
-        <div className=" flex flex-col lg:flex lg:flex-row gap-8 mr-60">
+        <div className=" flex flex-col md:flex-row lg:flex lg:flex-row  gap-8 mr-60">
             <div className="flex gap-4">
             <span><Briefcase/></span>
             <p className="text-extralight">Segment </p>
