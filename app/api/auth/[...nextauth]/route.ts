@@ -2,7 +2,7 @@ import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import {PrismaAdapter} from '@next-auth/prisma-adapter'
 import {prisma} from '@/lib//prisma'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 
 
 
@@ -25,7 +25,7 @@ export const authOptions = {
                 where: { email: credentials.email }
             })
             
-            if (!user) {
+            if (!user || !user.password ) {
                 return null
             }
             

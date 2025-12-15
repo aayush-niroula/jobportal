@@ -16,34 +16,44 @@ type CandidateCardType={
 const CandidateCard = ({name,location,education,description,role,skill1,skill2,skill3,image}:CandidateCardType) => {
     const router = useRouter()
   return (
-    <div className="flex gap-6 bg-white min-w-[786px] font-playfair p-6">
-        <div>
-            <img src={"/goat.jpg"} alt="candidate-image"  className="object-cover max-h-[300px] rounded-full"/>
+    <div className="w-full bg-white font-playfair p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-200 flex flex-col lg:flex-row gap-6">
+        <div className="flex justify-center lg:justify-start">
+            <img src={"/goat.jpg"} alt="candidate-image"  className="w-28 h-28 sm:w-36 sm:h-36 lg:w-48 lg:h-48 rounded-full object-cover"/>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 flex-1">
             <h1 className="font-bold text-xl">{name}</h1>
-            <div className="flex gap-4 text-sm font-light">
+            <div className="flex flex-wrap gap-4 text-sm font-light text-gray-600">
                 <p>{role}</p>
                 <p>{location}</p>
                 <p>{education}</p>
             </div>
-            <div className="bg-[#FAF2F2] h-auto min-w-[489px]">
-                <p className="text-sm font-light ">{description}</p>
+            <div className="bg-[#FAF2F2] p-3 rounded-lg">
+                <p className="text-sm font-light leading-relaxed ">{description}</p>
             </div>
             <h1 className="font-light text-xl">Top Skills</h1>
-            <div className="flex  justify-between gap-4">
-                <div className="flex gap-4">
-                    <p className="p-2 border border-black w-auto">{skill1}</p>
-                    <p className="p-2 border border-black w-auto">{skill2}</p>
-                    <p className="p-2 border border-black w-auto">{skill3}</p>
-                    
-                </div>
-                <div>
-                    <Button onClick={()=>router.push('/jobfacilator/candidates/candidateprofile')}>View Profile</Button>
-                </div>
-            </div>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex flex-wrap gap-2">
+            {[skill1, skill2, skill3].map((skill, i) => (
+              <span
+                key={i}
+                className="px-3 py-1 text-sm border border-black rounded-md"
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+          <Button
+            className="w-full sm:w-auto"
+            onClick={() =>
+              router.push("/jobfacilator/candidates/candidateprofile")
+            }
+          >
+            View Profile
+          </Button>
         </div>
+      </div>
     </div>
+
   )
 }
 
