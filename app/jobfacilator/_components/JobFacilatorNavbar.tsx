@@ -1,5 +1,7 @@
 "use client";
 
+import AvatarDropDown from "@/app/jobseeker/components/AvatarDropDown";
+import Notification from "@/app/jobseeker/components/Notfication";
 import { Button } from "@/components/ui/button";
 import { Bell, Menu, X } from "lucide-react";
 import Link from "next/link";
@@ -35,12 +37,8 @@ const JobFacilatorNavbar = () => {
 
            
             <div className="flex items-center gap-3 ml-4">
-              <Bell />
-              <img
-                src="/why.jpg"
-                className="h-[45px] w-[45px] rounded-full object-cover"
-                alt="profile"
-              />
+              <Notification />
+            <AvatarDropDown/>
               <h1 className="text-xl font-medium whitespace-nowrap">
                 Company Name
               </h1>

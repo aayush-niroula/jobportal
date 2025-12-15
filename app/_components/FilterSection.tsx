@@ -8,7 +8,7 @@ interface FilterSectionProps {
 
 const FilterSection = ({ title, options, showLocation = false }: FilterSectionProps) => {
   return (
-    <div className="lg:min-w-[309px] w-[280px] bg-white border border-black rounded-2xl font-playfair p-4 flex flex-col gap-4">
+    <div className="w-full max-w-[320px] lg:max-w-[350px] bg-white border border-black rounded-2xl font-playfair p-4 flex flex-col gap-4">
 
       {showLocation && (
         <input

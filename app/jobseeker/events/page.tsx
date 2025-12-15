@@ -10,9 +10,9 @@ const page = () => {
   return (
     <div className='flex flex-col justify-center items-center bg-[#F1F5F9] font-playfair p-10'>
         <EventSearchBar/>
-        <div className='lg:flex justify-between mt-10 gap-20'>
-            <div className='bg-white rounded-2xl h-auto min-w-[885px] p-10'>
-                <div className='flex justify-between items-center max-w-[775px]'>
+        <div className='flex flex-col lg:flex-row justify-between gap-8 w-full max-w-7xl mt-6'>
+            <div className='flex-1 bg-white rounded-2xl p-6 sm:p-10'>
+                <div className='flex justify-between items-center mb-6'>
                 <h1 className='font-medium text-2xl'>Upcomming Events</h1>
                 <Button variant={'outline'} className='p-6 border-black mb-2'>View All</Button>
                 </div>
@@ -24,23 +24,16 @@ const page = () => {
                 </div>
             </div>
             {/* right section  */}
-            <div className='flex flex-col gap-4 items-center'>
-            <div className='bg-white border border-black w-100 lg:min-w-[372] max-h-[414px] rounded-2xl p-8 flex flex-col  gap-4'>
-                <h1 className='font-bold text-2xl'>Event Categories</h1>
-                <div className='p-3 border border-black min-w-[290] '>
-                    <p className='flex justify-between'>Carrier fair <span>(5)</span></p>
-                </div>
-                <div className='p-3 border border-black min-w-[290] '>
-                    <p className='flex justify-between'>Workshop <span>(5)</span></p>
-                </div>
-                <div className='p-3 border border-black min-w-[290] '>
-                    <p className='flex justify-between'>Training <span>(5)</span></p>
-                </div>
-                <div className='p-3 border border-black min-w-[290] '>
-                    <p className='flex justify-between'>Webinar <span>(5)</span></p>
-                </div>
-               
-            </div>
+            <div className='flex flex-col gap-6 shrink-0 w-full lg:w-87.5'>
+            <div className="bg-white border border-black rounded-2xl p-6 flex flex-col gap-4">
+            <h1 className="font-bold text-2xl">Event Categories</h1>
+            {['Career Fair', 'Workshop', 'Training', 'Webinar'].map((cat, idx) => (
+              <div key={idx} className="p-3 border border-black w-full flex justify-between">
+                <p>{cat}</p>
+                <span>(5)</span>
+              </div>
+            ))}
+          </div>
              <FilterSection
             title="Related Fileds"
             showLocation={false}
@@ -54,46 +47,24 @@ const page = () => {
           />
 
           {/* Featured Organization starts here */}
-          <div className='min-w-[414px] max-h-auto bg-white rounded-2xl border border-black'>
-
-            <h1 className='text-3xl font-medium text-center p-2'>Featured Organization</h1>
-
-            <div className='flex p-8 gap-4'>
-                <img src="/Logo.jpg" alt="logo" className='object-contain h-[73px] w-[73px] rounded-full' />
-                <div className='flex flex-col gap-2'>
-                    <h1 className='font-medium text-xl'>Organization name</h1>
-                    <p className='text-sm font-light'>14 events</p>
+              <div className="bg-white border border-black rounded-2xl p-4">
+            <h1 className="text-2xl sm:text-3xl font-medium text-center mb-4">Featured Organization</h1>
+            {Array(4).fill(0).map((_, idx) => (
+              <div key={idx} className="flex items-center gap-4 p-4 border-b last:border-b-0">
+                <img src="/Logo.jpg" alt="logo" className="h-[60px] w-[60px] sm:h-[73px] sm:w-[73px] rounded-full object-contain" />
+                <div className="flex flex-col gap-1">
+                  <h2 className="font-medium text-lg sm:text-xl">Organization Name</h2>
+                  <p className="text-sm font-light">14 events</p>
                 </div>
-            </div>
-            <div className='flex p-8 gap-4'>
-                <img src="/Logo.jpg" alt="logo" className='object-contain h-[73px] w-[73px] rounded-full' />
-                <div className='flex flex-col gap-2'>
-                    <h1 className='font-medium text-xl'>Organization name</h1>
-                    <p className='text-sm font-light'>14 events</p>
-                </div>
-            </div>
-            <div className='flex p-8 gap-4'>
-                <img src="/Logo.jpg" alt="logo" className='object-contain h-[73px] w-[73px] rounded-full' />
-                <div className='flex flex-col gap-2'>
-                    <h1 className='font-medium text-xl'>Organization name</h1>
-                    <p className='text-sm font-light'>14 events</p>
-                </div>
-            </div>
-            <div className='flex p-8 gap-4'>
-                <img src="/Logo.jpg" alt="logo" className='object-contain h-[73px] w-[73px] rounded-full' />
-                <div className='flex flex-col gap-2'>
-                    <h1 className='font-medium text-xl'>Organization name</h1>
-                    <p className='text-sm font-light'>14 events</p>
-                </div>
-            </div>
-
-
+              </div>
+            ))}
           </div>
+
           {/* ends here  */}
 
           {/* host an event starts here  */}
 
-          <div className='p-6 flex flex-col border border-black rounded-2xl gap-4'>
+          <div className='bg-white p-6 flex flex-col border border-black rounded-2xl gap-4'>
             <h1 className='text-3xl font-bold '>Host an Event</h1>
             <p className='text-md font-light'>Share your expertise and connect with professionals</p>
             <Button className='p-6'>Create Event</Button>
@@ -107,7 +78,7 @@ const page = () => {
            
         </div>
 {/* next section start vayo  */}
-  <div className='w-full h-auto bg-white p-10 rounded-2xl mt-6'>
+  <div className='w-full max-w-7xl bg-white sm:p-10 rounded-2xl mt-6'>
     <p className='flex justify-between items-center text-xl font-bold mb-4'>Past Events <Button>View All</Button></p>
     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 

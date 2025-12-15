@@ -1,11 +1,19 @@
 import React from 'react'
-
-const CategoryBox = () => {
+interface Category{
+  categoryname:string,
+  jobsno:number
+}
+const CategoryBox = ({categoryname,jobsno}:Category) => {
   return (
-    <div className='lg:max-h-[417px] lg:w-[357px] playfair bg-white p-4 w-auto border border-black  '>
-        <img src="Accounting.jpg" alt=""  className='object-cover' />
-        <h1 className='font-medium text-2xl text-center'>Developer</h1>
-        <p className='text-md font-light text-center '>xx jobs</p>
+    <div className='w-full sm:w-[220px] lg:w-[280px] bg-white rounded-2xl border border-gray-200 font-playfair overflow-hidden shadow-sm flex flex-col items-center'>
+      <div className='w-full h-40 sm:h-48 lg:h-58 overflow-hidden'>
+        <img src="Accounting.jpg" alt=""  className='object-cover h-full w-full' />
+      </div>
+      <div className='p-4 flex flex-col gap-1 items-center text-center'>
+        <h1 className='font-medium smLtext-xl lg:text-xl text-center'>{categoryname}</h1>
+        <p className='text-sm sm:text-base font-light '>{jobsno} jobs</p>
+
+      </div>
     </div>
   )
 }

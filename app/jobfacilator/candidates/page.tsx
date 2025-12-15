@@ -12,49 +12,193 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
 import CandidateCard from "./_component/CandidateCard";
 import Footer from "@/app/_components/Footer";
-
+import { candidateData } from "@/lib/candidateData";
+import { ChevronLeft, ChevronRight, Filter } from "lucide-react";
 const page = () => {
+  const [currentPage,setCurrentPage]= useState(1)
+
   const [showFilters, setShowFilters] = useState(false);
+  const candidatesPerPage = 4;
+  const indexOfLastCandidate = currentPage * candidatesPerPage;
+  const indexOfFirstCandidate = indexOfLastCandidate - candidatesPerPage;
+  const currentCandidates = candidateData.slice(indexOfFirstCandidate, indexOfLastCandidate);
+  const totalPages = Math.ceil(candidateData.length / candidatesPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    // Scroll to top of candidates section
+    const candidateSection = document.querySelector('.candidate-list-section');
+    if (candidateSection) {
+      candidateSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pageNumbers.push(i);
+        }
+        pageNumbers.push('...');
+        pageNumbers.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pageNumbers.push(1);
+        pageNumbers.push('...');
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pageNumbers.push(i);
+        }
+      } else {
+        pageNumbers.push(1);
+        pageNumbers.push('...');
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pageNumbers.push(i);
+        }
+        pageNumbers.push('...');
+        pageNumbers.push(totalPages);
+      }
+    }
+    
+    return pageNumbers;
+  };
 
   return (
     <div className="flex flex-col bg-[#F1F5F9]">
       <div className="max-w-7xl mx-auto w-full px-4 pt-20">
         
+      
         {/* Mobile Filter Button */}
-        <div className="lg:hidden mb-4">
-          <Button
-            className="w-full"
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            {showFilters ? "Hide Filters" : "Show Filters"}
-          </Button>
+        <div className="lg:hidden mb-6 flex justify-between items-center">
+          <div className="text-sm text-gray-700">
+            Showing <span className="font-bold">{indexOfFirstCandidate + 1}-{Math.min(indexOfLastCandidate, candidateData.length)}</span> of {candidateData.length} candidates
+          </div>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-2">
+                <Filter />
+                Filters
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-full sm:w-96 overflow-y-auto">
+              <SheetHeader>
+                <SheetTitle className="text-left">Filter Candidates</SheetTitle>
+              </SheetHeader>
+              
+              <div className="mt-6 space-y-6">
+                {/* Search Section */}
+                <div className="border border-gray-300 rounded-xl bg-white p-6">
+                  <h2 className="text-lg font-bold text-center mb-4">
+                    Search Candidates
+                  </h2>
+
+                  <div className="flex flex-col gap-4">
+                    <input
+                      type="text"
+                      placeholder="Skills (e.g., React, Python)"
+                      className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+
+                    <Select>
+                      <SelectTrigger className="w-full border border-gray-300">
+                        <SelectValue placeholder="Location" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Location</SelectLabel>
+                          <SelectItem value="Kathmandu">Kathmandu</SelectItem>
+                          <SelectItem value="Biratnagar">Biratnagar</SelectItem>
+                          <SelectItem value="Ithari">Ithari</SelectItem>
+                          <SelectItem value="Pokhara">Pokhara</SelectItem>
+                          <SelectItem value="Remote">Remote</SelectItem>
+                          <SelectItem value="Worldwide">Worldwide</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+
+                    <input
+                      type="text"
+                      placeholder="Industry"
+                      className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+
+                    <Button className="w-full">Search</Button>
+                  </div>
+                </div>
+
+                {/* Filter Sections */}
+                <FilterSection
+                  title="Experience level"
+                  showLocation={false}
+                  options={[
+                    { label: "Entry Level", count: 180 },
+                    { label: "Mid Level", count: 42 },
+                    { label: "Senior", count: 30 },
+                    { label: "Expert", count: 20 },
+                  ]}
+                />
+
+                <FilterSection
+                  title="Education level"
+                  showLocation={false}
+                  options={[
+                    { label: "High School", count: 180 },
+                    { label: "Associate's", count: 42 },
+                    { label: "Bachelor", count: 30 },
+                    { label: "Master's", count: 20 },
+                    { label: "PhD", count: 20 },
+                  ]}
+                />
+
+                <FilterSection
+                  title="Skills"
+                  showLocation={false}
+                  options={[
+                    { label: "JavaScript", count: 180 },
+                    { label: "Java", count: 42 },
+                    { label: "Python", count: 30 },
+                    { label: "C#", count: 20 },
+                  ]}
+                />
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-8">
           
-          {/* Filters */}
-          <div
-            className={`flex flex-col gap-6 ${
-              showFilters ? "block" : "hidden"
-            } lg:block`}
-          >
-            {/* Search */}
-            <div className="border border-black rounded-2xl bg-white p-6">
-              <h1 className="text-xl font-bold text-center">
+          {/* Filters Sidebar - Desktop */}
+          <div className="hidden lg:block space-y-6">
+            {/* Search Section */}
+            <div className="border border-gray-300 rounded-2xl bg-white p-6 shadow-sm">
+              <h2 className="text-xl font-bold text-center mb-6">
                 Search Candidates
-              </h1>
+              </h2>
 
-              <div className="flex flex-col gap-4 mt-4">
+              <div className="flex flex-col gap-4">
                 <input
                   type="text"
-                  placeholder="Skills"
-                  className="p-2 border border-black rounded-md"
+                  placeholder="Skills (e.g., React, Python)"
+                  className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
 
                 <Select>
-                  <SelectTrigger className="w-full border border-black">
+                  <SelectTrigger className="w-full border border-gray-300">
                     <SelectValue placeholder="Location" />
                   </SelectTrigger>
                   <SelectContent>
@@ -64,6 +208,8 @@ const page = () => {
                       <SelectItem value="Biratnagar">Biratnagar</SelectItem>
                       <SelectItem value="Ithari">Ithari</SelectItem>
                       <SelectItem value="Pokhara">Pokhara</SelectItem>
+                      <SelectItem value="Remote">Remote</SelectItem>
+                      <SelectItem value="Worldwide">Worldwide</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -71,73 +217,118 @@ const page = () => {
                 <input
                   type="text"
                   placeholder="Industry"
-                  className="p-2 border border-black rounded-md"
+                  className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
 
-                <Button>Search</Button>
+                <Button className="w-full">Search</Button>
+                <Button variant="outline" className="w-full">Reset Filters</Button>
               </div>
             </div>
 
-            {/* Filters */}
-            <FilterSection
-              title="Experience level"
-              showLocation={false}
-              options={[
-                { label: "Entry Level", count: 180 },
-                { label: "Mid Level", count: 42 },
-                { label: "Senior", count: 30 },
-                { label: "Expert", count: 20 },
-              ]}
-            />
+            {/* Filter Sections */}
+            <div className="space-y-6">
+              <FilterSection
+                title="Experience level"
+                showLocation={false}
+                options={[
+                  { label: "Entry Level", count: 180 },
+                  { label: "Mid Level", count: 42 },
+                  { label: "Senior", count: 30 },
+                  { label: "Expert", count: 20 },
+                ]}
+              />
 
-            <FilterSection
-              title="Education level"
-              showLocation={false}
-              options={[
-                { label: "High School", count: 180 },
-                { label: "Associate's", count: 42 },
-                { label: "Bachelor", count: 30 },
-                { label: "Master's", count: 20 },
-                { label: "PhD", count: 20 },
-              ]}
-            />
+              <FilterSection
+                title="Education level"
+                showLocation={false}
+                options={[
+                  { label: "High School", count: 180 },
+                  { label: "Associate's", count: 42 },
+                  { label: "Bachelor", count: 30 },
+                  { label: "Master's", count: 20 },
+                  { label: "PhD", count: 20 },
+                ]}
+              />
 
-            <FilterSection
-              title="Skills"
-              showLocation={false}
-              options={[
-                { label: "JavaScript", count: 180 },
-                { label: "Java", count: 42 },
-                { label: "Python", count: 30 },
-                { label: "C#", count: 20 },
-              ]}
-            />
+              <FilterSection
+                title="Skills"
+                showLocation={false}
+                options={[
+                  { label: "JavaScript", count: 180 },
+                  { label: "Java", count: 42 },
+                  { label: "Python", count: 30 },
+                  { label: "C#", count: 20 },
+                  { label: "React", count: 150 },
+                  { label: "Node.js", count: 120 },
+                  { label: "AWS", count: 90 },
+                ]}
+              />
+            </div>
           </div>
 
+
           {/* Candidate List */}
-          <div className="flex flex-col gap-4 overflow-hidden">
-            {[
-              "Alex Buffet",
-              "Cristiano Ronaldo",
-              "John Cena",
-              "Elon Musk",
-            ].map((name) => (
+          <div className="space-y-4 md:space-y-6">
+            {currentCandidates.map((candidate,index) => (
               <CandidateCard
-                key={name}
-                name={name}
-                role="Full Stack Developer"
-                location="Toronto, Canada"
-                education="Bachelor's Degree"
-                description="Experienced software developer with 5+ years of expertise in building scalable web applications and leading development teams."
-                skill1="Node.js"
-                skill2="Docker"
-                skill3="React"
-                image=""
+                key={candidate.name + index}
+                name={candidate.name}
+                  role={candidate.role}
+                  location={candidate.location}
+                  education={candidate.education}
+                  description={candidate.description}
+                  skill1={candidate.skill1}
+                  skill2={candidate.skill2}
+                  skill3={candidate.skill3}
+                  image={candidate.image}
+
+               
               />
             ))}
 
-            <div className="flex justify-center mt-4">
-              <Button>View More</Button>
+            {/* Pagination */}
+            <div className="mt-8 flex flex-col items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="flex items-center gap-1"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Previous
+                </Button>
+                
+                <div className="flex items-center gap-1">
+                  {getPageNumbers().map((pageNum, index) => (
+                    pageNum === '...' ? (
+                      <span key={`ellipsis-${index}`} className="px-3 py-2">...</span>
+                    ) : (
+                      <Button
+                        key={pageNum}
+                        variant={currentPage === pageNum ? "default" : "outline"}
+                        size="sm"
+                        className="w-10 h-10"
+                        onClick={() => handlePageChange(pageNum as number)}
+                      >
+                        {pageNum}
+                      </Button>
+                    )
+                  ))}
+                </div>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="flex items-center gap-1"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>           
             </div>
           </div>
         </div>

@@ -1,152 +1,205 @@
-"use client"
-import Footer from '@/app/_components/Footer'
-import { Button } from '@/components/ui/button'
-import { ArrowRight, Bookmark, Building, Circle, MapPin, Share2, User } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import React from 'react'
+"use client";
+
+import Footer from "@/app/_components/Footer";
+import { Button } from "@/components/ui/button";
+import {
+  ArrowRight,
+  Bookmark,
+  Building,
+  Circle,
+  MapPin,
+  Share2,
+  User,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import React from "react";
 
 const ApplyNow = () => {
-    const router = useRouter()
+  const router = useRouter();
+
   return (
-    <div className='main-div bg-[#F1F5F9] p-20 font-playfair'>
-
-  
-    <div className='flex justify-center gap-20'>
-        {/* two left section starts  */}
-        <div className='flex flex-col gap-4 justify-center'>
-        <div className='flex bg-white h-auto max-w-[640px] p-6 justify-between'>
-            <div>
-               <img src="/Logo.jpg" alt="logoimage"className='object-contain h-[100px]' /> 
+    <div className="bg-[#F1F5F9] font-playfair px-4 sm:px-6 lg:px-10 py-10 space-y-10 font-playfair">
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 justify-center">
+        {/* Left Column */}
+        <div className="flex flex-col gap-6 w-full lg:w-2/3">
+          {/* Job Card */}
+          <div className="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <img
+              src="/Logo.jpg"
+              alt="Company Logo"
+              className="w-24 h-24 sm:w-28 sm:h-28 object-contain rounded-lg"
+            />
+            <div className="flex-1 flex flex-col gap-2 text-center sm:text-left">
+              <h1 className="text-lg sm:text-xl font-semibold">Job Title</h1>
+              <p className="text-gray-600">Lenevo</p>
+              <div className="flex flex-wrap justify-center sm:justify-start gap-3 text-sm text-gray-500">
+                <span>USA, Los Angeles</span>
+                <span>Full-time</span>
+                <span>Posted 3 days ago</span>
+              </div>
             </div>
-            <div className='flex flex-col gap-3'>
-                <h1>Job Title</h1>
-                <p>Lenevo</p>
-                <div className='flex gap-2'>
-                    <p>USA.Los Angeles</p>
-                    <p>Full time</p>
-                    <p>Posted 3 days ago</p>
-                    
-                </div>
+            <div className="flex flex-col items-center gap-2">
+              <div className="flex gap-2 text-gray-600">
+                <Bookmark className="w-5 h-5" />
+                <Share2 className="w-5 h-5" />
+              </div>
+              <Button className="py-2 px-4 sm:py-3 sm:px-6">Apply</Button>
             </div>
-            <div className='flex flex-col gap-2 justify-center'>
-                <div className='flex gap-2'>
-                    <Bookmark/>
-                    <Share2/>
-                </div>
-                <Button>Apply</Button>
-            </div>
-        </div>
-        <div className='min-w-[640px] max-h-[451px] bg-white rounded-2xl p-6 flex flex-col gap-4'>
-            <h1 className='font-medium text-4xl'>Salary Benefits</h1>
-            <div className='flex gap-4'>
-                <div className='p-2 border border-black rounded-2xl flex flex-col gap-2'>
-                    <h3>Salary Range</h3>
-                    <h1>$80000-120000</h1>
-                    <p>per hour</p>
-                </div>
-                <div className='p-2 border border-black rounded-2xl flex flex-col gap-2'>
-                    <h3>Application Deadline </h3>
-                    <h1>Dec 20 ,2025</h1>
-                    <p>23 days remaining</p>
-                </div>
-            </div>
-            <h1 className='text-4xl font-bold'>Benefits Package</h1>
-            <div className='flex gap-6'>
-            <div>
-                <p> Health Insurance </p>
-                <p>Bonus</p>
-                <p>Lunch and Breakfast</p>
-            </div>
-            <div>
-                <p>Health Insurance</p>
-                <p>Bonus</p>
-                <p>Lunch and Breakfast</p>
-            </div>
-            </div>
-        </div>
-        </div>
-    
-
-        {/* right section  */}
-            <div className='max-w-lg bg-white p-10 '>
-            <div className='flex flex-col  items-center gap-4'>
-            <h1 className='font-medium text-4xl'>About the company</h1>
-            <img src="/Logo.jpg" alt="Logo of the company"  className='object-cover max-h-[196px]'/>
-            <h1 className='text-2xl font-light'>Lenevo Group Limited</h1>
-            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Et quae est vel sint sunt non modi veritatis perferendis ipsa, nemo alias deleniti officia doloremque quam ex consequuntur, laboriosam accusantium voluptatibus.</p>
           </div>
-               <div className='flex gap-2 p-4'>
-                <div>
-                    <Building/>
-                </div>
-                <div>
-                    <p>Industry</p>
-                    <h1 className='font-medium text-xl'>Hardware</h1>
-                </div>
+
+          {/* Salary & Benefits */}
+          <div className="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 flex flex-col gap-4">
+            <h1 className="text-xl sm:text-2xl font-semibold">
+              Salary & Benefits
+            </h1>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1 border border-gray-300 rounded-xl p-3">
+                <p className="text-gray-500">Salary Range</p>
+                <h1 className="font-semibold">$80,000 - $120,000</h1>
+                <p className="text-gray-500">per year</p>
+              </div>
+              <div className="flex-1 border border-gray-300 rounded-xl p-3">
+                <p className="text-gray-500">Application Deadline</p>
+                <h1 className="font-semibold">Dec 20, 2025</h1>
+                <p className="text-gray-500">23 days remaining</p>
+              </div>
             </div>
-               <div className='flex gap-2 p-4'>
-                <div>
-                   <User />
-                </div>
-                <div>
-                    <p>Industry</p>
-                    <h1 className='font-medium text-xl'>Hardware</h1>
-                </div>
+
+            <h1 className="text-xl sm:text-2xl font-bold mt-4">
+              Benefits Package
+            </h1>
+            <div className="grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-gray-700">
+              {[
+                "Health Insurance",
+                "Bonus",
+                "Lunch & Breakfast",
+                "Flexible Hours",
+                "Remote Option",
+              ].map((item, idx) => (
+                <span key={idx} className="flex items-center gap-2">
+                  <span className="h-2 w-2 bg-green-500 rounded-full inline-block"></span>
+                  {item}
+                </span>
+              ))}
             </div>
-               <div className='flex gap-2 p-4'>
-                <div>
-                   <MapPin />
-                </div>
-                <div>
-                    <p>Industry</p>
-                    <h1 className='font-medium text-xl'>Hardware</h1>
-                </div>
+          </div>
+        </div>
+
+        {/* Right Column: About Company */}
+        <div className="w-full lg:w-1/3 flex flex-col gap-6">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-4 items-center text-center">
+            <h1 className="text-xl sm:text-2xl font-semibold">
+              About the Company
+            </h1>
+            <img
+              src="/Logo.jpg"
+              alt="Company Logo"
+              className="h-40 w-auto object-contain"
+            />
+            <h2 className="text-lg sm:text-xl font-light">
+              Lenevo Group Limited
+            </h2>
+            <p className="text-gray-600 text-sm sm:text-base">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Et quae
+              est vel sint sunt non modi veritatis perferendis ipsa.
+            </p>
+          </div>
+
+          {/* Company Details */}
+          <div className="bg-white border border-gray-200 rounded-2xl p-4 flex flex-col gap-4 text-left">
+            <div className="flex items-center gap-3">
+              <Building className="w-5 h-5" />
+              <div>
+                <p className="text-gray-500">Industry</p>
+                <h1 className="font-semibold">Hardware</h1>
+              </div>
             </div>
-<div className='flex justify-center items-center'>
+            <div className="flex items-center gap-3">
+              <User className="w-5 h-5" />
+              <div>
+                <p className="text-gray-500">Employees</p>
+                <h1 className="font-semibold">500+</h1>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <MapPin className="w-5 h-5" />
+              <div>
+                <p className="text-gray-500">Location</p>
+                <h1 className="font-semibold">USA, Los Angeles</h1>
+              </div>
+            </div>
 
-    <Button className='p-6' onClick={()=>router.push('/jobseeker/viewcompany')}>Company Profile <span><ArrowRight/></span></Button>
-</div>
-
+            <Button
+              className="mt-4 py-2 px-4 sm:py-3 sm:px-6"
+              onClick={() => router.push("/jobseeker/viewcompany")}
+            >
+              Company Profile <ArrowRight className="ml-2 w-4 h-4 inline" />
+            </Button>
+          </div>
         </div>
-    </div>
-    {/* buttom section starts here  */}
-    <div className='h-[752] w-full bg-white mt-20 p-10 flex flex-col gap-4'>
-        <div className='flex flex-col gap-2'>
-        <h1 className='font-medium text-2xl'>Job Description</h1>
-        <p>[Company Name] is looking for a talented and motivated [Job Title] to join our growing team. In this role, you will be responsible for developing and maintaining high-quality software solutions that meet our clients' needs.</p>
-        </div>
-
-        <div className='flex flex-col gap-2'>
-            <h1 className='font-medium text-2xl'>Key Responsibilities</h1>
-            <p className='flex items-center gap-2'><span><Circle size={15}/></span>Design, develop, and maintain software applications</p>
-            <p className='flex items-center gap-2'><span><Circle size={15}/></span>Design, develop, and maintain software applications</p>
-            <p className='flex items-center gap-2'><span><Circle size={15}/></span>Design, develop, and maintain software applications</p>
-            <p className='flex items-center gap-2'><span><Circle size={15}/></span>Design, develop, and maintain software applications</p>
-        </div>
-
-        <div className='flex flex-col gap-2'>
-            <h1 className='font-medium text-2xl'>Required Qualifications</h1>
-            <p className='flex items-center gap-2'><span><Circle size={15}/></span>Bachelor's degree in Computer Science or related field</p>
-            <p className='flex items-center gap-2'><span><Circle size={15}/></span>Bachelor's degree in Computer Science or related field</p>
-            <p className='flex items-center gap-2'><span><Circle size={15}/></span>Bachelor's degree in Computer Science or related field</p>
-            <p className='flex items-center gap-2'><span><Circle size={15}/></span>Bachelor's degree in Computer Science or related field</p>
-            <p className='flex items-center gap-2'><span><Circle size={15}/></span>Bachelor's degree in Computer Science or related field</p>
-        </div>
-
-        <div className='flex flex-col gap-2'>
-            <h1 className='font-medium text-2xl'>Preferred Qualifications</h1>
-           <p className='flex items-center gap-2'><span><Circle size={15}/></span>Master's degree in Computer Science</p>
-           <p className='flex items-center gap-2'><span><Circle size={15}/></span>Master's degree in Computer Science</p>
-           <p className='flex items-center gap-2'><span><Circle size={15}/></span>Master's degree in Computer Science</p>
-           <p className='flex items-center gap-2'><span><Circle size={15}/></span>Master's degree in Computer Science</p>
-
-        </div>
-
-
-    </div>
-    <Footer/>
       </div>
-  )
-}
 
-export default ApplyNow
+      {/* Bottom Section: Job Description */}
+      <div className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-6">
+        <section className="space-y-2">
+          <h1 className="text-xl sm:text-2xl font-semibold">Job Description</h1>
+          <p>
+            [Company Name] is looking for a talented and motivated [Job Title]
+            to join our growing team...
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h1 className="text-xl sm:text-2xl font-semibold">
+            Key Responsibilities
+          </h1>
+          {[
+            "Design, develop, and maintain software applications",
+            "Collaborate with teams",
+            "Ensure code quality",
+            "Participate in reviews",
+          ].map((item, i) => (
+            <p key={i} className="flex items-start gap-2">
+              <Circle className="w-3 h-3 mt-1" /> {item}
+            </p>
+          ))}
+        </section>
+
+        <section className="space-y-2">
+          <h1 className="text-xl sm:text-2xl font-semibold">
+            Required Qualifications
+          </h1>
+          {[
+            "Bachelor's degree in CS",
+            "3+ years experience",
+            "Strong communication skills",
+            "Team player",
+          ].map((item, i) => (
+            <p key={i} className="flex items-start gap-2">
+              <Circle className="w-3 h-3 mt-1" /> {item}
+            </p>
+          ))}
+        </section>
+
+        <section className="space-y-2">
+          <h1 className="text-xl sm:text-2xl font-semibold">
+            Preferred Qualifications
+          </h1>
+          {[
+            "Master's degree in CS",
+            "Leadership experience",
+            "Open-source contributions",
+          ].map((item, i) => (
+            <p key={i} className="flex items-start gap-2">
+              <Circle className="w-3 h-3 mt-1" /> {item}
+            </p>
+          ))}
+        </section>
+      </div>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default ApplyNow;

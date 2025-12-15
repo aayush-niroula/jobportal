@@ -1,14 +1,26 @@
+"use client"
 import { Button } from '@/components/ui/button'
-import React from 'react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+type JobPostCard={
+  title:string,
+  company:string,
+  salary:string,
+  type:string,
+  location:string
+  posted:string
+}
 
-const JobPostCard = () => {
+
+const JobPostCard = ({title,company,location,salary,type,posted}:JobPostCard) => {
+  const router = useRouter()
   return (
     <div className='lg:min-w-[284px] lg:max-h-[390px] border border-black rounded-2xl bg-white p-4 w-full'>
        <div className='flex items-center gap-4'>
         <img src="Logo.jpg" alt="" className='object-contain max-h-[76px] min-w-[90px] min-w-'/>
         <div className='flex flex-col gap-2'>
-            <h1 className='lg:text-xl font-medium'>Linkedin</h1>
-            <p className='lg:text-sm text-xs font-light '>newyork us</p>
+            <h1 className='lg:text-xl font-medium'>{company}</h1>
+            <p className='lg:text-sm text-xs font-light '>{location}</p>
         </div>
         
        </div>
@@ -37,7 +49,7 @@ const JobPostCard = () => {
        </div>
        <div className='flex justify-between items-center mt-6'>
             <p className='font-bold text-2xl '>$50 <span className='font-light text-sm'>/hour</span></p>
-            <Button className='p-6'>Apply Now</Button>
+            <Button className='p-6' onClick={()=>router.push('/jobseeker/applynow')}>Apply Now</Button>
        </div>
     </div>
   )

@@ -4,159 +4,116 @@ import { Bookmark, BriefcaseBusiness, Building, Calendar, Globe, MapPin, Phone, 
 
 const ViewCompany = () => {
   return (
-    <div className="font-playfair flex flex-col justify-center items-center gap-8 pt-8 ">
-      {/* first section starts */}
-      <div className="h-auto max-w-[1248px] bg-white flex gap-4 justify-between p-10 rounded-2xl">
-        <div>
-          <img
-            src="/Logo.jpg"
-            alt=""
-            className="object-contain max-h-[103px]"
-          />
-        </div>
-        <div>
-          <h1 className="font-medium text-2xl">Udemy</h1>
-          <div className="flex gap-6 justify-center items-center">
-            <p className="flex gap-2">
-              <span>
-                <MapPin />
-              </span>
-              Location
-            </p>
-            <p className="flex gap-2">
-              <span>
-                <Users />
-              </span>
-              100000-500000
-            </p>
-            <p className="flex gap-2">
-              <span>
-                <Phone />
-              </span>
-              977 980000000
-            </p>
-            <p className="flex gap-2">
-              <span>
-                <Calendar />
-              </span>
-              since 2003
-            </p>
+    <div className="font-playfair px-4 sm:px-6 lg:px-10 py-10 space-y-10 bg-[#F1F5F9]">
+
+      {/* Top Section: Company Header */}
+      <div className="bg-white rounded-2xl p-6 sm:p-10 flex flex-col lg:flex-row items-center lg:items-start gap-6 lg:gap-10 max-w-[1248px] mx-auto border border-gray-200">
+        <img src="/Logo.jpg" alt="Company Logo" className="h-24 w-24 sm:h-28 sm:w-28 object-contain rounded-lg" />
+
+        <div className="flex-1 flex flex-col gap-2 text-center lg:text-left">
+          <h1 className="text-2xl font-medium">Udemy</h1>
+          <div className="flex flex-wrap justify-center lg:justify-start gap-4 text-gray-600">
+            <div className="flex items-center gap-1"><MapPin /> Location</div>
+            <div className="flex items-center gap-1"><Users /> 100000-500000</div>
+            <div className="flex items-center gap-1"><Phone /> 977 980000000</div>
+            <div className="flex items-center gap-1"><Calendar /> Since 2003</div>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center">
-          <Button className="p-4">Bookmark <span><Bookmark/></span></Button>
-        </div>
-      </div>
-      {/* ends here  */}
 
-      <div className="flex items-center justify-center gap-40">
-        <div className="max-w-[788px] max-h-[458px] p-10 bg-white">
-          <h1 className="text-2xl font-medium">Who we are ?</h1>
-          <p className="text-wrap">
-            We are the multinational company bascically reside in the hongkong
-            which main focus is to improve software ,perosonal computers of the
-            customers.Lorem Lenovo is determined to improve our planet and
-            society by minimizing Lenovo’s environmental impact, promoting
-            social equity through its business and via the Lenovo Foundation,
-            and ensuring ethical, responsible, and transparent operations. In
-            January 2023, Lenovo became one of the first group of companies to
-            receive net-zero validation from the Science Based Targets
-            initiative, making it the first PC and smartphone maker and one of
-            only 139 companies around the world with targets validated by the
-            Net-Zero Standard. Lenovo’s goal is to positively impact 15 million
-            people by 2025 through the work of global philanthropy partnerships
-            and programs, led by the Lenovo Foundation.
+        <Button className="mt-4 lg:mt-0 py-2 px-4 sm:py-3 sm:px-6 flex items-center gap-2">
+          Bookmark <Bookmark />
+        </Button>
+      </div>
+
+      {/* Who We Are & Snapshot */}
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 max-w-[1248px] mx-auto">
+        {/* Left: Who we are */}
+        <div className="flex-1 bg-white rounded-2xl p-6 sm:p-10 flex flex-col gap-4">
+          <h1 className="text-2xl font-medium">Who We Are?</h1>
+          <p className="text-gray-700 text-sm sm:text-base">
+            We are a multinational company based in Hong Kong focused on software and personal computers...
+            Lenovo is determined to improve our planet and society by minimizing environmental impact and promoting social equity...
           </p>
         </div>
-        <div className="min-w-[460px] max-h-[458px] bg-white border p-10">
-            <h1 className="text-2xl font text-center mb-4">Comapany SnapShot</h1>
-            <div className="flex flex-col gap-4">
-            <div>
-                <p className="flex gap-2 font-bold text-xl"> <span><Globe/></span>Industry</p>
-                <p className="font-light text-gray-600">www.udemy.com</p>
+
+        {/* Right: Company Snapshot */}
+        <div className="flex-1 bg-white rounded-2xl p-6 sm:p-10 border border-gray-200 flex flex-col gap-4">
+          <h1 className="text-2xl font-medium text-center">Company Snapshot</h1>
+          {[
+            { icon: Globe, label: "Industry", value: "Information Technology" },
+            { icon: Building, label: "Website", value: "www.udemy.com" },
+            { icon: BriefcaseBusiness, label: "Department", value: "Marketing" },
+            { icon: MapPin, label: "Office", value: "Ktm Baneshwor" },
+          ].map((item, i) => (
+            <div key={i} className="flex flex-col gap-1">
+              <p className="flex items-center gap-2 font-bold text-lg">
+                <item.icon className="w-5 h-5" /> {item.label}
+              </p>
+              <p className="text-gray-600">{item.value}</p>
             </div>
-            <div>
-                <p className="flex gap-2 font-bold text-xl"> <span><Building/></span>Website</p>
-                <p className="font-light text-gray-600">Information Technology</p>
-            </div>
-            <div>
-                <p className="flex gap-2 font-bold text-xl"> <span><BriefcaseBusiness/></span>Department</p>
-                <p className="font-light text-gray-600">Marketing</p>
-            </div>
-            <div>
-                <p className="flex gap-2 font-bold text-xl"> <span><MapPin/></span>Office</p>
-                <p className="font-light text-gray-600">Ktm Baneshwor</p>
-            </div>
-            </div>
+          ))}
         </div>
       </div>
 
-      {/* next section starts here  */}
-
-      <div className="flex gap-40 items-center justify-center">
-        <div className="bg-white rounded-2xl p-10 flex flex-col justify-center items-center gap-10">
-            <h1 className="text-2xl font-bold ">Features</h1>
-            <div className="grid grid-cols-2 gap-8">
-            <div className=" p-4 min-w-[283px] bg-white border border-black rounded-2xl">
-                <h1 className="text-xl ">Remote Friendly</h1>
-                <p>remote friendly environment for work</p>
-            </div>
-            <div className=" p-4 min-w-[283px] bg-white border border-black rounded-2xl">
-                <h1 className="text-xl ">Remote Friendly</h1>
-                <p>remote friendly environment for work</p>
-            </div>
-            <div className=" p-4 min-w-[283px] bg-white border border-black rounded-2xl">
-                <h1 className="text-xl ">Remote Friendly</h1>
-                <p>remote friendly environment for work</p>
-            </div>
-            <div className=" p-4 min-w-[283px] bg-white border border-black rounded-2xl">
-                <h1 className="text-xl">Remote Friendly</h1>
-                <p>remote friendly environment for work</p>
-            </div>
-
-            </div>
+      {/* Features & Get in Touch */}
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 max-w-[1248px] mx-auto">
+        {/* Features */}
+        <div className="flex-1 bg-white rounded-2xl p-6 sm:p-10 flex flex-col gap-6">
+          <h1 className="text-2xl font-bold text-center">Features</h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {["Remote Friendly","Flexible Hours","Health Benefits","Team Activities"].map((feature, i) => (
+              <div key={i} className="p-4 bg-white border border-gray-300 rounded-2xl text-center">
+                <h2 className="font-semibold text-lg">{feature}</h2>
+                <p className="text-gray-600 text-sm">remote friendly environment for work</p>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="p-10 bg-white flex flex-col gap-4 ">
-            <h1 className="text-xl font-bold">Get in Touch</h1>
 
-            <div className="flex flex-col gap-2">
-                <label>Full Name</label>
-                <input type="text" className="border border-black p-2 min-w-[347]" />
+        {/* Get in Touch */}
+        <div className="flex-1 bg-white rounded-2xl p-6 sm:p-10 flex flex-col gap-4">
+          <h1 className="text-2xl font-bold">Get in Touch</h1>
+          {[
+            { label: "Full Name", type: "text" },
+            { label: "Work Email", type: "email" },
+            { label: "Message", type: "textarea" },
+          ].map((field, i) => (
+            <div key={i} className="flex flex-col gap-2">
+              <label>{field.label}</label>
+              {field.type === "textarea" ? (
+                <textarea className="border border-gray-400 p-2 rounded-md w-full" rows={4} />
+              ) : (
+                <input type={field.type} className="border border-gray-400 p-2 rounded-md w-full" />
+              )}
             </div>
-            <div className="flex flex-col gap-2">
-                <label>Work Email</label>
-                <input type="text" className="border border-black p-2 min-w-[347]" />
-            </div>
-            <div className="flex flex-col gap-2">
-                <label>Message</label>
-                <textarea className="border border-black p-2 min-w-[347] h-auto"/>
-            </div>
-             <div className="flex justify-center items-center">
-            <Button>Send</Button>
-             </div>
+          ))}
+          <div className="flex justify-center">
+            <Button className="py-2 px-4 sm:py-3 sm:px-6">Send</Button>
+          </div>
         </div>
       </div>
-      {/* ends here  */}
-      <div className="flex gap-40 justify-center items-center">
-        <div className="bg-white rounded-2xl p-10 flex flex-col gap-4 min-w-[746px]">
-            <h1 className="text-2xl font-medium">Inside our company</h1>
-            <p className="font-light text-sm text-gray-700">Take a peak of some of our favourite moments inside our company</p>
-            <div className="grid grid-cols-3 gap-4">
-                <img src="/Accounting.jpg" alt="images" className="object-contain min-w-[193px] max-h-[114px] rounded-2xl border border-black"/>
-                <img src="/Accounting.jpg" alt="images" className="object-contain min-w-[193px] max-h-[114px] rounded-2xl border border-black"/>
-                <img src="/Accounting.jpg" alt="images" className="object-contain min-w-[193px] max-h-[114px] rounded-2xl border border-black"/>
-                <img src="/Accounting.jpg" alt="images" className="object-contain min-w-[193px] max-h-[114px] rounded-2xl border border-black"/>
-                <img src="/Accounting.jpg" alt="images" className="object-contain min-w-[193px] max-h-[114px] rounded-2xl border border-black"/>
-                <img src="/Accounting.jpg" alt="images" className="object-contain min-w-[193px] max-h-[114px] rounded-2xl border border-black"/>
-            </div>
+
+      {/* Inside Company & Location */}
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 max-w-[1248px] mx-auto">
+        {/* Inside Company */}
+        <div className="flex-1 bg-white rounded-2xl p-6 sm:p-10 flex flex-col gap-4">
+          <h1 className="text-2xl font-medium">Inside Our Company</h1>
+          <p className="text-gray-600 text-sm sm:text-base">Take a peek at some of our favourite moments inside the company</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array(6).fill(0).map((_, i) => (
+              <img key={i} src="/Accounting.jpg" alt="Company Moment" className="w-full h-32 sm:h-36 object-contain rounded-2xl border border-gray-300" />
+            ))}
+          </div>
         </div>
-        <div className="p-10 max-h-[500] min-w-[460px] bg-white rounded-2xl flex flex-col gap-4">
-            <h1 className="text-2xl font-bold">Company Location</h1>
-            <img src="/Map.jpg" alt="" className="object-cover max-h-[330px] border border-black w-full" />
+
+        {/* Location Map */}
+        <div className="flex-1 bg-white rounded-2xl p-6 sm:p-10">
+          <h1 className="text-2xl font-bold mb-4">Company Location</h1>
+          <img src="/Map.jpg" alt="Company Map" className="w-full h-64 sm:h-80 object-cover border border-gray-300 rounded-lg" />
         </div>
       </div>
-      {/* footer  */}
-      <Footer/>
+
+      <Footer />
     </div>
   );
 };

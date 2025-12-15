@@ -1,31 +1,82 @@
-import React from 'react'
 
 const Skills = () => {
+  const skills = [
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Node.js",
+    "Python",
+    "MongoDB",
+    "PostgreSQL",
+    "Docker",
+    "Kubernetes",
+  ];
 
-const skills = ['JavaScript','TypeScript','React','Nodejs','Python','MongoDb','Postgress','Docker','Kubernetes']
-const softskills =['TeamLeaderShip','ProjectManagement','Communication','ProblemSolving']
+  const softSkills = [
+    "Team Leadership",
+    "Project Management",
+    "Communication",
+    "Problem Solving",
+  ];
+
   return (
-    <div className='bg-white border border-black rounded-2xl max-w-[763px] h-auto p-10 flex flex-col gap-2 font-playfair'>
-        <h1 className='text-2xl font-bold'>Skills and Technology</h1>
-        <p className='text-xl font-medium'>Technical Skills</p>
-        <div className='grid grid-cols-3 gap-2 place-content-center p-10'>
-            {skills.map((value,index)=>(
-                <p  className='border border-black p-2 rounded-full' key={index}>{value}</p>
-            ))}
-        </div>
+    <div
+      className="
+        w-full
+        bg-white
+        border border-gray-200
+        rounded-2xl
+        font-playfair
+        p-4 sm:p-6 lg:p-8
+        max-w-[763px]
+      "
+    >
+      <h1 className="text-xl sm:text-2xl font-bold mb-4">
+        Skills & Technology
+      </h1>
+      <p className="text-base sm:text-lg font-medium mb-3">
+        Technical Skills
+      </p>
 
-       <h1>SoftSkills</h1>
-        <div className='grid grid-cols-2 gap-4'>
-            {
-                 softskills.map((value,index)=>(
-                    <p key={index} className='bg-green-400 p-2 rounded-full w-50 text-center'>{value}</p>
-                ))
-            }
-        </div>
-    
+      <div className="flex flex-wrap gap-2 mb-6">
+        {skills.map((skill, index) => (
+          <span
+            key={index}
+            className="
+              px-3 py-1
+              text-sm sm:text-base
+              border border-gray-300
+              rounded-full
+              whitespace-nowrap
+            "
+          >
+            {skill}
+          </span>
+        ))}
+      </div>
+      <p className="text-base sm:text-lg font-medium mb-3">
+        Soft Skills
+      </p>
+
+      <div className="flex flex-wrap gap-3">
+        {softSkills.map((skill, index) => (
+          <span
+            key={index}
+            className="
+              px-3 py-1
+              text-sm sm:text-base
+              rounded-full
+              bg-green-100
+              text-green-800
+              whitespace-nowrap
+            "
+          >
+            {skill}
+          </span>
+        ))}
+      </div>
     </div>
+  );
+};
 
-  )
-}
-
-export default Skills
+export default Skills;

@@ -5,6 +5,8 @@ import { Bell, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Notification from "./Notfication";
+import AvatarDropDown from "./AvatarDropDown";
 
 const JobSeekerNavbar = () => {
   const [open, setOpen] = useState(false);
@@ -41,12 +43,8 @@ const JobSeekerNavbar = () => {
           </Link>
 
           <div className="flex gap-4 items-center">
-            <Bell />
-            <img
-              src="/why.jpg"
-              alt="profile"
-              className="h-[45px] w-[45px] rounded-full object-cover"
-            />
+            <Notification />
+            <AvatarDropDown/>
           </div>
 
           <h1 className="text-xl font-medium">Username</h1>

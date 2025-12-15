@@ -1,4 +1,4 @@
-import React from "react";
+"use client"
 import Searchbar from "../../_components/Searchbar";
 import {
   Select,
@@ -19,17 +19,53 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+
+import { useState } from "react";
+
 const page = () => {
+  const [currentPage,setCurrentPage] = useState(1)
+  const jobsPerPage= 9;
+  const dummyJobData = Array.from({ length: 24 }, (_, i) => ({
+  id: i + 1,
+  title: `Job Position ${i + 1}`,
+  company: `Company ${i + 1}`,
+  location: "New York, NY",
+  salary: "$80,000 - $120,000",
+  type: i % 3 === 0 ? "Full-time" : i % 3 === 1 ? "Part-time" : "Contract",
+  posted: "2 days ago",
+}));
+
+const totalPages = Math.ceil(dummyJobData.length/ jobsPerPage)
+
+const indexofLastJob = currentPage * jobsPerPage;
+const indexOfFirstJob = indexofLastJob- jobsPerPage
+const currentJobs= dummyJobData.slice(indexOfFirstJob,indexofLastJob)
+
+const handlePageChange =(pageumber:number)=>{
+  setCurrentPage(pageumber)
+  window.scrollTo({top:500,behavior:"smooth"})
+
+}
   return (
-    <div className="p-10 font-playfair  flex flex-col items-center gap-4 ">
-      <div className="ml-40 mr-40">
+    <div className="p-4 md:p-6 lg:p-10 font-playfair flex flex-col items-center ">
+      <div className="w-full max-w-7xl">
+      <div className="mb-6 md:mb-8">
         <Searchbar />
       </div>
 
       {/* card section starts here  */}
-      <div className="flex gap-20 mt-10 ">
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 ">
         <div className="hidden lg:flex flex-col gap-10 shrink-0 ">
-          <div className="flex justify-between mt-6 ">
+          <div className="flex justify-between items-center ">
             <h1>Advance Filter</h1>
             <Button>Reset</Button>
           </div>
@@ -68,10 +104,10 @@ const page = () => {
           />
         </div>
         <div className="flex-1">
-           <div className="flex justify-between items-center lg:hidden  mb-4">
-            <p>
-              SHOW: <span className="font-bold text-xl">24</span>
-            </p>
+           <div className="flex justify-between items-center lg:hidden  mb-6">
+            <p className="text-sm">
+                SHOWING: <span className="font-bold text-base">{indexOfFirstJob + 1}-{Math.min(indexofLastJob, dummyJobData.length)}</span> of {dummyJobData.length}
+              </p>
 
             {/* Mobile filter drawer */}
             <Sheet>
@@ -126,14 +162,15 @@ const page = () => {
 
           <div className="hidden lg:flex gap-4 mb-4">
             <div>
-              <p>
-                SHOW: <span className="font-bold text-xl">24</span>
+             <p className="text-sm">
+                SHOWING: <span className="font-bold text-base">{indexOfFirstJob + 1}-{Math.min(indexofLastJob, dummyJobData.length)}</span> of {dummyJobData.length}
               </p>
             </div>
-            <div className="flex">
+            <div className="flex items-center gap-4">
+              <p className="text-sm">Sort by</p>
               <Select>
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Sort by" />
+                  <SelectValue placeholder="Latest" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="light">Latest</SelectItem>
@@ -143,21 +180,107 @@ const page = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3  gap-4 mt-40">
-            <JobPostCard />
-            <JobPostCard />
-            <JobPostCard />
-            <JobPostCard />
-            <JobPostCard />
-            <JobPostCard />
-            <JobPostCard />
-            <JobPostCard />
-            <JobPostCard />
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {currentJobs.map((job) => (
+                <JobPostCard 
+                  key={job.id}
+                  title={job.title}
+                  company={job.company}
+                  location={job.location}
+                  salary={job.salary}
+                  type={job.type}
+                  posted={job.posted}
+                />
+              ))}
+            </div>
+
+             <div className="mt-8 flex justify-center">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      href="#" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (currentPage > 1) handlePageChange(currentPage - 1);
+                      }}
+                      className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                    />
+                  </PaginationItem>
+                  
+                  {[...Array(totalPages)].map((_, index) => {
+                    const pageNumber = index + 1;
+                    // Show only first 3 pages, last 3 pages, and pages around current page
+                    if (
+                      pageNumber === 1 ||
+                      pageNumber === totalPages ||
+                      (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+                    ) {
+                      return (
+                        <PaginationItem key={pageNumber}>
+                          <PaginationLink 
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handlePageChange(pageNumber);
+                            }}
+                            isActive={currentPage === pageNumber}
+                          >
+                            {pageNumber}
+                          </PaginationLink>
+                        </PaginationItem>
+                      );
+                    } else if (
+                      pageNumber === currentPage - 2 ||
+                      pageNumber === currentPage + 2
+                    ) {
+                      return (
+                        <PaginationItem key={pageNumber}>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                      );
+                    }
+                    return null;
+                  })}
+                  
+                  <PaginationItem>
+                    <PaginationNext 
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (currentPage < totalPages) handlePageChange(currentPage + 1);
+                      }}
+                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+            
+            {/* Alternative simpler pagination */}
+            <div className="mt-6 flex items-center justify-between lg:hidden">
+              <Button
+                variant="outline"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              <span className="text-sm">
+                Page {currentPage} of {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Button>
+            </div>
           </div>
         </div>
       </div>
-      <Button className="mt-4 p-6 ml-40">View More</Button>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
