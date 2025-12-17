@@ -10,12 +10,11 @@ import { useRouter } from "next/navigation";
 
 const page = () => {
   const router = useRouter();
-  // Placeholder for dynamic user data (replace with real props/state)
-  const userName = "Alex"; // Fetch from auth/context
+  
+  const userName = "Alex"; 
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Main Container for Max Width & Centering */}
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
         {/* Header */}
         <div className="space-y-2">
@@ -37,13 +36,15 @@ const page = () => {
         {/* Main Content: Apply Cards + Sidebar */}
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8" aria-label="Dashboard actions">
           {/* Left: Apply Cards */}
+          
           <div className="lg:col-span-2 space-y-6">
+            <h1 className="font-playfair text-xl lg:text-4xl lg:font-bold">Featured jobs</h1>
             {Array.from({ length: 3 }).map((_, i) => (
               <ApplyCard key={i} />
             ))}
           </div>
           {/* Right: Sidebar */}
-          <div className="space-y-6 lg:col-span-1">
+          <div className="space-y-6 lg:col-span-1 lg:mt-15">
             <ProfileCompleteness />
             <Notifications />
             <div className="p-6 border border-border rounded-2xl shadow-sm w-full lg:min-w-[350px]">

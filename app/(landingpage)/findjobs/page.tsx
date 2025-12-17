@@ -56,7 +56,7 @@ const handlePageChange =(pageumber:number)=>{
 
 }
   return (
-    <div className="p-4 md:p-6 lg:p-10 font-playfair flex flex-col items-center ">
+    <div className="p-4 md:p-6 lg:p-10 font-playfair flex flex-col items-center font-playfair bg-[#F1F5F9] ">
       <div className="w-full max-w-7xl">
       <div className="mb-6 md:mb-8">
         <Searchbar />

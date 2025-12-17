@@ -1,37 +1,75 @@
-import React from 'react'
+import React from "react";
 
 const CompanyInformation = () => {
   return (
-    <div className='bg-white p-8 w-auto lg:max-w-[755px] h-auto rounded-xl'>
-        <h1>Company Information</h1>
-        <div>
-            <h1 className='lg:text-xl text-sm font-medium'>Company Name</h1>
-            <input type="text" className='lg:p-2 p-1 w-full border border-black ' />
-        </div>
-        <div>
-            <h1 className='lg:text-xl text-sm font-medium'>Business Registration Number</h1>
-            <input type="text" className='lg:p-2 w-full border border-black p-1' />
-        </div>
-        <div className='flex md:justify-between gap-4 lg:justify-between'>
-            <div>
-            <h1 className='lg:text-xl text-sm font-medium'>Company Email</h1>
-            <input type="text" className='lg:p-2 w-full border border-black p-1' />
-            </div>
-            <div>
-            <h1 className='lg:text-xl text-sm font-medium'>Company Phone</h1>
-            <input type="text" className='lg:p-2 w-full border border-black p-1' />
-            </div>
-        </div>
-        <div>
-            <h1 className='lg:text-xl text-sm font-medium'>Company Address</h1>
-            <input type="text" className='lg:p-2 w-full border border-black p-1' />
-        </div>
-        <div>
-            <h1 className='lg:text-xl text-sm font-medium'>Company Website link</h1>
-            <input type="text" className='lg:p-2 w-full border border-black p-1' />
-        </div>
-    </div>
-  )
-}
+    <div className="bg-white w-full max-w-4xl mx-auto rounded-xl p-4 sm:p-6 lg:p-8">
+      <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-6">
+        Company Information
+      </h1>
 
-export default CompanyInformation
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm sm:text-base lg:text-lg font-medium mb-1">
+            Company Name
+          </label>
+          <input
+            type="text"
+            className="w-full border border-gray-400 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+          />
+        </div>
+        <div>
+          <label className="block text-sm sm:text-base lg:text-lg font-medium mb-1">
+            Business Registration Number
+          </label>
+          <input
+            type="text"
+            className="w-full border border-gray-400 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+          />
+        </div>
+
+        {/* Email & Phone */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm sm:text-base lg:text-lg font-medium mb-1">
+              Company Email
+            </label>
+            <input
+              type="text"
+              className="w-full border border-gray-400 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm sm:text-base lg:text-lg font-medium mb-1">
+              Company Phone
+            </label>
+            <input
+              type="text"
+              className="w-full border border-gray-400 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+            />
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm sm:text-base lg:text-lg font-medium mb-1">
+            Company Address
+          </label>
+          <input
+            type="text"
+            className="w-full border border-gray-400 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+          />
+        </div>
+        <div>
+          <label className="block text-sm sm:text-base lg:text-lg font-medium mb-1">
+            Company Website Link
+          </label>
+          <input
+            type="text"
+            className="w-full border border-gray-400 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CompanyInformation;

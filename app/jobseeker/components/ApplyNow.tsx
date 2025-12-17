@@ -1,5 +1,4 @@
 "use client";
-
 import Footer from "@/app/_components/Footer";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,10 +11,11 @@ import {
   User,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import ApplyForm from "./Applyform";
 
 const ApplyNow = () => {
   const router = useRouter();
+ 
 
   return (
     <div className="bg-[#F1F5F9] font-playfair px-4 sm:px-6 lg:px-10 py-10 space-y-10 font-playfair">
@@ -43,7 +43,7 @@ const ApplyNow = () => {
                 <Bookmark className="w-5 h-5" />
                 <Share2 className="w-5 h-5" />
               </div>
-              <Button className="py-2 px-4 sm:py-3 sm:px-6">Apply</Button>
+              <ApplyForm/>
             </div>
           </div>
 

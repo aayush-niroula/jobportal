@@ -60,7 +60,7 @@ const ProfileCompleteness = () => {
   
       {percentage < 100 && (
         <Button 
-          className="mt-2 py-5 text-lg font-medium w-full bg-green-600 hover:bg-green-700"
+          className="mt-2 py-5 text-lg font-medium w-fully"
           onClick={() => alert('Redirect to edit page')} 
         >
           Complete Profile Now

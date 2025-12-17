@@ -4,8 +4,24 @@ import FeaturedJob from "../_components/FeaturedJob";
 import Footer from "../_components/Footer";
 import GetStarted from "../_components/GetStarted";
 import Searchbar from "../_components/Searchbar";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 
 export default function Home() {
+  const categories = [
+  { categoryname: "Developer", jobsno: 12 },
+  { categoryname: "Medicine", jobsno: 10 },
+  { categoryname: "Hardware", jobsno: 5 },
+  { categoryname: "Design", jobsno: 8 },
+  { categoryname: "Marketing", jobsno: 6 },
+  { categoryname: "Finance", jobsno: 4 },
+];
+
   return (
     <div className="pt-10 flex flex-col items-center gap-8 bg-[#F1F5F9] w-full font-playfair">
         <h1 className="text-center lg:text-5xl font-medium font-playfair text-xl ">FIND YOUR DREAM JOB TODAY</h1>
@@ -14,20 +30,28 @@ export default function Home() {
         <p className="font-medium ">Popular Searches: <span className="font-light text-sm">Designer</span> <span className="font-light text-sm">Web Developer</span></p>
 
         <h1 className="text-4xl font-playfair">Categories</h1>
-        <div className="grid grid-cols-1 p-4 gap-10 lg:grid-cols-3 md:grid-cols-2 ">
-        <CategoryBox
-          categoryname="Developer"
-          jobsno={12}
+        <div className="w-full px-4 sm:px-12 lg:px-6">
+          <div className="max-w-7xl mx-auto relative">
+          <Carousel className="w-full ">
+  <CarouselContent className="-ml-2 sm:ml-4">
+    {
+      categories.map((category,index)=>(
+           <CarouselItem
+           key={index}
+           className="pl-2 sm:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+           >
+          <CategoryBox
+          categoryname={category.categoryname}
+          jobsno={category.jobsno}
         />
-        <CategoryBox 
-        categoryname="Medicine"
-        jobsno={10}
-        />
-        
-        <CategoryBox
-        categoryname="Hardware"
-        jobsno={5}
-        />
+    </CarouselItem>
+      ))
+    }
+  </CarouselContent>
+  <CarouselPrevious className="left-0 sm:-left-6 lg:-left-12" />
+  <CarouselNext className="right-0 sm:-right-6 lg:-right-12" />
+</Carousel>
+          </div>
         </div>
 
         <h1 className="text-4xl font-medium pt-8 font-playfair">Featured Jobs</h1>

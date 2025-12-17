@@ -132,3 +132,27 @@ export const candidateData = [
       image: ""
     }
   ];
+
+ export const jobs = [
+{
+id: 1,
+title: "Frontend Developer",
+location: "Remote",
+applications: 3,
+candidates: [
+{ id: 1, name: "Ayush Niroula", skill: "React, Next.js", status: "pending" },
+{ id: 2, name: "Sita Sharma", skill: "Vue, Tailwind", status: "shortlisted" },
+{ id: 3, name: "Ramesh KC", skill: "HTML, CSS", status: "rejected" },
+],
+},
+{
+id: 2,
+title: "UI/UX Designer",
+location: "Kathmandu",
+applications: 2,
+candidates: [
+{ id: 4, name: "Bina Thapa", skill: "Figma, UX Research", status: "pending" },
+{ id: 5, name: "Kiran Rai", skill: "Adobe XD", status: "pending" },
+],
+},
+];
