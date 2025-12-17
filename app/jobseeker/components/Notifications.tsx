@@ -68,7 +68,7 @@ const Notifications = () => {
   return (
     <div className="bg-white font-sans border border-gray-200 rounded-2xl shadow-lg p-4 md:p-6 
                     w-full max-w-full md:max-w-md lg:max-w-lg
-                    flex flex-col h-[calc(100vh-2rem)] md:h-auto md:max-h-[600px]">
+                    flex flex-col h-[calc(100vh-2rem)] md:h-auto md:max-h-150">
       
       {/* Header */}
       <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">

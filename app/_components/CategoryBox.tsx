@@ -5,7 +5,7 @@ interface Category{
 }
 const CategoryBox = ({categoryname,jobsno}:Category) => {
   return (
-    <div className='w-full sm:w-[220px] lg:w-[280px] bg-white rounded-2xl border border-gray-200 font-playfair overflow-hidden shadow-sm flex flex-col items-center'>
+    <div className='w-full sm:w-55 lg:w-70 bg-white rounded-2xl border border-gray-200 font-playfair overflow-hidden shadow-sm flex flex-col items-center hover:scale-105 hover:shadow-md'>
       <div className='w-full h-40 sm:h-48 lg:h-58 overflow-hidden'>
         <img src="Accounting.jpg" alt=""  className='object-cover h-full w-full' />
       </div>

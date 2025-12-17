@@ -21,13 +21,20 @@ export default function Home() {
   { categoryname: "Marketing", jobsno: 6 },
   { categoryname: "Finance", jobsno: 4 },
 ];
+const popularSearches = ["Designer","Web Developer"]
 
   return (
     <div className="pt-10 flex flex-col items-center gap-8 bg-[#F1F5F9] w-full font-playfair">
         <h1 className="text-center lg:text-5xl font-medium font-playfair text-xl ">FIND YOUR DREAM JOB TODAY</h1>
         <p className="text-center font-light leading-relaxed ">Discover opportunities that match your skills. Apply easily, connect with employers, and take the next step in your career—all in one platform</p>
         <Searchbar/>
-        <p className="font-medium ">Popular Searches: <span className="font-light text-sm">Designer</span> <span className="font-light text-sm">Web Developer</span></p>
+        <p className="font-medium flex items-center gap-2 ">Popular Searches: {
+          popularSearches.map((item,index)=>(
+            <span key={index} className="text-sm text-blue-800  nav-underline cursor-pointer">
+              {item}
+            </span>
+          ))
+          }</p>
 
         <h1 className="text-4xl font-playfair">Categories</h1>
         <div className="w-full px-4 sm:px-12 lg:px-6">
@@ -64,9 +71,22 @@ export default function Home() {
 
         <h1 className="text-4xl font-bold pt-4 font-playfair">Why choose us ?</h1>
         <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-4 lg:max-auto gap-6">
-          <ChooseUsBox/>
-          <ChooseUsBox/>
-          <ChooseUsBox/>
+          <ChooseUsBox
+          title="Modern Design"
+          image="/why.jpg"
+          description="Our site is inspired with the modern design and structure"
+          />
+          <ChooseUsBox
+          title="Modern Design"
+          image="/why.jpg"
+          description="Our site is inspired with the modern design and structure"
+          />
+          <ChooseUsBox
+          title="Modern Design"
+          image="/why.jpg"
+          description="Our site is inspired with the modern design and structure"
+          />
+       
         </div>
 
         <GetStarted/>

@@ -69,10 +69,10 @@ const handlePageChange =(pageumber:number)=>{
             <h1>Advance Filter</h1>
             <Button>Reset</Button>
           </div>
-          {/* filter section  */}
+        <div className="flex flex-col gap-8">
           <FilterSection
             title="Industry"
-            showLocation={true}
+            showLocation={false}
             options={[
               { label: "All", count: 180 },
               { label: "0-25k", count: 42 },
@@ -103,6 +103,7 @@ const handlePageChange =(pageumber:number)=>{
             ]}
           />
         </div>
+        </div>
         <div className="flex-1">
            <div className="flex justify-between items-center lg:hidden  mb-6">
             <p className="text-sm">
@@ -123,7 +124,7 @@ const handlePageChange =(pageumber:number)=>{
                 <div className="flex flex-col gap-6 mt-6">
                   <FilterSection
                     title="Industry"
-                    showLocation={true}
+                    showLocation={false}
                     options={[
                       { label: "All", count: 180 },
                       { label: "0-25k", count: 42 },
@@ -169,7 +170,7 @@ const handlePageChange =(pageumber:number)=>{
             <div className="flex items-center gap-4">
               <p className="text-sm">Sort by</p>
               <Select>
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-45">
                   <SelectValue placeholder="Latest" />
                 </SelectTrigger>
                 <SelectContent>

@@ -3,7 +3,7 @@ import MyApplicationsPage from './_components/MyApplicationsPage'
 
 const page = () => {
   return (
-    <div>
+    <div className='font-playfair'>
         <MyApplicationsPage/>
     </div>
   )

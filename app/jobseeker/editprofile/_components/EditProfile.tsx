@@ -49,7 +49,7 @@ export default function EditProfile() {
     if (photoInputRef.current) photoInputRef.current.value = "";
   };
 
-  // Handle Resume Upload
+
   const handleResumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -57,7 +57,7 @@ export default function EditProfile() {
         alert("Please upload a PDF file only");
         return;
       }
-      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+      if (file.size > 10 * 1024 * 1024) { 
         alert("Resume size should be less than 10MB");
         return;
       }
@@ -72,7 +72,7 @@ export default function EditProfile() {
     if (resumeInputRef.current) resumeInputRef.current.value = "";
   };
   return (
-    <div className="min-h-screen bg-muted/40 flex justify-center p-4 md:p-8">
+    <div className="min-h-screen bg-muted/40 flex justify-center p-4 md:p-8 font-playfair">
       <div className="w-full max-w-4xl grid gap-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl md:text-3xl font-semibold">Edit Profile</h1>

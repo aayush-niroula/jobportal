@@ -14,7 +14,7 @@ const page = () => {
   const userName = "Alex"; 
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background font-playfair">
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
         {/* Header */}
         <div className="space-y-2">
@@ -47,7 +47,7 @@ const page = () => {
           <div className="space-y-6 lg:col-span-1 lg:mt-15">
             <ProfileCompleteness />
             <Notifications />
-            <div className="p-6 border border-border rounded-2xl shadow-sm w-full lg:min-w-[350px]">
+            <div className="p-6 border border-border rounded-2xl shadow-sm w-full lg:min-w-87.5">
               <h2 className="text-xl sm:text-2xl font-bold font-playfair mb-2">AI Resume Analysis</h2>
               <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
                 Upload your resume and get instant job recommendations powered by AI.

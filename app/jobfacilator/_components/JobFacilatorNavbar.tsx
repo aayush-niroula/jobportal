@@ -21,7 +21,7 @@ const JobFacilatorNavbar = () => {
           <img
             src="/Talent.png"
             alt="logo"
-            className="h-[40px] w-[40px] sm:h-[50px] sm:w-[50px] lg:h-[60px] lg:w-[60px] object-contain"
+            className="h-10 w-10 sm:h-12.5 sm:w-12.5 lg:h-15 lg:w-15 object-contain"
           />
           <h1 className="text-xl font-bold leading-5">
             TALENT <br /> LOOP
@@ -29,11 +29,11 @@ const JobFacilatorNavbar = () => {
         </div>
         <div className="hidden lg:flex flex-1 justify-center">
           <ul className="flex items-center gap-3 md:gap-5 lg:gap-10 text-sm md:text-base lg:text-lg">
-           <Link href={'/jobfacilator'}> <li className="cursor-pointer hover:underline">Dashboard</li></Link>
-           <Link href={'/jobfacilator/myjobs/1'}> <li className="cursor-pointer hover:underline">My Jobs</li></Link>
-        <Link href={'/jobfacilator/candidates'}><li className="cursor-pointer hover:underline">Candidates</li></Link> 
-          <Link href={'/jobseeker/events'}><li className="cursor-pointer hover:underline">Events</li></Link>
-           <Link href={`/jobfacilator/postajob/${id}`}><li className="cursor-pointer hover:underline">Post a New Job</li></Link>
+           <Link href={'/jobfacilator'}> <li className="cursor-pointer nav-underline">Dashboard</li></Link>
+           <Link href={'/jobfacilator/myjobs/1'}> <li className="cursor-pointer nav-underline">My Jobs</li></Link>
+        <Link href={'/jobfacilator/candidates'}><li className="cursor-pointer nav-underline">Candidates</li></Link> 
+          <Link href={'/jobseeker/events'}><li className="cursor-pointer nav-underline">Events</li></Link>
+           <Link href={`/jobfacilator/postajob/${id}`}><li className="cursor-pointer nav-underline">Post a New Job</li></Link>
 
            
            
@@ -62,29 +62,29 @@ const JobFacilatorNavbar = () => {
       </div>
 
       {/* MOBILE DROPDOWN MENU */}
-      {open && (
-        <div className="lg:hidden mt-3 w-full bg-[#F8F9FA] shadow-md rounded-xl p-4 flex flex-col gap-4 text-base z-50">
-          <Link href="/">
-            <span className="cursor-pointer hover:underline">Dashboard</span>
+          {open && (
+        <div className="lg:hidden mt-3 w-full bg-[#F8F9FA] shadow-md rounded-xl p-4 flex flex-col items-center gap-4 text-base z-50">
+          <Link href="/jobfacilator">
+            <span className="cursor-pointer nav-underline">Dashboard</span>
           </Link>
-
-          <span className="cursor-pointer hover:underline">My Jobs</span>
-
-          <span className="cursor-pointer hover:underline">Candidates</span>
-
-          <Link href="/">
-            <span className="cursor-pointer hover:underline">Events</span>
+          <Link href="/jobfacilator/myjobs/1">
+            <span className="cursor-pointer nav-underline">My Jobs</span>
           </Link>
-
-          <Link href="/">
-            <span className="cursor-pointer hover:underline">
-              Post a new Job
-            </span>
+          <Link href="/jobfacilator/candidates">
+            <span className="cursor-pointer nav-underline">Candidates</span>
           </Link>
-
-          <Button className="w-full text-lg py-3">Register / Login</Button>
+          <Link href="/jobseeker/events">
+            <span className="cursor-pointer nav-underline">Events</span>
+          </Link>
+          <Link href={`/jobfacilator/postajob/${id}`}>
+            <span className="cursor-pointer nav-underline">Post a New Job</span>
+          </Link>
+          <Button className="w-full text-lg py-3" onClick={() => router.push('/')}>
+            Logout
+          </Button>
         </div>
       )}
+
     </nav>
   );
 };

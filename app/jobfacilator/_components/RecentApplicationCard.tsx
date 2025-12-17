@@ -34,8 +34,8 @@ const RecentApplicationCard = ({name,appliedfor,appliedtime}:RecentApplication) 
         </div>
         <div className='flex flex-col items-center justify-center sm:flex-row lg:flex-col gap-3 w-full sm:w-auto'>
            
-            <Button className='px-15 bg-green-800' >Shortlist</Button>
-            <Button className='px-15' variant={'destructive'}>Reject</Button>
+            <Button className='px-15 w-32 bg-green-800' >Shortlist</Button>
+            <Button className='px-15 w-32' variant={'destructive'}>Reject</Button>
         </div>
 
     </div>

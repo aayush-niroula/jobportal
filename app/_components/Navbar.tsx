@@ -1,75 +1,94 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
-import { Cross, Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+
+  const navLinks = [
+    { name: "HOME", href: "/" },
+    { name: "EVENTS", href: "/jobseeker/events" },
+    { name: "UPLOAD CV", href: "/uploadcv" },
+    { name: "FIND JOBS", href: "/findjobs" },
+  ];
+
   return (
-    <div className="relative flex justify-between max-h-[147px] w-full  bg-[#F8F9FA] text-black ">
-      <div className="flex gap-4 items-center w-1/3 ">
-        <img
-          src="Talent.png"
-          alt="logo"
-          className="object-contain h-full bg-transparent "
-        />
-        <h1 className="playfair font-bold ">TALENT LOOP</h1>
+    <nav className="w-full bg-[#F8F9FA] text-black shadow-md font-playfair">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 md:h-20">
+          {/* Logo + Title */}
+          <div className="flex items-center gap-3 shrink-0">
+            <img
+              src="/Talent.png"
+              alt="logo"
+              className="h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 object-contain"
+            />
+            <h1 className="font-bold text-lg sm:text-xl md:text-2xl whitespace-nowrap ">
+              TALENT LOOP
+            </h1>
+          </div>
+
+          {/* Desktop Navigation - Fixed for medium & large screens */}
+          <div className="hidden md:flex items-center justify-center flex-1">
+            <ul className="flex gap-6 lg:gap-10 items-center">
+              {navLinks.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className="font-semibold text-lg lg:text-xl nav-underline whitespace-nowrap"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+         
+          <div className="hidden md:block shrink-0">
+            <Button className="text-base lg:text-xl px-6 py-3">
+              Register/Login
+            </Button>
+          </div>
+
+         
+          <button
+            className="md:hidden p-2 rounded-md hover:bg-gray-200 transition"
+            onClick={() => setOpen(!open)}
+            aria-label="Toggle menu"
+          >
+            {open ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
       </div>
 
-      <ul className="hidden md:flex flex-1 gap-10 items-center justify-center absolute left-1/2 -translate-x-1/2 top-1/3 ">
-        <Link href={"/"}>
-          <li className="playfair font-semibold text-xl cursor-pointer hover:underline ">
-            HOME
-          </li>
-        </Link>
-        <li className="playfair font-semibold text-xl cursor-pointer hover:underline">
-          EVENTS
-        </li>
-        <li className="playfair font-semibold text-xl cursor-pointer hover:underline">
-          UPLOAD CV
-        </li>
-        <Link href={"/findjobs"}>
-          
-          <li className="playfair font-semibold text-xl cursor-pointer hover:underline">
-            FIND JOBS
-          </li>
-        </Link>
-      </ul>
-      <Button className="hidden md:block m-auto mr-20 text-xl pb-4">
-        Register/Login
-      </Button>
-
-      <button
-        className="md:hidden flex items-cente w-1/3"
-        onClick={() => setOpen(!open)}
-      >
-        {open ? <Cross /> : <Menu />}
-      </button>
+      {/* Mobile Menu */}
       {open && (
-        <div className="absolute top-22 left-0 w-full bg-[#F8F9FA] shadow-lg py-6 flex flex-col gap-6 items-center z-50 list-none">
-          <Link href={"/"}>
-            <li className="playfair font-semibold text-xl cursor-pointer hover:underline ">
-              HOME
-            </li>
-          </Link>
-
-          <li className="playfair text-xl font-semibold cursor-pointer hover:underline">
-            EVENTS
-          </li>
-          <li className="playfair text-xl font-semibold cursor-pointer hover:underline">
-            UPLOAD CV
-          </li>
-          <Link href={"/findjobs"}>
-           
-            <li className="playfair font-semibold text-xl cursor-pointer hover:underline">
-              FIND JOBS
-            </li>
-          </Link>
-          <Button className="p-4 text-lg">Register/Login</Button>
+        <div className="md:hidden bg-[#F8F9FA] border-t border-gray-200">
+          <div className="px-4 pt-5 pb-8 flex flex-col gap-5 items-center text-center">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="font-semibold text-lg sm:text-xl hover:underline whitespace-nowrap"
+              >
+                {link.name}
+              </Link>
+            ))}
+            <Button
+              className="w-11/12 text-lg py-6"
+              onClick={() => setOpen(false)}
+            >
+              Register/Login
+            </Button>
+          </div>
         </div>
       )}
-    </div>
+    </nav>
   );
 };
 

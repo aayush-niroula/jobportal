@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -115,6 +113,17 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.553 0.013 58.071);
 }
+@layer components {
+  .nav-underline {
+    @apply relative inline-block whitespace-nowrap
+           after:absolute after:left-0 after:-bottom-1
+           after:h-0.5 after:w-full after:bg-current
+           after:scale-x-0 after:origin-left
+           after:transition-transform after:duration-300
+           hover:after:scale-x-100;
+  }
+}
+
 
 @layer base {
   * {

@@ -15,7 +15,7 @@ type JobPostCard={
 const JobPostCard = ({title,company,location,salary,type,posted}:JobPostCard) => {
   const router = useRouter()
   return (
-    <div className='border border-gray-200 rounded-2xl bg-gradient-to-br from-white to-slate-50 p-5 w-full flex flex-col h-full shadow-sm hover:shadow-md transition-shadow'>
+    <div className='border border-gray-200 rounded-2xl bg-linear-to-br from-white to-slate-50 p-5 w-full flex flex-col h-full shadow-sm hover:shadow-md transition-shadow'>
        <div className='flex items-center gap-4'>
         <img src="Logo.jpg" alt="" className='object-contain h-16 w-20 rounded-lg'/>
         <div className='flex flex-col gap-2'>

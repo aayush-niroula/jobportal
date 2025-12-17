@@ -3,7 +3,7 @@ import EditCompanyProfile from '../_components/EditCompanyProfile'
 
 const page = () => {
   return (
-    <div><EditCompanyProfile/></div>
+    <div className='font-playfair'><EditCompanyProfile/></div>
   )
 }
 

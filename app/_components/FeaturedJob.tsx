@@ -1,17 +1,25 @@
 "use client"
 import { Button } from "@/components/ui/button"
+
 import { Briefcase, CircleDollarSign, Clock, MapPin } from "lucide-react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 
 const FeaturedJob = () => {
   const router = useRouter()
   return (
-    <div className=" w-full max-w-[1156px]
+    <div className=" w-full
       bg-white border border-gray-200 rounded-2xl
       p-4 sm:p-6 md:p-8
-      flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-8
+      flex flex-col lg:flex-row items-center  gap-4 lg:gap-8
       font-playfair ">
-      <img src="Logo.jpg" alt="" className="object-contain rounded-lg max-w-[200px] h-32 lg:h-40" />
+    <Image
+  src="/Logo.jpg"
+  alt="Company Logo"
+  width={160}
+  height={160}
+  className="rounded-lg object-contain w-28 h-28 lg:w-32 lg:h-32  md:w-44 md:h-44"
+/>
       <div className="flex-1 flex flex-col gap-4">
         <h1 className="text-lg sm:text-xl md:text-2xl ">Frontend Developer</h1>
         <div className=" flex flex-wrap gap-4 text-gray-600 text-sm sm:text-base">
