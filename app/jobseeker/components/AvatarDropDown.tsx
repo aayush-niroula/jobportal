@@ -15,10 +15,10 @@ const AvatarDropDown = () => {
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48">
-        <DropdownMenuItem onClick={() => router.push("/jobseeker/editprofile")}>
+        <DropdownMenuItem onClick={() => router.push("/jobfacilator/editprofile")}>
           <User className="mr-2" /> Edit Profile
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push("/jobseeker/settings")}>
+        <DropdownMenuItem onClick={() => router.push("/jobfacilator/editprofile")}>
           <Settings className="mr-2" /> Settings
         </DropdownMenuItem>
       </DropdownMenuContent>

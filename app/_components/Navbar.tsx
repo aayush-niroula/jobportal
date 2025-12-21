@@ -3,10 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const router = useRouter()
 
   const navLinks = [
     { name: "HOME", href: "/" },
@@ -49,7 +51,7 @@ const Navbar = () => {
 
          
           <div className="hidden md:block shrink-0">
-            <Button className="text-base lg:text-xl px-6 py-3">
+            <Button onClick={()=>router.push('/register')} className="text-base lg:text-xl px-6 py-3">
               Register/Login
             </Button>
           </div>

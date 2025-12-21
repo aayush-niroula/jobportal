@@ -18,8 +18,63 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+
+type Userdata ={
+  name: string;
+  email: string;
+  phone?: string;
+  password: string;
+  role_name: string;
+}
 
 export default function RegisterPage() {
+  const [name,setName]= useState("")
+  const [email,setEmail]=useState("")
+  const [phone,setPhone]=useState("")
+  const [password,setPassword]=useState("")
+  const [confirmpassword,setConfirmPassword]=useState("")
+  const [role_name,setRoleName]=useState('')
+ const router = useRouter()
+
+  async function registerUser(userData:Userdata) {
+    const res = await fetch("/api/auth/register",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(userData)
+    })
+
+    if(!res.ok) throw new Error("failed to register")
+
+    return res.json()
+  }
+
+  const handleRegister = async (e: React.FormEvent)=>{
+    e.preventDefault();
+   if(!name || !email || !phone || !password || !confirmpassword){
+    return toast.error("All fields are required")
+   }
+   if(password !== confirmpassword){
+    return toast.message("Password and confirnm password doesnot match")
+   }
+   if(!role_name){
+    return toast.message("please select the role_name")
+  }
+  const data = {name,email,phone,password,role_name}
+try {
+  
+  const res =await registerUser(data)
+   toast.success("User registered successfully")
+    router.push('/login')
+   
+  
+} catch (error) {
+  
+}
+
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
       <Card className="w-full max-w-md">
@@ -42,6 +97,8 @@ export default function RegisterPage() {
                 name="name"
                 type="text"
                 placeholder="John Doe"
+                value={name}
+                onChange={(e)=>setName(e.target.value)}
                 required
               />
             </div>
@@ -55,6 +112,8 @@ export default function RegisterPage() {
                 type="email"
                 placeholder="you@example.com"
                 required
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
               />
             </div>
 
@@ -65,7 +124,9 @@ export default function RegisterPage() {
                 id="phone"
                 name="phone"
                 type="tel"
-                placeholder="+1234567890"
+                placeholder=""
+                value={phone}
+                onChange={(e)=>setPhone(e.target.value)}
               />
             </div>
 
@@ -77,6 +138,8 @@ export default function RegisterPage() {
                 name="password"
                 type="password"
                 required
+                value={password}
+                onChange={(e)=>setPassword(e.target.value)}
               />
               <p className="text-sm text-muted-foreground">
                 Must be at least 8 characters.
@@ -91,26 +154,32 @@ export default function RegisterPage() {
                 name="confirm_password"
                 type="password"
                 required
+                value={confirmpassword}
+                onChange={(e)=>setConfirmPassword(e.target.value)}
               />
             </div>
 
             {/* Role */}
             <div className="space-y-2">
               <Label htmlFor="role">I am registering as</Label>
-              <Select name="role" required>
+              <Select
+               name="role"
+               value={role_name}
+               onValueChange={(value)=>setRoleName(value)}
+                required>
                 <SelectTrigger id="role">
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="seeker">Job Seeker</SelectItem>
-                  <SelectItem value="facilitator">
-                    Job Facilitator / Employer
+                  <SelectItem value="JobSeeker">JobSeeker</SelectItem>
+                  <SelectItem value="JobFacilitator">
+                    JobFacilitator
                   </SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button onClick={handleRegister} type="submit" className="w-full">
               Register
             </Button>
           </form>

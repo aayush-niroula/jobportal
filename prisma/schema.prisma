@@ -30,7 +30,6 @@ model User {
 model Role {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   role_name       String   @unique
-
   users           User[]
   userRoles       UserRoles[]
   facilitators    JobFacilitator[]
@@ -58,11 +57,21 @@ model JobFacilitator {
   role_id         String   @db.ObjectId
   created_at      DateTime @default(now())
   updated_at      DateTime @updatedAt
-
   user            User     @relation(fields: [user_id], references: [id])
   role            Role     @relation(fields: [role_id], references: [id])
   verification    Facilitator_verification?
   jobs            Jobs[]
+  company_description String
+  website_link    String
+  location        String
+  company_location_link String
+  industry          String?
+  department         String?
+  company_size        String?    
+  founded_year        Int?
+  gallery_images    String[]
+  features          String[]
+ 
 
   @@map("Job_facilitator")
 }

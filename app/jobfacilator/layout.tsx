@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import JobFacilatorNavbar from "./_components/JobFacilatorNavbar";
+import NavbarGlobal from "../Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,7 +25,7 @@ export default function JobFacilatorLayout({
 }) {
   return (
     <main className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased`}>
-      <JobFacilatorNavbar />
+      <NavbarGlobal />
       {children}
     </main>
   );

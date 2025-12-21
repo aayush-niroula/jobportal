@@ -11,7 +11,7 @@ const ApplyCard = () => {
       {/* Top Row: Logo, Job Info, Badge */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-4">
         {/* Company Logo */}
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <img
             src="/Logo.jpg"
             alt="Leapfrog Inc logo"

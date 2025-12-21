@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuthStore } from "@/app/store/useAuthStore";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,8 +19,65 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+
+type LoginData ={
+  email:string
+  password:string
+  name?:string
+  role_name:string
+}
 
 export default function Login() {
+  const [email,setEmail]=useState("")
+  const [password,setPassword]= useState("")
+  const [confirmpassword,setConfirmPassword]=useState("")
+  const [role_name,setRoleName] = useState("")
+  const setUser = useAuthStore((state)=>state.setUser)
+  const router = useRouter()
+
+  async function login(userData:LoginData) {
+    const res = await fetch("/api/auth/login",{
+      method:"POST",
+      headers:{"ContentType":"application/json"},
+      body:JSON.stringify(userData)
+    })
+    if(!res.ok) throw new Error("failed to login")
+    return res.json()
+    
+  }
+  const handleLogin =async(e:React.FormEvent)=>{
+    e.preventDefault();
+    if(!email ||!password || !confirmpassword ||  !role_name){
+      toast.error("All fields are required");     
+    }
+    if(password !== confirmpassword){
+      toast.error("Password and confirm password donot match")
+    }
+     const data = {email,password,role_name}
+     try {
+      const res = await login(data)
+      setUser(res.user)
+
+      if(res.user.role ==="JobFacilitator"){
+        router.push('/jobfacilator')
+      }
+      else if(res.user.role==="JobSeeker"){
+        router.push('/jobseeker/Dashboard')
+      }
+      else{
+        router.push('/')
+      }
+     toast.success('User logged in successfully')
+   
+
+     } catch (error) {
+      console.log(error);
+      
+     }
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
       <Card className="w-full max-w-md">
@@ -33,7 +91,7 @@ export default function Login() {
         </CardHeader>
 
         <CardContent>
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleLogin}>
 
             {/* Email */}
             <div className="space-y-2">
@@ -44,6 +102,8 @@ export default function Login() {
                 type="email"
                 placeholder="you@example.com"
                 required
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
               />
             </div>
 
@@ -56,6 +116,8 @@ export default function Login() {
                 name="password"
                 type="password"
                 required
+                value={password}
+                onChange={(e)=>setPassword(e.target.value)}
               />
               <p className="text-sm text-muted-foreground">
                 Must be at least 8 characters.
@@ -70,20 +132,27 @@ export default function Login() {
                 name="confirm_password"
                 type="password"
                 required
+                value={confirmpassword}
+                onChange={(e)=>setConfirmPassword(e.target.value)}
               />
             </div>
 
             {/* Role */}
             <div className="space-y-2">
               <Label htmlFor="role">I am logging in as</Label>
-              <Select name="role" required>
+              <Select
+               name="role"
+                required
+                onValueChange={(value)=>setRoleName(value)}
+                value={role_name}
+                >
                 <SelectTrigger id="role">
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="seeker">Job Seeker</SelectItem>
-                  <SelectItem value="facilitator">
-                    Job Facilitator / Employer
+                  <SelectItem value="JobSeeker">JobSeeker</SelectItem>
+                  <SelectItem value="JobFacilitator">
+                    JobFacilitator
                   </SelectItem>
                 </SelectContent>
               </Select>

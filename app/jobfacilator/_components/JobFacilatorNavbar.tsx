@@ -2,6 +2,7 @@
 
 import AvatarDropDown from "@/app/jobseeker/components/AvatarDropDown";
 import Notification from "@/app/jobseeker/components/Notfication";
+import { useAuthStore } from "@/app/store/useAuthStore";
 import { Button } from "@/components/ui/button";
 import { Bell, Menu, X } from "lucide-react";
 import Link from "next/link";
@@ -13,7 +14,14 @@ const JobFacilatorNavbar = () => {
   const [open, setOpen] = useState(false);
   const id = "1"
   const router = useRouter()
-
+  const user= useAuthStore((state)=>state.user)
+  const logout = useAuthStore((state)=>state.logout)
+  console.log(user);
+  
+const handleLogout = ()=>{
+logout()
+router.push('/')
+}
   return (
     <nav className="w-full bg-[#F8F9FA] text-black font-playfair px-6 py-4 shadow-sm relative">    
       <div className="flex items-center justify-between lg:justify-center">
@@ -46,10 +54,10 @@ const JobFacilatorNavbar = () => {
              <Notification />
             <AvatarDropDown/>
               <h1 className="text-xl font-medium whitespace-nowrap">
-                Company Name
+                {user?.name}
               </h1>
             </div>
-          <Button onClick={()=>router.push('/')} className="text-lg px-6">Logout</Button>
+          <Button onClick={handleLogout} className="text-lg px-6">Logout</Button>
         </div>
 
 

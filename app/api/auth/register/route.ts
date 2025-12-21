@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
-
 /**
  * @swagger
  * /api/auth/register:
@@ -95,7 +94,8 @@ import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, password, phone, role_name } = await req.json();
+     const body = await req.json();
+    const { name, email, password, phone, role_name } = body
 
     if (!name || !email || !password || !role_name) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -109,9 +109,8 @@ export async function POST(req: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const role = await prisma.role.findUnique({ where: { role_name } });
+    const role = await prisma.role.findUnique({ where: { role_name:role_name } });
     if (!role) return NextResponse.json({ error: "Role not found" }, { status: 404 });
-
     const user = await prisma.user.create({
       data: {
         name,

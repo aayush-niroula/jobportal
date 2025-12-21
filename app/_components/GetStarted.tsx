@@ -11,8 +11,8 @@ const GetStarted = () => {
         <p className='text-sm font-light text-center'>Your gateway to opportunities and the right talent</p>
 
         <div className='lg:flex-row md:flex-row flex flex-col gap-4 justify-center items-center mt-10'>
-          <Button className='lg:p-10 md:p-8 p-6' onClick={()=>router.push('/jobseeker/Dashboard')}>SIGNUP AS A JOBSEEKER</Button>
-          <Button className='lg:p-10 md:p-8 p-6 ' onClick={()=>router.push('/jobfacilator')} variant={'outline'}>POST AS A FACILATOR</Button>
+          <Button className='lg:p-10 md:p-8 p-6' onClick={()=>router.push('/register')}>SIGNUP AS A JOBSEEKER</Button>
+          <Button className='lg:p-10 md:p-8 p-6 ' onClick={()=>router.push('/register')} variant={'outline'}>POST AS A FACILATOR</Button>
         </div>
     </div>
   )

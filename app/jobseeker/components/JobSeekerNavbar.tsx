@@ -7,16 +7,21 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Notification from "./Notfication";
 import AvatarDropDown from "./AvatarDropDown";
+import { useAuthStore } from "@/app/store/useAuthStore";
 
 const JobSeekerNavbar = () => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const user = useAuthStore((state)=>state.user)
+   const logout = useAuthStore((state)=>state.logout)
+const handleLogout = ()=>{
+logout()
+router.push('/')
+}
 
   return (
     <nav className="w-full bg-[#F8F9FA] text-black font-playfair px-6 py-4 shadow-md">
       <div className="flex justify-between items-center w-full">
-
-     
         <div className="flex items-center gap-3">
           <img
             src="/Talent.png"
@@ -47,10 +52,10 @@ const JobSeekerNavbar = () => {
             <AvatarDropDown/>
           </div>
 
-          <h1 className="text-xl font-medium">Username</h1>
+          <h1 className="text-xl font-medium">{user?.name}</h1>
         </ul>
 
-        <Button onClick={() => router.push("/")} className="hidden md:block">
+        <Button onClick={handleLogout} className="hidden md:block">
           Logout
         </Button>
 
