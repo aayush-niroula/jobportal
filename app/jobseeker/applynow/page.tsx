@@ -3,7 +3,7 @@ import ApplyNow from '../components/ApplyNow'
 
 const page = () => {
   return (
-    <div>
+    <div className='max-w-7xl mx-auto'>
         <ApplyNow/>
     </div>
   )

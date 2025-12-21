@@ -18,7 +18,7 @@ const ApplyNow = () => {
  
 
   return (
-    <div className="bg-[#F1F5F9] font-playfair px-4 sm:px-6 lg:px-10 py-10 space-y-10 font-playfair">
+    <div className="font-playfair px-4 sm:px-6 lg:px-10 py-10 space-y-10 font-playfair">
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 justify-center">
         {/* Left Column */}
         <div className="flex flex-col gap-6 w-full lg:w-2/3">

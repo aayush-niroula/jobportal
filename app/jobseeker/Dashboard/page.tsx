@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import RecentApplication from "../components/RecentApplication";
 import Footer from "@/app/_components/Footer";
 import { useRouter } from "next/navigation";
+import BookmarkedJobs from "../components/BookmarkedJobs";
 
 const page = () => {
   const router = useRouter();
@@ -27,7 +28,7 @@ const page = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 bg-card rounded-lg border">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 p-4 sm:p-6 bg-card rounded-lg border">
           <Information title="Applications" number={20} lastline="+2 this week" />
           <Information title="In Review" number={20} lastline="pending review" />
           <Information title="Saved Jobs" number={8} lastline="bookmarked" />
@@ -42,6 +43,8 @@ const page = () => {
             {Array.from({ length: 3 }).map((_, i) => (
               <ApplyCard key={i} />
             ))}
+
+              <BookmarkedJobs/>
           </div>
           {/* Right: Sidebar */}
           <div className="space-y-6 lg:col-span-1 lg:mt-15">
