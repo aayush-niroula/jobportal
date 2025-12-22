@@ -127,13 +127,23 @@ model Jobs {
   time            DateTime? 
   facilitator_id  String   @db.ObjectId
   category_id     String   @db.ObjectId
-
   facilitator     JobFacilitator     @relation(fields: [facilitator_id], references: [id])
   category        Job_Category       @relation(fields: [category_id], references: [id])
-
   applications    Applications[]
   recommendations Recommendations[]
   expirationLog   Job_expiration_log[]
+  responsibilites String[]
+  requirements    String[]
+  preferred_qualifications String[]
+  job_type        JobType
+  work_mode       WorkMode
+  expericence_level ExperienceLevel
+  salary_min         Int?
+  salary_max         Int?
+  salary_type        SalaryType
+  benefits           String[]
+  skills             String[]
+  
 
   @@map("Jobs")
 }
@@ -186,4 +196,30 @@ model Job_expiration_log {
   job         Jobs     @relation(fields: [job_id], references: [id])
 
   @@map("Job_expiration_log")
+}
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERN
+  FREELANCE
+}
+
+enum WorkMode {
+  ONSITE
+  REMOTE
+  HYBRID
+}
+
+enum ExperienceLevel {
+  ENTRY
+  MID
+  SENIOR
+  LEAD
+}
+
+enum SalaryType {
+  YEARLY
+  MONTHLY
+  HOURLY
 }
