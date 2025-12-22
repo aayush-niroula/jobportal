@@ -132,12 +132,12 @@ model Jobs {
   applications    Applications[]
   recommendations Recommendations[]
   expirationLog   Job_expiration_log[]
-  responsibilites String[]
+ responsibilities String[]
   requirements    String[]
   preferred_qualifications String[]
   job_type        JobType
   work_mode       WorkMode
-  expericence_level ExperienceLevel
+  experience_level ExperienceLevel
   salary_min         Int?
   salary_max         Int?
   salary_type        SalaryType
@@ -156,7 +156,6 @@ model Applications {
   applied_at      DateTime  @default(now())
   reviewed_at     DateTime?
   message         String?
-
   job             Jobs      @relation(fields: [job_id], references: [id])
   seeker          JobSeeker @relation(fields: [jobseeker_id], references: [id])
 
