@@ -121,6 +121,35 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    if(role_name==="JobSeeker"){
+      await prisma.jobSeeker.create({
+     data: {
+      user_id: user.id,
+      role_id: role.id,
+      location: "",
+      education_level: "",
+      analyzer_vector: "",
+      resume_url: "",
+    },
+  });
+    }
+    if(role_name==="JobFacilitator"){
+      await prisma.jobFacilitator.create({
+        data:{
+          user_id: user.id,
+          role_id: role.id,
+          company_name: "",
+          company_email: email,
+          company_description: "",
+          website_link: "",
+          location: "",
+          company_location_link: "",
+          gallery_images: [],
+          features: [],
+        }
+      })
+    }
+
     return NextResponse.json({ message: "User registered", userId: user.id }, { status: 201 });
   } catch (err) {
     console.error(err);

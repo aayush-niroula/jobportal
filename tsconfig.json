@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "app/jobseeker/events/_components/EventLearnMore.tsx"  ],
+, "app/jobseeker/events/_components/EventLearnMore.tsx", "prisma/seed.js"  ],
   "exclude": ["node_modules"]
 }

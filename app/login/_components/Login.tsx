@@ -41,7 +41,9 @@ export default function Login() {
   async function login(userData:LoginData) {
     const res = await fetch("/api/auth/login",{
       method:"POST",
-      headers:{"ContentType":"application/json"},
+      headers: {
+        "ContentType":"application/json",
+       },
       body:JSON.stringify(userData)
     })
     if(!res.ok) throw new Error("failed to login")
@@ -59,7 +61,9 @@ export default function Login() {
      const data = {email,password,role_name}
      try {
       const res = await login(data)
-      setUser(res.user)
+      setUser({...res.user,
+       token:res.token
+      })
 
       if(res.user.role ==="JobFacilitator"){
         router.push('/jobfacilator')

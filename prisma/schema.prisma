@@ -2,7 +2,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
 }
 
 datasource db {
@@ -90,28 +89,66 @@ model Facilitator_verification {
 }
 
 model JobSeeker {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  user_id          String   @unique @db.ObjectId
-  role_id          String   @db.ObjectId
-  location         String?
-  education_level  String?
-  analyzer_vector  String?  
-  resume_url       String?
-
-  user             User      @relation(fields: [user_id], references: [id])
-  role             Role      @relation(fields: [role_id], references: [id])
-  applications     Applications[]
-  recommendations  Recommendations[]
+  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
+  user_id               String   @unique @db.ObjectId
+  role_id               String   @db.ObjectId
+  location              String?
+  experience_level      ExperienceLevel?
+  profile_image         String?
+  professional_summary  String?
+  technical_skills      String[]
+  soft_skills           String[]
+  availability          String?
+  expected_salary_min   Int?
+  expected_salary_max   Int?
+  job_type              JobType?
+  work_mode             WorkMode?
+  resume_url            String?
+  linkedin_url          String?
+  portfolio_url         String?
+  analyzer_vector       String?
+  user                  User @relation(fields: [user_id], references: [id])
+  role                  Role @relation(fields: [role_id], references: [id])
+  experiences           WorkExperience[]
+  educations            Education[]
+  applications          Applications[]
+  recommendations       Recommendations[]
 
   @@map("Job_Seeker")
 }
 
+model WorkExperience {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  jobseeker_id    String   @db.ObjectId
+  role            String
+  company         String
+  start_date      DateTime
+  end_date        DateTime?
+  points          String[]
+  jobseeker       JobSeeker @relation(fields: [jobseeker_id], references: [id])
+
+  @@map("Work_Experience")
+}
+
+model Education {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  jobseeker_id    String   @db.ObjectId
+  degree          String
+  institution     String
+  start_year      Int
+  end_year        Int?
+
+  jobseeker       JobSeeker @relation(fields: [jobseeker_id], references: [id])
+
+  @@map("Education")
+}
+
+
 model Job_Category {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  category_name String
+  category_name String   @unique
   description  String?
   created_at   DateTime @default(now())
-
   jobs         Jobs[]
 
   @@map("Job_Category")
@@ -120,7 +157,7 @@ model Job_Category {
 model Jobs {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   job_name        String
-  description     String
+  description     String[]
   location        String
   salary          String?
   deadline        DateTime?

@@ -53,7 +53,7 @@ export default function RegisterPage() {
 
   const handleRegister = async (e: React.FormEvent)=>{
     e.preventDefault();
-   if(!name || !email || !phone || !password || !confirmpassword){
+   if(!name || !email || !password || !confirmpassword){
     return toast.error("All fields are required")
    }
    if(password !== confirmpassword){

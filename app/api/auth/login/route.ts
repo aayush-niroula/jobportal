@@ -15,10 +15,13 @@ export async function POST(req:NextRequest){
 
     const user = await prisma.user.findUnique({
         where:{email:email},
-       include:{role:true}
+        include:{
+        role:true,
+        facilitator:true,
+        seeker:true
+    }
     })
-    
-    
+     
     if(!user){
         return NextResponse.json({error:"User not found"})
     }
@@ -40,7 +43,7 @@ export async function POST(req:NextRequest){
         expiresIn:'1h'
      })
     
-    return NextResponse.json({token,user:{id:user.id,email:user.email,name:user.name,role:user.role.role_name}})
+    return NextResponse.json({token,user:{id:user.id,email:user.email,name:user.name,role:user.role.role_name,facilitatorId:user.facilitator?.id || null, seekerId:user.seeker?.id}})
 
 
 

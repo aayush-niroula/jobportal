@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FilterSection from "@/app/_components/FilterSection";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,25 +24,37 @@ import CandidateCard from "./_component/CandidateCard";
 import Footer from "@/app/_components/Footer";
 import { candidateData } from "@/lib/candidateData";
 import { ChevronLeft, ChevronRight, Filter } from "lucide-react";
+import { useAuthStore } from "@/app/store/useAuthStore";
 const page = () => {
   const [currentPage,setCurrentPage]= useState(1)
 
+  const [candidates,setCandidates]= useState<any[]>([])
   const [showFilters, setShowFilters] = useState(false);
   const candidatesPerPage = 4;
   const indexOfLastCandidate = currentPage * candidatesPerPage;
   const indexOfFirstCandidate = indexOfLastCandidate - candidatesPerPage;
-  const currentCandidates = candidateData.slice(indexOfFirstCandidate, indexOfLastCandidate);
-  const totalPages = Math.ceil(candidateData.length / candidatesPerPage);
+  const currentCandidates = candidates.slice(indexOfFirstCandidate, indexOfLastCandidate);
+  const totalPages = Math.ceil(candidates.length / candidatesPerPage);
+  const user = useAuthStore(state=>state.user)
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    // Scroll to top of candidates section
     const candidateSection = document.querySelector('.candidate-list-section');
     if (candidateSection) {
       candidateSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
+  useEffect(()=>{
+    const fetchAllCandidates = async() =>{
+      const res = await fetch('/api/jobseeker')
+      const data = await res.json()
+      console.log(data);
+      setCandidates(data.candidates)
+      
+    }
+    fetchAllCandidates()
+  },[user?.id])
   const getPageNumbers = () => {
     const pageNumbers = [];
     const maxVisiblePages = 5;
@@ -269,18 +281,19 @@ const page = () => {
 
           {/* Candidate List */}
           <div className="space-y-4 md:space-y-6">
-            {currentCandidates.map((candidate,index) => (
+            {candidates.map((candidate,index) => (
               <CandidateCard
-                key={candidate.name + index}
-                name={candidate.name}
+                key={candidate.user.name+ index}
+                id={candidate.id}
+                name={candidate.user.name}
                   role={candidate.role}
                   location={candidate.location}
-                  education={candidate.education}
-                  description={candidate.description}
-                  skill1={candidate.skill1}
-                  skill2={candidate.skill2}
-                  skill3={candidate.skill3}
-                  image={candidate.image}
+                  education={candidate.educations[0]?.degree}
+                  description={candidate.professional_summary}
+                  skill1={candidate.technical_skills[0]}
+                  skill2={candidate.technical_skills[1]}
+                  skill3={candidate.soft_skills[0]}
+                  image={candidate.profile_image}
 
                
               />

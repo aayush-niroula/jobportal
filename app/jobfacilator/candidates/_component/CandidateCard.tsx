@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 
 type CandidateCardType={
+    id:string
     name:string,
     location:string,
     education:string,
@@ -13,12 +14,12 @@ type CandidateCardType={
     skill3:string,
     image:string
 }
-const CandidateCard = ({name,location,education,description,role,skill1,skill2,skill3,image}:CandidateCardType) => {
+const CandidateCard = ({name,location,education,description,role,skill1,skill2,skill3,image,id}:CandidateCardType) => {
     const router = useRouter()
   return (
     <div className="w-full bg-white font-playfair p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-200 flex flex-col lg:flex-row gap-6">
         <div className="flex justify-center lg:justify-start">
-            <img src={"/goat.jpg"} alt="candidate-image"  className="w-28 h-28 sm:w-36 sm:h-36 lg:w-48 lg:h-48 rounded-full object-cover"/>
+            <img src={image || "/goat.jpg"} alt="candidate-image"  className="w-28 h-28 sm:w-36 sm:h-36 lg:w-48 lg:h-48 rounded-full object-cover"/>
         </div>
         <div className="flex flex-col gap-2 flex-1">
             <h1 className="font-bold text-xl">{name}</h1>
@@ -45,7 +46,7 @@ const CandidateCard = ({name,location,education,description,role,skill1,skill2,s
           <Button
             className="w-full sm:w-auto"
             onClick={() =>
-              router.push("/jobfacilator/candidates/candidateprofile")
+              router.push(`/jobfacilator/candidates/candidateprofile/${id}`)
             }
           >
             View Profile

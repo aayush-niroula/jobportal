@@ -1,32 +1,33 @@
 import { Circle } from "lucide-react";
 import React from "react";
 
-const experiences = [
-  {
-    role: "Senior Software Developer",
-    company: "Tech Corp Inc",
-    period: "2022 – 2024",
-    points: [
-      "Led development of key features for enterprise web applications",
-      "Collaborated with cross-functional teams to deliver projects on time",
-      "Mentored junior developers and conducted code reviews",
-      "Implemented CI/CD pipelines and improved deployment processes",
-    ],
-  },
-  {
-    role: "Senior Software Developer",
-    company: "Tech Corp Inc",
-    period: "2020 – 2022",
-    points: [
-      "Designed scalable backend services",
-      "Improved application performance by 30%",
-      "Worked closely with product managers",
-      "Maintained deployment pipelines",
-    ],
-  },
-];
+export interface WorkExperienceItem {
+  role: string;
+  company: string;
+  period: string;
+  points: string[];
+}
 
-const WorkExperience = () => {
+interface WorkExperienceProps {
+  experiences: WorkExperienceItem[];
+}
+
+const WorkExperience: React.FC<WorkExperienceProps> = ({
+  experiences,
+}) => {
+  if (!experiences || experiences.length === 0) {
+    return (
+      <div className="w-full bg-white border border-gray-200 rounded-2xl p-6 font-playfair">
+        <h1 className="text-xl font-bold mb-4">
+          Work Experience
+        </h1>
+        <p className="text-gray-500 text-sm">
+          No work experience available.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 lg:p-8 font-playfair">
       <h1 className="text-xl sm:text-2xl font-bold mb-6">
@@ -57,7 +58,10 @@ const WorkExperience = () => {
                   key={i}
                   className="flex items-start gap-2 text-sm sm:text-base"
                 >
-                  <Circle size={14} className="mt-1 shrink-0" />
+                  <Circle
+                    size={14}
+                    className="mt-1 shrink-0"
+                  />
                   <span>{point}</span>
                 </li>
               ))}
