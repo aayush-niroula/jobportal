@@ -68,6 +68,7 @@ model JobFacilitator {
   department         String?
   company_size        String?    
   founded_year        Int?
+  company_logo    String
   gallery_images    String[]
   features          String[]
  
@@ -82,7 +83,6 @@ model Facilitator_verification {
   registration_no   String
   status            String
   submitted_at      DateTime
-
   facilitator       JobFacilitator @relation(fields: [facilitator_id], references: [id])
 
   @@map("facilitator_verification")

@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 
     const {
       job_name,
-      description, // now should be string[]
+      description, 
       location,
       salary,
       deadline,
@@ -34,7 +34,6 @@ export async function POST(req: NextRequest) {
       skills,
     } = body;
 
-    // Make sure facilitator exists
     const facilitatorRecord = await prisma.jobFacilitator.findUnique({
       where: { user_id: userId },
     });
@@ -46,7 +45,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Create new job
     const newJob = await prisma.jobs.create({
       data: {
         job_name,

@@ -11,12 +11,37 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Briefcase, Users } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { jobs } from "@/lib/candidateData";
 import Candidate from "./Candidate";
+import { useParams } from "next/navigation";
+import { useAuthStore } from "@/app/store/useAuthStore";
 const MyJobs = () => {
   const [selectedJob, setSelectedJob] = useState(jobs[0]);
-  const [candidates, setCandidates] = useState(selectedJob.candidates);
+  const [candidates, setCandidates] = useState(selectedJob.candidates)
+  const [job, setJob] = useState<any[]>([])
+  const user = useAuthStore(state =>state.user)
+
+  const {id}= useParams()
+  console.log("Frontend",id);
+  
+  useEffect(()=>{
+    const facilatorOwnJobs = async()=>{
+      const res = await fetch(`/api/jobs/getUserJob/${id}`,{
+        method:"GET",
+        headers:{
+          Authorization: `Bearer ${user?.token}`,
+          "Content-Type":"application/json"
+        }
+      })
+      const data = await res.json()
+      console.log(data);
+      setJob(data.jobs || [])
+      
+    }
+    facilatorOwnJobs()
+  },[id,user?.token])
+  
    
   const tabs = [
     { value: "all", label: "All" },
@@ -36,7 +61,6 @@ const MyJobs = () => {
 
   return (
     <div className="font-playfair max-w-7xl mx-auto">
-      {/* Posted jobs section */}
       <div className="flex flex-col gap-8">
         <Card>
           <CardHeader>
@@ -47,19 +71,19 @@ const MyJobs = () => {
             <CardDescription>Here is all the posted jobs</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
-            {jobs.map((job) => (
+            {job.map((j) => (
               <div
-                key={job.id}
+                key={j.id}
                 className={`p-3 rounded-xl cursor-pointer transition hover:bg-muted`}
                 onClick={() => {
-                  setSelectedJob(job);
-                  setCandidates(job.candidates);
+                  setSelectedJob(j);
+                  setCandidates(j.candidates);
                 }}
               >
-                <h1 className="font-medium text-md">{job.title}</h1>
-                <p className="text-sm text-gray-500 ">{job.location}</p>
+                <h1 className="font-medium text-md">{j.job_name}</h1>
+                <p className="text-sm text-gray-500 ">{j.location}</p>
                 <Badge className="mt-2" variant={"secondary"}>
-                  {job.applications} Applications
+                  {j.applications} Applications
                 </Badge>
               </div>
             ))}

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -18,8 +19,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { BulletTextarea } from "@/app/_components/BulletTextarea";
 import { useAuthStore } from "@/app/store/useAuthStore";
+import AddLineInput from "./AddLineInput";
 
 interface Category {
   id: string;
@@ -27,64 +28,126 @@ interface Category {
 }
 
 export default function PostNewJob() {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const user = useAuthStore((state) => state.user);
 
-  const [job_name, setJobName] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [categoryId, setCategoryId] = useState("");
+
+  const [jobName, setJobName] = useState("");
   const [location, setLocation] = useState("");
-  const [job_type, setJobType] = useState<"FULL_TIME" | "PART_TIME" | "CONTRACT" | "INTERN" | "FREELANCE">();
-  const [work_mode, setWorkMode] = useState<"ONSITE" | "REMOTE" | "HYBRID">();
-  const [experience_level, setExperienceLevel] = useState<"ENTRY" | "MID" | "SENIOR" | "LEAD">();
-  const [salary_min, setSalaryMin] = useState<number | undefined>();
-  const [salary_max, setSalaryMax] = useState<number | undefined>();
-  const [salary_type, setSalaryType] = useState<"YEARLY" | "MONTHLY" | "HOURLY">("MONTHLY");
-  const [deadline, setDeadline] = useState<string>();
-  const [description, setDescription] = useState<string>("");
+
+  const [jobType, setJobType] =
+    useState<"FULL_TIME" | "PART_TIME" | "CONTRACT" | "INTERN" | "FREELANCE">();
+  const [workMode, setWorkMode] =
+    useState<"ONSITE" | "REMOTE" | "HYBRID">();
+  const [experienceLevel, setExperienceLevel] =
+    useState<"ENTRY" | "MID" | "SENIOR" | "LEAD">();
+
+  const [salaryMin, setSalaryMin] = useState<number>();
+  const [salaryMax, setSalaryMax] = useState<number>();
+  const [salaryType, setSalaryType] =
+    useState<"YEARLY" | "MONTHLY" | "HOURLY">("MONTHLY");
+  const [deadline, setDeadline] = useState("");
+  const [description, setDescription] = useState("");
   const [responsibilities, setResponsibilities] = useState<string[]>([]);
   const [requirements, setRequirements] = useState<string[]>([]);
-  const [preferredQualifications, setPreferredQualifications] = useState<string[]>([]);
+  const [preferredQualifications, setPreferredQualifications] = useState<
+    string[]
+  >([]);
+
   const [skills, setSkills] = useState<string[]>([]);
   const [benefits, setBenefits] = useState<string[]>([]);
-
-  const user = useAuthStore((state) => state.user);
+  const [loadingAI, setLoadingAI] = useState(false);
 
   useEffect(() => {
     fetch("/api/jobcategory")
       .then((res) => res.json())
       .then(setCategories)
-      .catch(console.error);
+      .catch(() => toast.error("Failed to load categories"));
   }, []);
 
-  const addTag = (value: string, list: string[], setList: any) => {
+  const addTag = (
+    value: string,
+    list: string[],
+    setList: (v: string[]) => void
+  ) => {
     const v = value.trim();
     if (v && !list.includes(v)) setList([...list, v]);
   };
 
-  const removeTag = (value: string, list: string[], setList: any) =>
-    setList(list.filter((v) => v !== value));
+  const removeTag = (
+    value: string,
+    list: string[],
+    setList: (v: string[]) => void
+  ) => {
+    setList(list.filter((i) => i !== value));
+  };
+
+  const generateAIContent = async () => {
+    if (!jobName) return toast.error("Job Name is required to generate AI content");
+
+    setLoadingAI(true);
+
+    try {
+      const res = await fetch("/api/generate-job", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role: jobName }),
+      });
+
+      if (!res.ok) throw new Error("Failed to generate AI content");
+
+      const data = await res.json();
+      console.log("AI Response:", data);
+
+      setDescription(data.description || "");
+      setResponsibilities(data.responsibilities || []);
+      setRequirements(data.requirements || []);
+      setPreferredQualifications(data.preferred_qualifications || []);
+
+      toast.success("AI content generated!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to generate AI content");
+    } finally {
+      setLoadingAI(false);
+    }
+  };
 
   const handleSubmit = async () => {
-    if (!user?.token) return toast.error("You must be logged in.");
+    if (!user?.token) return toast.error("You must be logged in");
 
-    if (!job_name || !location || !selectedCategory) {
-      return toast.error("Please fill all required fields.");
-    }
+    if (
+      !jobName ||
+      !location ||
+      !categoryId ||
+      !jobType ||
+      !workMode ||
+      !experienceLevel
+    )
+      return toast.error("Please fill all required fields");
+
+    if (salaryMin && salaryMax && salaryMin > salaryMax)
+      return toast.error("Salary min cannot be greater than salary max");
 
     const payload = {
-      job_name,
-      description: description.split("\n").filter(Boolean),
+      job_name: jobName,
       location,
-      category_id: selectedCategory,
-      job_type,
-      work_mode,
-      experience_level,
-      salary_min: salary_min ?? null,
-      salary_max: salary_max ?? null,
-      salary_type,
+      category_id: categoryId,
+      job_type: jobType,
+      work_mode: workMode,
+      experience_level: experienceLevel,
+      salary_min: salaryMin ?? null,
+      salary_max: salaryMax ?? null,
+      salary_type: salaryType,
       deadline: deadline ? new Date(deadline) : null,
-      responsibilities: responsibilities.filter(Boolean),
-      requirements: requirements.filter(Boolean),
-      preferred_qualifications: preferredQualifications.filter(Boolean),
+      description: description
+        .split("\n")
+        .map((v) => v.trim())
+        .filter(Boolean),
+      responsibilities,
+      requirements,
+      preferred_qualifications: preferredQualifications,
       skills,
       benefits,
     };
@@ -99,12 +162,12 @@ export default function PostNewJob() {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error("Failed to post job");
+      if (!res.ok) throw new Error();
 
-      toast.success("New job created successfully 🎉");
+      toast.success("Job posted successfully 🎉");
       setJobName("");
       setLocation("");
-      setSelectedCategory("");
+      setCategoryId("");
       setJobType(undefined);
       setWorkMode(undefined);
       setExperienceLevel(undefined);
@@ -118,39 +181,56 @@ export default function PostNewJob() {
       setPreferredQualifications([]);
       setSkills([]);
       setBenefits([]);
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to post job.");
+    } catch {
+      toast.error("Failed to post job");
     }
   };
 
   return (
-    <div className="w-full flex justify-center bg-[#F1F5F9] py-10 px-4 font-playfair">
-      <Card className="w-full max-w-[720px] p-6 rounded-2xl shadow-lg">
+    <div className="flex justify-center bg-slate-100 py-10 px-4">
+      <Card className="w-full max-w-3xl shadow-xl rounded-2xl">
         <CardHeader>
-          <CardTitle className="text-3xl">Post a New Job</CardTitle>
+          <CardTitle className="text-3xl font-semibold">
+            Post a New Job
+          </CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-6">
+          {/* Job Title */}
           <div>
-            <Label>Job Title</Label>
-            <Input value={job_name} onChange={(e) => setJobName(e.target.value)} />
+            <Label>Job Title *</Label>
+            <Input
+              value={jobName}
+              onChange={(e) => setJobName(e.target.value)}
+              placeholder="e.g. Frontend Developer"
+            />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <Select value={job_type} onValueChange={(v) => setJobType(v as any)}>
-              <SelectTrigger><SelectValue placeholder="Job Type" /></SelectTrigger>
+          <Button
+            onClick={generateAIContent}
+            disabled={loadingAI}
+            className="mb-4"
+          >
+            {loadingAI ? "Generating..." : "Generate AI Job Content"}
+          </Button>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Select value={jobType} onValueChange={(v) => setJobType(v as any)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Job Type" />
+              </SelectTrigger>
               <SelectContent>
-                <SelectItem value="FULL_TIME">Full-time</SelectItem>
-                <SelectItem value="PART_TIME">Part-time</SelectItem>
+                <SelectItem value="FULL_TIME">Full Time</SelectItem>
+                <SelectItem value="PART_TIME">Part Time</SelectItem>
                 <SelectItem value="CONTRACT">Contract</SelectItem>
                 <SelectItem value="INTERN">Intern</SelectItem>
                 <SelectItem value="FREELANCE">Freelance</SelectItem>
               </SelectContent>
             </Select>
 
-            <Select value={work_mode} onValueChange={(v) => setWorkMode(v as any)}>
-              <SelectTrigger><SelectValue placeholder="Work Mode" /></SelectTrigger>
+            <Select value={workMode} onValueChange={(v) => setWorkMode(v as any)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Work Mode" />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="ONSITE">Onsite</SelectItem>
                 <SelectItem value="REMOTE">Remote</SelectItem>
@@ -158,8 +238,13 @@ export default function PostNewJob() {
               </SelectContent>
             </Select>
 
-            <Select value={experience_level} onValueChange={(v) => setExperienceLevel(v as any)}>
-              <SelectTrigger><SelectValue placeholder="Experience" /></SelectTrigger>
+            <Select
+              value={experienceLevel}
+              onValueChange={(v) => setExperienceLevel(v as any)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Experience" />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="ENTRY">Entry</SelectItem>
                 <SelectItem value="MID">Mid</SelectItem>
@@ -169,42 +254,85 @@ export default function PostNewJob() {
             </Select>
           </div>
 
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger><SelectValue placeholder="Job Category" /></SelectTrigger>
+          <Select value={categoryId} onValueChange={setCategoryId}>
+            <SelectTrigger>
+              <SelectValue placeholder="Job Category" />
+            </SelectTrigger>
             <SelectContent>
-              {categories.map((cat) => (
-                <SelectItem key={cat.id} value={cat.id}>
-                  {cat.category_name}
+              {categories.map((c) => (
+                <SelectItem key={c.id} value={c.id}>
+                  {c.category_name}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
 
           <div>
-            <Label>Location</Label>
-            <Input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="City, Country" />
+            <Label>Location *</Label>
+            <Input
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="Kathmandu, Nepal"
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              type="number"
+              placeholder="Salary Min"
+              value={salaryMin ?? ""}
+              onChange={(e) => setSalaryMin(Number(e.target.value))}
+            />
+            <Input
+              type="number"
+              placeholder="Salary Max"
+              value={salaryMax ?? ""}
+              onChange={(e) => setSalaryMax(Number(e.target.value))}
+            />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div>
-              <Label>Salary Min</Label>
-              <Input type="number" value={salary_min ?? ""} onChange={(e) => setSalaryMin(Number(e.target.value))} />
-            </div>
-            <div>
-              <Label>Salary Max</Label>
-              <Input type="number" value={salary_max ?? ""} onChange={(e) => setSalaryMax(Number(e.target.value))} />
-            </div>
-          </div>
+          <Select value={salaryType} onValueChange={(v) => setSalaryType(v as any)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Salary Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="MONTHLY">Monthly</SelectItem>
+              <SelectItem value="YEARLY">Yearly</SelectItem>
+              <SelectItem value="HOURLY">Hourly</SelectItem>
+            </SelectContent>
+          </Select>
 
-          <div>
-            <Label>Application Deadline</Label>
-            <Input type="date" value={deadline} onChange={(e) => setDeadline(e.target.value)} />
-          </div>
+          <Input
+            type="date"
+            value={deadline}
+            onChange={(e) => setDeadline(e.target.value)}
+          />
+          <Textarea
+            rows={6}
+            placeholder="Job Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
 
-          <BulletTextarea label="Job Description" value={description} onChange={setDescription} />
-          <BulletTextarea label="Responsibilities" value={responsibilities.join("\n")} onChange={(v) => setResponsibilities(v.split("\n"))} />
-          <BulletTextarea label="Requirements" value={requirements.join("\n")} onChange={(v) => setRequirements(v.split("\n"))} />
-          <BulletTextarea label="Preferred Qualifications" value={preferredQualifications.join("\n")} onChange={(v) => setPreferredQualifications(v.split("\n"))} />
+          <AddLineInput
+            label="Responsibilities"
+            placeholder="e.g. Build and maintain UI components"
+            value={responsibilities}
+            onChange={setResponsibilities}
+          />
+
+          <AddLineInput
+            label="Requirements"
+            placeholder="e.g. 2+ years of React experience"
+            value={requirements}
+            onChange={setRequirements}
+          />
+
+          <AddLineInput
+            label="Preferred Qualifications"
+            placeholder="e.g. Experience with Prisma or Next.js"
+            value={preferredQualifications}
+            onChange={setPreferredQualifications}
+          />
 
           {[
             { label: "Skills", list: skills, setList: setSkills },
@@ -216,7 +344,12 @@ export default function PostNewJob() {
                 {list.map((item) => (
                   <span key={item} className="bg-gray-200 px-2 py-1 rounded">
                     {item}
-                    <button className="ml-2" onClick={() => removeTag(item, list, setList)}>×</button>
+                    <button
+                      onClick={() => removeTag(item, list, setList)}
+                      className="ml-2 text-red-500"
+                    >
+                      ×
+                    </button>
                   </span>
                 ))}
               </div>

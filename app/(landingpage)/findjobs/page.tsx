@@ -29,10 +29,11 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const page = () => {
   const [currentPage,setCurrentPage] = useState(1)
+  const [jobs, setJobs] = useState<any[]>([]);
   const jobsPerPage= 9;
   const dummyJobData = Array.from({ length: 24 }, (_, i) => ({
   id: i + 1,
@@ -45,7 +46,6 @@ const page = () => {
 }));
 
 const totalPages = Math.ceil(dummyJobData.length/ jobsPerPage)
-
 const indexofLastJob = currentPage * jobsPerPage;
 const indexOfFirstJob = indexofLastJob- jobsPerPage
 const currentJobs= dummyJobData.slice(indexOfFirstJob,indexofLastJob)
@@ -55,6 +55,17 @@ const handlePageChange =(pageumber:number)=>{
   window.scrollTo({top:500,behavior:"smooth"})
 
 }
+
+useEffect(()=>{
+  const fetchJobs = async ()=>{
+    const res = await fetch(`/api/jobseeker/jobs?page=${currentPage}&limit=${jobsPerPage}`)
+    const data = await res.json()
+    console.log(data);
+    setJobs(data.data)
+    
+  }
+  fetchJobs()
+},[currentPage])
   return (
     <div className="p-4 md:p-6 lg:p-10 font-playfair flex flex-col items-center font-playfair bg-[#F1F5F9] ">
       <div className="w-full max-w-7xl">
@@ -182,15 +193,18 @@ const handlePageChange =(pageumber:number)=>{
           </div>
 
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {currentJobs.map((job) => (
+              {jobs.map((job) => (
                 <JobPostCard 
                   key={job.id}
-                  title={job.title}
-                  company={job.company}
+                  title={job.job_name}
+                  company={job.facilitator.company_name}
                   location={job.location}
-                  salary={job.salary}
+                  salary_max={job.salary_max}
+                  salary_min={job.salary_min}
                   type={job.type}
-                  posted={job.posted}
+                  posted={job.time}
+                  description={job.description}
+                  skills={job.skills}
                 />
               ))}
             </div>

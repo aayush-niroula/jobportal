@@ -127,7 +127,6 @@ export async function POST(req: NextRequest) {
       user_id: user.id,
       role_id: role.id,
       location: "",
-      education_level: "",
       analyzer_vector: "",
       resume_url: "",
     },
