@@ -56,16 +56,32 @@ const handlePageChange =(pageumber:number)=>{
 
 }
 
-useEffect(()=>{
-  const fetchJobs = async ()=>{
-    const res = await fetch(`/api/jobseeker/jobs?page=${currentPage}&limit=${jobsPerPage}`)
-    const data = await res.json()
-    console.log(data);
-    setJobs(data.data)
-    
-  }
-  fetchJobs()
-},[currentPage])
+useEffect(() => {
+  const fetchJobs = async () => {
+    try {
+      const res = await fetch(
+        `/api/jobseeker/jobs?page=${currentPage}&limit=${jobsPerPage}`
+      );
+      const data = await res.json();
+      console.log(data);
+      
+
+      if (!res.ok || !Array.isArray(data.data)) {
+        console.error(data);
+        setJobs([]);
+        return;
+      }
+
+      setJobs(data.data);
+    } catch (err) {
+      console.error(err);
+      setJobs([]);
+    }
+  };
+
+  fetchJobs();
+}, [currentPage]);
+
   return (
     <div className="p-4 md:p-6 lg:p-10 font-playfair flex flex-col items-center font-playfair bg-[#F1F5F9] ">
       <div className="w-full max-w-7xl">
@@ -201,10 +217,11 @@ useEffect(()=>{
                   location={job.location}
                   salary_max={job.salary_max}
                   salary_min={job.salary_min}
-                  type={job.type}
-                  posted={job.time}
-                  description={job.description}
+                  type={job.job_type}
+                  posted={job.created_at}
+                  description={job.description.join(" ")}
                   skills={job.skills}
+                  id={job.id}
                 />
               ))}
             </div>

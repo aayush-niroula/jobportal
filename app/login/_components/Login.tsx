@@ -52,12 +52,10 @@ export default function Login() {
   }
   const handleLogin =async(e:React.FormEvent)=>{
     e.preventDefault();
-    if(!email ||!password || !confirmpassword ||  !role_name){
+    if(!email ||!password  ||  !role_name){
       toast.error("All fields are required");     
     }
-    if(password !== confirmpassword){
-      toast.error("Password and confirm password donot match")
-    }
+
      const data = {email,password,role_name}
      try {
       const res = await login(data)
@@ -128,18 +126,6 @@ export default function Login() {
               </p>
             </div>
 
-            {/* Confirm Password */}
-            <div className="space-y-2">
-              <Label htmlFor="confirm_password">Confirm Password</Label>
-              <Input
-                id="confirm_password"
-                name="confirm_password"
-                type="password"
-                required
-                value={confirmpassword}
-                onChange={(e)=>setConfirmPassword(e.target.value)}
-              />
-            </div>
 
             {/* Role */}
             <div className="space-y-2">

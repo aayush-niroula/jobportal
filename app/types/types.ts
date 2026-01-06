@@ -38,3 +38,71 @@ export interface Candidate {
   experiecence_level?:string;
   experiences?:Expericene[]
 }
+
+export interface Facilitator {
+  id?:string
+  company_email?:string
+  company_location_link?:string
+  company_size:string
+  company_name: string;
+  company_logo: string;
+  company_description: string;
+  industry: string;
+  location: string;
+  department:string
+  features:string[]
+  founded_year:number
+  gallery_images:string[]
+  website_link?:string
+
+}
+
+export interface Job {
+  id: string;
+  job_name: string;
+  job_type: string;
+  location: string;
+  created_at: string;
+  deadline: string;
+  salary_min: number;
+  salary_max: number;
+  benefits: string[];
+  description: string[];
+  responsibilities: string[];
+  requirements: string[];
+  preferred_qualifications: string[];
+  facilitator: Facilitator;
+}
+
+export type Application = {
+  id: string;
+  status: "PENDING" | "SCREENING" | "INTERVIEW" | "REJECTED";
+  appliedAt: string;
+  reviewedAt: string | null;
+  message?: string;
+  job: {
+    job_name: string;
+    job_type: string;
+    experience_level: string;
+    location: string;
+    salary_min?: number;
+    salary_max?: number;
+    description:string;
+    requirements:string[]
+    facilitator: {
+      company_name: string;
+      company_logo?: string;
+      user?:{
+        name:string
+        phone:number
+        email:number
+      }
+    
+    };
+  };
+  interviews:{
+    notes:string
+    scheduled_at:string
+    scheduled_by:string
+  }
+};

@@ -1,5 +1,5 @@
 import React from 'react'
-import ApplyNow from '../components/ApplyNow'
+import ApplyNow from '../../components/ApplyNow'
 
 const page = () => {
   return (

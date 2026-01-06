@@ -12,6 +12,7 @@ type JobPostCardProps = {
   posted: string
   description?: string
   skills?: string[]
+  id:string
 }
 
 const JobPostCard = ({
@@ -23,7 +24,8 @@ const JobPostCard = ({
   type,
   posted,
   description = "No description available",
-  skills = []
+  skills = [],
+  id
 }: JobPostCardProps) => {
   const router = useRouter()
 
@@ -78,7 +80,7 @@ const JobPostCard = ({
        </div>
 
        <div className='flex justify-between items-center mt-5 pt-4 border-t border-gray-200'>
-            <Button className='px-6 py-2 h-auto' onClick={()=>router.push('/jobseeker/applynow')}>
+            <Button className='px-6 py-2 h-auto' onClick={()=>router.push(`/jobseeker/applynow/${id}`)}>
               Apply Now
             </Button>
        </div>

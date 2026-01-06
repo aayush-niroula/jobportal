@@ -1,4 +1,4 @@
-import ViewCompany from "../components/ViewCompany"
+import ViewCompany from "../../components/ViewCompany"
 
 const page = () => {
   return (

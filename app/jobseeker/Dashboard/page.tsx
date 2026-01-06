@@ -8,11 +8,12 @@ import RecentApplication from "../components/RecentApplication";
 import Footer from "@/app/_components/Footer";
 import { useRouter } from "next/navigation";
 import BookmarkedJobs from "../components/BookmarkedJobs";
+import { useAuthStore } from "@/app/store/useAuthStore";
 
 const page = () => {
   const router = useRouter();
+  const user = useAuthStore(state =>state.user)
   
-  const userName = "Alex"; 
 
   return (
     <div className="min-h-screen bg-background font-playfair">
@@ -20,7 +21,7 @@ const page = () => {
         {/* Header */}
         <div className="space-y-2">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-medium font-playfair">
-            Welcome back, {userName}!
+            Welcome back, {user?.name}!
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
             Here’s what’s happening with your job search.
@@ -36,7 +37,7 @@ const page = () => {
 
         {/* Main Content: Apply Cards + Sidebar */}
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8" aria-label="Dashboard actions">
-          {/* Left: Apply Cards */}
+        
           
           <div className="lg:col-span-2 space-y-6">
             <h1 className="font-playfair text-xl lg:text-4xl lg:font-bold">Featured jobs</h1>

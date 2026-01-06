@@ -10,29 +10,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, Building, Clock, Mail, Phone, FileText, Users, DollarSign, Briefcase } from "lucide-react";
+import { Application } from "@/app/types/types";
 
-type Application = {
-  id: string;
-  jobTitle: string;
-  company: string;
-  location: string;
-  appliedAt: string;
-  status: string;
-  summary: string;
-  salaryRange?: string;
-  jobType?: string;
-  experienceLevel?: string;
-  contactPerson?: string;
-  contactEmail?: string;
-  contactPhone?: string;
-  jobDescription?: string;
-  requirements?: string[];
-  nextSteps?: string;
-  interviewDate?: string;
-  notes?: string;
-  applicationMethod?: string;
-  jobPostingLink?: string;
-};
+
 
 export function ApplicationDetailsDialog({
   application,
@@ -40,9 +20,9 @@ export function ApplicationDetailsDialog({
   application: Application;
 }) {
   const statusColors: Record<string, string> = {
-    Applied: "bg-blue-100 text-blue-800",
-    Screening: "bg-yellow-100 text-yellow-800",
-    Interview: "bg-purple-100 text-purple-800",
+    PENDING: "bg-blue-100 text-blue-800",
+    SCREENING: "bg-yellow-100 text-yellow-800",
+    INTERVIEW: "bg-purple-100 text-purple-800",
   };
 
   return (
@@ -56,16 +36,16 @@ export function ApplicationDetailsDialog({
           <div className="flex items-start justify-between font-playfair">
             <div>
               <DialogTitle className="text-2xl font-bold">
-                {application.jobTitle}
+                {application.job.job_name}
               </DialogTitle>
               <div className="flex items-center gap-4 mt-2">
                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
                   <Building size={16} />
-                  <span>{application.company}</span>
+                  <span>{application.job.facilitator.company_name}</span>
                 </div>
                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
                   <MapPin size={16} />
-                  <span>{application.location}</span>
+                  <span>{application.job.location}</span>
                 </div>
               </div>
             </div>
@@ -87,109 +67,98 @@ export function ApplicationDetailsDialog({
                   Applied On
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {application.appliedAt}
+                  {new Date(application.appliedAt).toLocaleString()}
                 </p>
               </div>
 
-              {application.interviewDate && (
+              {application?.interviews?.scheduled_at && (
                 <div>
                   <p className="text-sm font-medium flex items-center gap-2">
                     <Clock size={16} />
                     Next Interview
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {application.interviewDate}
+                    {application.interviews.scheduled_at}
                   </p>
                 </div>
               )}
 
-              {application.jobType && (
+              {application.job.job_type && (
                 <div>
                   <p className="text-sm font-medium flex items-center gap-2">
                     <Briefcase size={16} />
                     Job Type
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {application.jobType}
+                    {application.job.job_type}
                   </p>
                 </div>
               )}
             </div>
 
             <div className="space-y-3">
-              {application.salaryRange && (
+              {application.job.salary_max && (
                 <div>
                   <p className="text-sm font-medium flex items-center gap-2">
                     <DollarSign size={16} />
                     Salary Range
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {application.salaryRange}
+                    {application.job.salary_min}-{application.job.salary_max}
                   </p>
                 </div>
               )}
 
-              {application.experienceLevel && (
+              {application.job.experience_level && (
                 <div>
                   <p className="text-sm font-medium flex items-center gap-2">
                     <Users size={16} />
                     Experience Level
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {application.experienceLevel}
+                    {application.job.experience_level}
                   </p>
                 </div>
               )}
 
-              {application.applicationMethod && (
-                <div>
-                  <p className="text-sm font-medium flex items-center gap-2">
-                    <FileText size={16} />
-                    Applied Via
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {application.applicationMethod}
-                  </p>
-                </div>
-              )}
             </div>
           </div>
 
           {/* Contact Information */}
-          {(application.contactPerson || application.contactEmail || application.contactPhone) && (
+          {(application?.job?.facilitator?.user?.email ) && (
             <div>
               <h3 className="text-lg font-semibold mb-3">Contact Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-3 bg-blue-50 rounded-lg">
-                {application.contactPerson && (
+                {application.job.facilitator.user.name && (
                   <div>
                     <p className="text-sm font-medium">Contact Person</p>
                     <p className="text-sm text-muted-foreground">
-                      {application.contactPerson}
+                      {application?.job?.facilitator.user.name}
                     </p>
                   </div>
                 )}
-                {application.contactEmail && (
+                {application.job.facilitator.user.email && (
                   <div>
                     <p className="text-sm font-medium flex items-center gap-2">
                       <Mail size={16} />
                       Email
                     </p>
                     <a 
-                      href={`mailto:${application.contactEmail}`}
+                      href={`mailto:${application.job.facilitator.user.email}`}
                       className="text-sm text-blue-600 hover:underline"
                     >
-                      {application.contactEmail}
+                      {application.job.facilitator.user.email}
                     </a>
                   </div>
                 )}
-                {application.contactPhone && (
+                {application.job.facilitator.user.phone && (
                   <div>
                     <p className="text-sm font-medium flex items-center gap-2">
                       <Phone size={16} />
                       Phone
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {application.contactPhone}
+                      {application.job.facilitator.user.phone}
                     </p>
                   </div>
                 )}
@@ -198,21 +167,21 @@ export function ApplicationDetailsDialog({
           )}
 
           {/* Job Description */}
-          {application.jobDescription && (
+          {application.job.description && (
             <div>
               <h3 className="text-lg font-semibold mb-2">Job Description</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                {application.jobDescription}
+                {application.job.description}
               </p>
             </div>
           )}
 
           {/* Requirements */}
-          {application.requirements && application.requirements.length > 0 && (
+          {application.job.requirements && application.job.requirements.length > 0 && (
             <div>
               <h3 className="text-lg font-semibold mb-2">Requirements</h3>
               <ul className="space-y-1">
-                {application.requirements.map((req, index) => (
+                {application?.job?.requirements?.map((req, index) => (
                   <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
                     <span className="mt-1">•</span>
                     <span>{req}</span>
@@ -222,20 +191,12 @@ export function ApplicationDetailsDialog({
             </div>
           )}
 
-          {/* Next Steps */}
-          {application.nextSteps && (
-            <div className="p-4 bg-green-50 rounded-lg">
-              <h3 className="text-lg font-semibold mb-2">Next Steps</h3>
-              <p className="text-sm">{application.nextSteps}</p>
-            </div>
-          )}
-
           {/* Notes */}
-          {application.notes && (
+          {application.message && (
             <div>
               <h3 className="text-lg font-semibold mb-2">My Notes</h3>
               <div className="p-3 bg-yellow-50 rounded-lg">
-                <p className="text-sm text-muted-foreground italic">{application.notes}</p>
+                <p className="text-sm text-muted-foreground italic">{application.message}</p>
               </div>
             </div>
           )}

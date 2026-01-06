@@ -68,7 +68,7 @@ model JobFacilitator {
   department         String?
   company_size        String?    
   founded_year        Int?
-  company_logo    String
+  company_logo    String?
   gallery_images    String[]
   features          String[]
  
@@ -157,6 +157,7 @@ model Job_Category {
 model Jobs {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   job_name        String
+  created_at      DateTime? @default(now())
   description     String[]
   location        String
   salary          String?
@@ -195,6 +196,7 @@ model Applications {
   message         String?
   job             Jobs      @relation(fields: [job_id], references: [id])
   seeker          JobSeeker @relation(fields: [jobseeker_id], references: [id])
+  interviews      Interviews?
 
   @@map("Applications")
 }
@@ -218,7 +220,6 @@ model Notifications {
   type        String
   is_read     Boolean  @default(false)
   created_at  DateTime @default(now())
-
   user        User     @relation(fields: [user_id], references: [id])
 
   @@map("Notifications")
@@ -228,11 +229,29 @@ model Job_expiration_log {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   job_id      String   @db.ObjectId
   expired_at  DateTime
-
   job         Jobs     @relation(fields: [job_id], references: [id])
 
   @@map("Job_expiration_log")
 }
+
+model Interviews {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  application_id  String   @unique @db.ObjectId
+  scheduled_by    String   @db.ObjectId  
+  scheduled_at    DateTime
+  interview_type  InterviewType
+  meeting_link    String?
+  notes           String?
+  created_at      DateTime @default(now())
+  application     Applications @relation(fields: [application_id], references: [id])
+}
+
+enum InterviewType {
+  ONLINE
+  ONSITE
+  PHONE
+}
+
 enum JobType {
   FULL_TIME
   PART_TIME

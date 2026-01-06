@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -26,68 +26,14 @@ import {
 } from "lucide-react";
 import { ApplicationDetailsDialog } from "./ApplicationDetailsDialog";
 import Information from "../../components/Information";
+import { useAuthStore } from "@/app/store/useAuthStore";
+import { Application } from "@/app/types/types";
 
 export default function MyApplicationsPage() {
-  const [applications, setApplications] = useState([
-    {
-  id: "1",
-  jobTitle: "Frontend Developer",
-  company: "Tech Solutions Inc.",
-  location: "Kathmandu, Nepal",
-  appliedAt: "2025-12-01",
-  status: "Under Review",
-  summary: "Applied for the frontend developer position to work on React-based projects.",
-  salaryRange: "₹50,000 - ₹70,000/month",
-  jobType: "Full-time",
-  experienceLevel: "Mid-level",
-  contactPerson: "Sanjay Shrestha",
-  contactEmail: "sanjay@techsolutions.com",
-  contactPhone: "+977-9801234567",
-  jobDescription: "Develop and maintain web applications using React, TypeScript, and Tailwind CSS.",
-  requirements: [
-    "3+ years of experience in frontend development",
-    "Proficient in React and TypeScript",
-    "Experience with REST APIs and GraphQL",
-    "Good communication skills"
-  ],
-  nextSteps: "HR will contact you for a technical interview within 1 week.",
-  interviewDate: "2025-12-20",
-  notes: "Portfolio link included in the application.",
-  applicationMethod: "Online portal",
-  jobPostingLink: "https://techsolutions.com/jobs/frontend-developer"
-    },
-    {
-      id: "2",
-      jobTitle: "UI/UX Designer",
-      company: "Design Studio",
-      location: "Remote",
-      appliedAt: "Dec 01, 2025",
-      status: "Screening",
-      summary: "Design flows and wireframes for mobile apps.",
-      salaryRange: "$70,000 - $90,000",
-      jobType: "Full-time",
-      experienceLevel: "Senior",
-      nextSteps: "HR screening scheduled",
-  
-      jobPostingLink: "https://designstudio.com/jobs/ui-ux-designer",
-    },
-    {
-      id: "3",
-      jobTitle: "Backend Developer",
-      company: "Tech Labs",
-      location: "Lalitpur, Nepal",
-      appliedAt: "Nov 28, 2025",
-      status: "Interview",
-      summary: "Build REST APIs using Node.js.",
-      salaryRange: "$75,000 - $95,000",
-      jobType: "Full-time",
-      experienceLevel: "Mid-level",
-      nextSteps: "Technical interview tomorrow",
-      jobPostingLink: "https://techlabs.com/careers/backend-dev",
-    },
-  ]);
+  const [applications, setApplications] = useState<Application[]>([]);
 
   const [statusFilter, setStatusFilter] = useState("all");
+  const user = useAuthStore(state =>state.user)
 
   const filteredApplications =
     statusFilter === "all"
@@ -102,11 +48,31 @@ export default function MyApplicationsPage() {
   };
 
   const stats = {
-    total: applications.length,
-    applied: applications.filter((a) => a.status === "Applied").length,
-    screening: applications.filter((a) => a.status === "Screening").length,
-    interview: applications.filter((a) => a.status === "Interview").length,
+    total: applications?.length,
+    applied: applications?.filter((a) => a.status === "PENDING").length,
+    screening: applications?.filter((a) => a.status === "SCREENING").length,
+    interview: applications?.filter((a) => a.status === "INTERVIEW").length,
   };
+
+  useEffect(()=>{
+    const fetchAllApplications = async()=>{
+      const res = await fetch("/api/jobseeker/myapplications",
+        {
+          method:"GET",
+          headers:{
+            Authorization:`Bearer ${user?.token}`,
+            "Content-Type":"application/json"
+          }
+        }
+      )
+
+      const data = await res.json()
+      setApplications(data.application)
+      console.log(data);
+      
+    }
+    fetchAllApplications()
+  },[user?.token])
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 sm:p-6">
@@ -137,21 +103,21 @@ export default function MyApplicationsPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All</SelectItem>
-                <SelectItem value="Applied">Applied</SelectItem>
-                <SelectItem value="Screening">Screening</SelectItem>
-                <SelectItem value="Interview">Interview</SelectItem>
+                <SelectItem value="PENDING">Applied</SelectItem>
+                <SelectItem value="SCREENING">Screening</SelectItem>
+                <SelectItem value="INTERVIEW">Interview</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <p className="text-sm text-muted-foreground">
-            Showing {filteredApplications.length} of {applications.length}
+            Showing {filteredApplications?.length} of {applications?.length}
           </p>
         </div>
 
         {/* Applications */}
         <div className="space-y-4">
-          {filteredApplications.map((app) => (
+          {applications?.map((app) => (
             <Card key={app.id} className="hover:shadow-md transition">
               <CardContent className="p-4 sm:p-6 space-y-4">
                 {/* Top */}
@@ -163,14 +129,14 @@ export default function MyApplicationsPage() {
 
                     <div>
                       <h2 className="text-lg font-semibold">
-                        {app.jobTitle}
+                        {app.job.job_name}
                       </h2>
                       <div className="mt-1 flex flex-wrap gap-3 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1">
-                          <Building size={14} /> {app.company}
+                          <Building size={14} /> {app.job?.facilitator?.company_name}
                         </span>
                         <span className="flex items-center gap-1">
-                          <MapPin size={14} /> {app.location}
+                          <MapPin size={14} /> {app.job.location}
                         </span>
                       </div>
                     </div>
@@ -179,14 +145,15 @@ export default function MyApplicationsPage() {
                   <div className="flex sm:flex-col sm:items-end gap-2">
                     <span className="flex items-center gap-1 text-sm text-muted-foreground">
                       <Calendar size={14} />
-                      {app.appliedAt}
+                     {new Date(app.appliedAt).toLocaleDateString()}
+
                     </span>
 
                     <Badge
                       variant={
-                        app.status === "Applied"
+                        app.status === "PENDING"
                           ? "secondary"
-                          : app.status === "Screening"
+                          : app.status === "SCREENING"
                           ? "outline"
                           : "default"
                       }
@@ -198,39 +165,34 @@ export default function MyApplicationsPage() {
 
                 <Separator />
 
-                {/* Meta */}
+              
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
                   <div className="flex items-center gap-2">
                     <DollarSign size={14} />
-                    {app.salaryRange}
+                    {app?.job?.salary_min }- {app?.job?.salary_max}
                   </div>
                   <div className="flex items-center gap-2">
                     <Briefcase size={14} />
-                    {app.experienceLevel}
+                    {app.job.experience_level}
                   </div>
-                  <Badge variant="outline">{app.jobType}</Badge>
+                  <Badge variant="outline">{app.job.job_type}</Badge>
                 </div>
 
-                {/* Summary */}
                 <p className="text-sm text-muted-foreground line-clamp-2">
-                  {app.summary}
+                  {app?.message}
                 </p>
 
-                {/* Next Steps */}
-                {app.nextSteps && (
-                  <div className="rounded-md bg-blue-50 p-2 text-sm">
-                    <strong>Next:</strong> {app.nextSteps}
-                  </div>
-                )}
+             
+              
 
-                {/* Actions */}
+             
                 <div className="flex flex-wrap gap-2">
                   <ApplicationDetailsDialog application={app} />
 
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => handleWithdraw(app.id, app.jobTitle)}
+                    onClick={() => handleWithdraw(app.id, app.job.job_name)}
                   >
                     Withdraw
                   </Button>
@@ -240,8 +202,8 @@ export default function MyApplicationsPage() {
           ))}
         </div>
 
-        {/* Empty State */}
-        {filteredApplications.length === 0 && (
+
+        {filteredApplications?.length === 0 && (
           <div className="py-12 text-center">
             <p className="text-muted-foreground mb-4">
               No applications found

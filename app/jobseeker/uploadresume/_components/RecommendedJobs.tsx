@@ -1,8 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 interface Job {
+  id:string
   title: string;
   company: string;
   location: string;
@@ -15,7 +17,12 @@ interface RecommendedJobsProps {
 }
 
 const RecommendedJobs: React.FC<RecommendedJobsProps> = ({ jobs, onSeeDetails }) => {
+
+  const router = useRouter()
+  console.log(jobs);
+  
   if (!jobs || jobs.length === 0) return null;
+
 
   return (
     <div className="space-y-4 mt-4">
@@ -45,7 +52,7 @@ const RecommendedJobs: React.FC<RecommendedJobsProps> = ({ jobs, onSeeDetails })
                 </p>
               </div>
             </div>
-            <Button size="sm" onClick={() => onSeeDetails?.(job)}>
+            <Button size="sm" onClick={()=>router.push(`/jobseeker/applynow/${job.id}`)}>
               See Details
             </Button>
           </div>

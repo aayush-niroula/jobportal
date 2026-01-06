@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import cloudinary from "@/lib/cloudinary";
 import { prisma } from "@/lib/prisma";
+import { authenticate } from "@/app/utils/auth";
 
 export async function POST(req: NextRequest) {
   try {
+    const auth = await authenticate(req)
+    if(!auth || "userId" in auth === false) return
+
+    const userId = auth.userId
+
     const formData = await req.formData();
     const file = formData.get("file") as File;
-    const userId = formData.get("userId") as string;
 
     if (!file || !userId) {
       return NextResponse.json({ message: "File and userId are required" }, { status: 400 });

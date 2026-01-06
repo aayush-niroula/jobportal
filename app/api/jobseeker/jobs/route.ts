@@ -11,7 +11,7 @@ const page = parseInt(searchParams.get("page") || "1");
         skip,
         take:limit,
         orderBy:{
-            time:"desc"
+            created_at:"desc"
         },
         include:{
             facilitator:true,

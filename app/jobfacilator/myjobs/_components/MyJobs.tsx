@@ -17,42 +17,50 @@ import Candidate from "./Candidate";
 import { useParams } from "next/navigation";
 import { useAuthStore } from "@/app/store/useAuthStore";
 const MyJobs = () => {
-  const [selectedJob, setSelectedJob] = useState(jobs[0]);
-  const [candidates, setCandidates] = useState(selectedJob.candidates)
-  const [job, setJob] = useState<any[]>([])
+const [jobs, setJobs] = useState<any[]>([]);
+const [selectedJob, setSelectedJob] = useState<any | null>(null);
+const [candidates, setCandidates] = useState<any[]>([]);
   const user = useAuthStore(state =>state.user)
 
   const {id}= useParams()
   console.log("Frontend",id);
+
+  console.log("selectejob",selectedJob);
   
-  useEffect(()=>{
-    const facilatorOwnJobs = async()=>{
-      const res = await fetch(`/api/jobs/getUserJob/${id}`,{
-        method:"GET",
-        headers:{
-          Authorization: `Bearer ${user?.token}`,
-          "Content-Type":"application/json"
-        }
-      })
-      const data = await res.json()
-      console.log(data);
-      setJob(data.jobs || [])
-      
+  
+useEffect(() => {
+  const facilitatorOwnJobs = async () => {
+    const res = await fetch(`/api/jobs/getUserJob/${id}`, {
+      headers: {
+        Authorization: `Bearer ${user?.token}`,
+      },
+    });
+
+    const data = await res.json();
+
+    setJobs(data.jobs || []);
+
+    if (data.jobs?.length > 0) {
+      setSelectedJob(data.jobs[0]);
+      setCandidates(data.jobs[0].applications || []);
     }
-    facilatorOwnJobs()
-  },[id,user?.token])
+  };
+
+  facilitatorOwnJobs();
+}, [id, user?.token]);
+
   
    
   const tabs = [
     { value: "all", label: "All" },
-    { value: "shortlisted", label: "Shortlisted" },
-    { value: "pending", label: "Pending" },
-    { value: "rejected", label: "Rejected" },
+    { value: "SCREENING", label: "Screening" },
+    { value: "PENDING", label: "Pending" },
+    { value: "REJECTED", label: "Rejected" },
   ];
 
   const updateStatus = (
     id: number,
-    status: "shortlisted" | "rejected" | "pending"
+    status: "SCREENING" | "REJECTED" | "PENDING"
   ) => {
     setCandidates((prev) =>
       prev.map((c) => (c.id == id ? { ...c, status } : c))
@@ -71,19 +79,19 @@ const MyJobs = () => {
             <CardDescription>Here is all the posted jobs</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
-            {job.map((j) => (
+            {jobs.map((j) => (
               <div
                 key={j.id}
                 className={`p-3 rounded-xl cursor-pointer transition hover:bg-muted`}
                 onClick={() => {
                   setSelectedJob(j);
-                  setCandidates(j.candidates);
+                  setCandidates(j.applications || []);
                 }}
               >
                 <h1 className="font-medium text-md">{j.job_name}</h1>
                 <p className="text-sm text-gray-500 ">{j.location}</p>
                 <Badge className="mt-2" variant={"secondary"}>
-                  {j.applications} Applications
+                  {j.applications.length} Applications
                 </Badge>
               </div>
             ))}
@@ -95,7 +103,7 @@ const MyJobs = () => {
           <CardHeader>
             <CardTitle className="flex gap-2 items-center">
               <Users />
-              Applications -{selectedJob.title}
+              Applications -{selectedJob?.job_name}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -118,15 +126,10 @@ const MyJobs = () => {
                       .map((candidate) => (
                           <Candidate
                           key={candidate.id}
-                            name={candidate.name}
-                            skills={candidate.skill}
-                            status={candidate.status as "pending" | "shortlisted" | "rejected"}
-                            onShortlist={() =>
-                              updateStatus(candidate.id, "shortlisted")
-                            }
-                            onReject={() =>
-                              updateStatus(candidate.id, "rejected")
-                            }
+                            name={candidate?.seeker?.user?.name}
+                            skills={candidate?.seeker?.technical_skills}
+                            status={candidate?.status}
+                            applicationId={candidate.id}
                           />
                       ))}
                   </div>

@@ -5,6 +5,8 @@ interface User {
   email: string;
   role: string;
   name?:string;
+  facilitatorId?:string
+  seekerId?:string
   token:string
 }
 

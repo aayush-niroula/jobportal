@@ -33,7 +33,11 @@ const userId = resolvedParams.id
         facilitator: true,
         applications: {
           include: {
-            seeker: true,
+            seeker:{
+              include:{
+                user:true
+              }
+            }
           },
         },
       },
