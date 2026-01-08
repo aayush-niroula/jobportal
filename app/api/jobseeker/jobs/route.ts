@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req:NextRequest) {
-    const { searchParams } = new URL(req.url);
+ const { searchParams } = new URL(req.url);
 const page = parseInt(searchParams.get("page") || "1");
  const limit = parseInt(searchParams.get("limit") || "10");
  const skip = (page - 1) * limit;
@@ -15,14 +15,19 @@ const page = parseInt(searchParams.get("page") || "1");
         },
         include:{
             facilitator:true,
-            category:true
+            category:true,
+            bookmarks:true
         }
     })
+    const jobWithBookMark = jobs.map(job =>({
+        ...job,
+        isBookmarked:job.bookmarks.length > 0
+    }))
 
     const totalJobs = await prisma.jobs.count()
 
     return NextResponse.json({
-        data:jobs,
+        data:jobWithBookMark,
         pagination:{
             total:totalJobs,
             page,

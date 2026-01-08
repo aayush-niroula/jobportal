@@ -122,6 +122,7 @@ export async function GET(req: NextRequest) {
         email:true,
         }
       },
+      applications:true,
       profile_image: true,
       resume_url: true,
       experience_level: true,
@@ -136,8 +137,11 @@ export async function GET(req: NextRequest) {
       linkedin_url: true,
       portfolio_url: true,
       educations: true,
-      experiences:true
+      experiences:true,
+      bookmarks:true
     },
+
+  
   });
 
   return NextResponse.json(seeker);

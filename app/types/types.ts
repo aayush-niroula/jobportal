@@ -37,6 +37,12 @@ export interface Candidate {
   linkedin_url?:string;
   experiecence_level?:string;
   experiences?:Expericene[]
+  applications?:[{
+    status:string
+    message:string
+
+  }],
+  bookmarks:string[]
 }
 
 export interface Facilitator {
@@ -71,7 +77,16 @@ export interface Job {
   responsibilities: string[];
   requirements: string[];
   preferred_qualifications: string[];
+  skills:string[]
+  work_mode?:string;
   facilitator: Facilitator;
+  isBookmarked?:boolean
+  bookmarks?:{
+    created_at:string;
+    id:string;
+    job_id:string;
+    jobseeker_id:string
+  }
 }
 
 export type Application = {

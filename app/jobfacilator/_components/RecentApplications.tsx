@@ -1,8 +1,40 @@
+"use client"
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import RecentApplicationCard from "./RecentApplicationCard";
+import { useAuthStore } from "@/app/store/useAuthStore";
+
 
 const RecentApplications = () => {
+  const user = useAuthStore(state =>state.user)
+  const [recentapplication,setRecentApplications] = useState<any[]>([])
+console.log("recentapplication",recentapplication);
+
+
+useEffect(() => {
+  if (!user?.token) return; 
+
+  const fetchRecentApplications = async () => {
+    const res = await fetch("/api/jobfacilator/recentapplications", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      }
+    });
+
+    const data = await res.json();
+
+    if (Array.isArray(data)) {
+      setRecentApplications(data); 
+    } else {
+      console.log("API Error:", data);
+      setRecentApplications([]); 
+    }
+  };
+
+  fetchRecentApplications();
+}, [user?.token]);
+
   return (
     <div className="w-full bg-white p-6 sm:p-8 lg:p-10 rounded-2xl shadow-sm border border-gray-200">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
@@ -10,14 +42,19 @@ const RecentApplications = () => {
         <Button className="w-fit lg:w-auto md:w-auto">View All</Button>
       </div>
  <div className="flex flex-col gap-4">
-        {[1, 2, 3, 4].map((_, i) => (
-          <RecentApplicationCard
-            key={i}
-            name="John Doe"
-            appliedfor="Applied for HR Interns"
-            appliedtime={2}
-          />
-        ))}
+       {recentapplication?.map((application, i) => (
+  <RecentApplicationCard
+    key={i}
+    id={application?.seeker?.id}
+    name={application?.seeker?.user?.name}  
+    appliedfor={application?.job?.job_name}
+    appliedtime={new Date(application?.appliedAt).getTime()}
+    skills = {application?.seeker?.soft_skills}
+    seeker_image={application?.seeker.profile_image}
+    applicationId={application?.id}
+  />
+))}
+
       </div>
       
     </div>

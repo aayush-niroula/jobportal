@@ -9,15 +9,17 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/app/store/useAuthStore";
+import { useSocket } from "@/app/providers/SocketProvider";
 
 interface CandidateProps {
   name: string;
   skills: string[];
   status: "PENDING" | "SCREENING" | "REJECTED" | "INTERVIEW";
   applicationId: string;
+  jobseekerId:string
 }
 
-const Candidate = ({ name, skills, status, applicationId }: CandidateProps) => {
+const Candidate = ({ name, skills, status, applicationId,jobseekerId }: CandidateProps) => {
   const [currentStatus, setCurrentStatus] = useState(status);
   const [open, setOpen] = useState(false);
   const [dateTime, setDateTime] = useState("");
@@ -28,6 +30,7 @@ const [meetingLink, setMeetingLink] = useState("");
   const [type, setType] = useState("ONLINE");
 
   const router = useRouter();
+  const socket = useSocket()
 
   const updateStatus = async (newStatus: typeof status) => {
     const res = await fetch("/api/jobseeker/myapplications/status", {
@@ -45,6 +48,16 @@ const [meetingLink, setMeetingLink] = useState("");
 
     setCurrentStatus(newStatus);
     toast.success(`Status updated to ${newStatus}`);
+
+    socket?.emit("send-notification",{
+      userId:jobseekerId,
+      notification:{
+        message:`Your application status changed to ${newStatus}`,
+        type:"STATUS",
+        created_at:new Date(),
+        applicationId
+      }
+    })
   };
 
   const scheduleInterview = async () => {
@@ -84,6 +97,32 @@ const [meetingLink, setMeetingLink] = useState("");
     setNotes("")
     setMeetingLink("")
     toast.success("Interview scheduled");
+
+     await fetch("/api/notifications", {
+    method: "POST",
+    headers: {
+      Authorization:`Bearer ${user?.token}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: "Interview scheduled for your application",
+      type: "INTERVIEW",
+      applicationId,
+      status: "INTERVIEW"
+    }),
+  });
+
+   socket?.emit("send-notification", {
+    notification: {
+      userId:jobseekerId,
+      message: "Interview scheduled for your application",
+      type: "INTERVIEW",
+      created_at: new Date(),
+      is_read: false,
+      applicationId,
+      status: "INTERVIEW"
+    }
+  });
   };
 
   return (

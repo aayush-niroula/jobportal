@@ -1,14 +1,43 @@
 "use client";
+import { useAuthStore } from '@/app/store/useAuthStore';
+import { Job } from '@/app/types/types';
 import { Button } from '@/components/ui/button';
 import { Bookmark } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-const ApplyCard = () => {
+interface ApplyCardProps {
+  job: Job;
+  onToggleBookmark?:()=>void
+}
+const ApplyCard = ({job,onToggleBookmark}:ApplyCardProps) => {
   const router = useRouter();
+  const user = useAuthStore(state => state.user)
+    const job_id = job.id
+    const [isBookmarked,setIsBookmarked] = useState(job.isBookmarked || false)
+
+  const toggleBookmark = async () => {
+  const res =await fetch("/api/bookmark", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${user?.token}`,
+    },
+    body: JSON.stringify({ job_id }),
+  });
+
+  const data = await res.json()
+ if(res.ok){
+  setIsBookmarked(data.bookmarked);
+  if(onToggleBookmark) onToggleBookmark()
+ }
+};
+
+
+
 
   return (
     <div className="w-full bg-white border border-border rounded-2xl shadow-sm p-4 sm:p-6 lg:p-8 flex flex-col gap-6 transition-shadow hover:shadow-md">
-      {/* Top Row: Logo, Job Info, Badge */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-4">
         {/* Company Logo */}
         <div className="shrink-0">
@@ -19,15 +48,15 @@ const ApplyCard = () => {
           />
         </div>
 
-        {/* Job Title + Company */}
+   
         <div className="flex-1 min-w-0">
           <h3 className="text-lg sm:text-xl lg:text-2xl font-medium font-playfair truncate">
-            MERN Stack Developer
+           {job.job_name}
           </h3>
-          <p className="text-sm sm:text-base text-muted-foreground">Leapfrog Inc</p>
+          <p className="text-sm sm:text-base text-muted-foreground">{job.facilitator.company_name}</p>
         </div>
 
-        {/* Popular Badge */}
+      
         <div className="self-start">
           <span className="bg-green-100 text-green-800 text-xs sm:text-sm font-medium px-3 py-1.5 rounded-full">
             Popular
@@ -40,38 +69,42 @@ const ApplyCard = () => {
         {/* Location, Salary, Type + Skills */}
         <div className="space-y-4">
           <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm sm:text-base text-muted-foreground">
-            <span>Kathmandu</span>
+            <span>{job.location}</span>
             <span>•</span>
-            <span>NPR 120k</span>
+            <span>NPR {job.salary_max}-{job.salary_min}</span>
             <span>•</span>
-            <span>Onsite</span>
+            <span>{job.work_mode}</span>
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <span className="bg-teal-100 text-teal-800 text-xs sm:text-sm px-3 py-1.5 rounded-full">
-              React
+            {
+              job.skills.map((skill:any)=>(
+            <span key={skill} className="bg-teal-100 text-teal-800 text-xs sm:text-sm px-3 py-1.5 rounded-full">
+              {skill}
             </span>
-            <span className="bg-teal-100 text-teal-800 text-xs sm:text-sm px-3 py-1.5 rounded-full">
-              Node.js
-            </span>
-            <span className="bg-teal-100 text-teal-800 text-xs sm:text-sm px-3 py-1.5 rounded-full">
-              MongoDB
-            </span>
+              ))
+
+            }
+           
           </div>
         </div>
 
-        {/* Actions: Save + Apply */}
         <div className="flex items-center gap-3 sm:gap-4">
           <button
             aria-label="Save job"
             className="p-2 sm:p-3 border border-border rounded-lg hover:bg-gray-50 transition"
+            onClick={toggleBookmark}
           >
-            <Bookmark className="h-5 w-5 sm:h-6 sm:w-6" />
+              <Bookmark
+              className={`h-5 w-5 sm:h-6 sm:w-6 transition-colors ${
+                isBookmarked ? "text-red-500" : "text-gray-400"
+              }`}
+            />
           </button>
           <Button
             size="lg"
             className="px-6 py-3 sm:px-8"
-            onClick={() => router.push('/jobseeker/applynow')}
+            onClick={() => router.push(`/jobseeker/applynow/${job.id}`)}
           >
             Apply Now
           </Button>
@@ -80,7 +113,7 @@ const ApplyCard = () => {
 
       {/* Posted Date */}
       <div className="text-sm text-muted-foreground">
-        Posted 3 days ago
+       {new Date(job.created_at).toLocaleString()}
       </div>
     </div>
   );

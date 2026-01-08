@@ -113,6 +113,7 @@ model JobSeeker {
   educations            Education[]
   applications          Applications[]
   recommendations       Recommendations[]
+  bookmarks             Bookmarks[]
 
   @@map("Job_Seeker")
 }
@@ -181,9 +182,21 @@ model Jobs {
   salary_type        SalaryType
   benefits           String[]
   skills             String[]
+  bookmarks          Bookmarks[]
   
-
   @@map("Jobs")
+}
+
+model Bookmarks {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  jobseeker_id  String     @db.ObjectId
+  job_id        String     @db.ObjectId
+  created_at    DateTime   @default(now())
+
+  jobseeker     JobSeeker  @relation(fields: [jobseeker_id], references: [id])
+  job           Jobs       @relation(fields: [job_id], references: [id])
+  @@unique([jobseeker_id, job_id])
+  @@map("Bookmarks")
 }
 
 model Applications {

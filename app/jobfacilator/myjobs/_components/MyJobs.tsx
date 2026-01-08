@@ -16,16 +16,45 @@ import { jobs } from "@/lib/candidateData";
 import Candidate from "./Candidate";
 import { useParams } from "next/navigation";
 import { useAuthStore } from "@/app/store/useAuthStore";
+import { useSocket } from "@/app/providers/SocketProvider";
+import { toast } from "sonner";
 const MyJobs = () => {
 const [jobs, setJobs] = useState<any[]>([]);
 const [selectedJob, setSelectedJob] = useState<any | null>(null);
 const [candidates, setCandidates] = useState<any[]>([]);
   const user = useAuthStore(state =>state.user)
+    const socket = useSocket();
 
   const {id}= useParams()
   console.log("Frontend",id);
 
   console.log("selectejob",selectedJob);
+
+
+
+useEffect(() => {
+  if (!socket) return;
+
+  const handleNotification = (notification: any) => {
+    toast(notification.message); 
+
+  
+    setCandidates((prev) =>
+      prev.map((c) =>
+        c.id === notification.applicationId
+          ? { ...c, status: notification.status }
+          : c
+      )
+    );
+  };
+
+  socket.on("new-notification", handleNotification);
+
+  return () => {
+    socket.off("new-notification", handleNotification);
+  };
+}, [socket]);
+
   
   
 useEffect(() => {
@@ -58,14 +87,24 @@ useEffect(() => {
     { value: "REJECTED", label: "Rejected" },
   ];
 
-  const updateStatus = (
-    id: number,
-    status: "SCREENING" | "REJECTED" | "PENDING"
-  ) => {
-    setCandidates((prev) =>
-      prev.map((c) => (c.id == id ? { ...c, status } : c))
-    );
-  };
+const updateStatus = async (
+  applicationId: number,
+  status: "SCREENING" | "REJECTED" | "PENDING"
+) => {
+  await fetch("/api/jobseeker/myapplications/status", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${user?.token}`,
+    },
+    body: JSON.stringify({ applicationId, status }),
+  });
+
+  setCandidates((prev) =>
+    prev.map((c) => (c.id === applicationId ? { ...c, status } : c))
+  );
+};
+
 
   return (
     <div className="font-playfair max-w-7xl mx-auto">
@@ -130,6 +169,7 @@ useEffect(() => {
                             skills={candidate?.seeker?.technical_skills}
                             status={candidate?.status}
                             applicationId={candidate.id}
+                            jobseekerId={candidate?.seeker?.id}
                           />
                       ))}
                   </div>

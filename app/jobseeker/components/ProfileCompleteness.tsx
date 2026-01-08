@@ -1,16 +1,28 @@
 "use client"
+import { Candidate } from '@/app/types/types';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-import React from 'react';
+type ProfileCompletenessProps = {
+  profile: Candidate | null
+};
 
-const ProfileCompleteness = () => {
+
+
+
+const ProfileCompleteness:React.FC<ProfileCompletenessProps> = ({profile}) => {
   const profileItems = [
-    { name: 'Basic Information', completed: true },
-    { name: 'Resume Upload', completed: false },
-    { name: 'Skills Added', completed: true },
-    { name: 'Work Experience', completed: false },
+    { name: "Basic Information", completed: !!(profile?.user?.name && profile?.user?.email) },
+    { name: "Profile Photo", completed: !!profile?.profile_image },
+    { name: "Resume Upload", completed: !!profile?.resume_url },
+    { name: "Skills Added", completed: !!(profile?.technical_skills?.length || profile?.soft_skills?.length) },
+    { name: "Links", completed: !!(profile?.linkedin_url || profile?.portfolio_url) },
+    { name: "Education", completed: (profile?.educations?.length ?? 0) > 0 },
+
+
+
+  
   ];
 
   const completedCount = profileItems.filter(item => item.completed).length;

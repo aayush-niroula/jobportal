@@ -34,7 +34,7 @@ const page = () => {
 }
   return (
     <div className="bg-[#F1F5F9] min-h-screen">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+      <div className="max-w-360 mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
         <CandiateTop
           candidatename={candidate.user?.name ?? ""}
           expericence="5"

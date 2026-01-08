@@ -6,7 +6,12 @@ import { authenticate } from "@/app/utils/auth";
 export async function POST(req: NextRequest) {
   try {
     const auth = await authenticate(req)
-    if(!auth || "userId" in auth === false) return
+    if(!auth || "userId" in auth === false){
+  return NextResponse.json(
+    { message: "Unauthorized" },
+    { status: 401 }
+  );
+}
 
     const userId = auth.userId
 
