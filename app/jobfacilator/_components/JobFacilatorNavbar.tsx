@@ -40,7 +40,7 @@ router.push('/')
            <Link href={'/jobfacilator'}> <li className="cursor-pointer nav-underline">Dashboard</li></Link>
            <Link href={`/jobfacilator/myjobs/${user?.id}`}> <li className="cursor-pointer nav-underline">My Jobs</li></Link>
         <Link href={'/jobfacilator/candidates'}><li className="cursor-pointer nav-underline">Candidates</li></Link> 
-          <Link href={'/jobseeker/events'}><li className="cursor-pointer nav-underline">Events</li></Link>
+          <Link href={'/jobfacilator/events'}><li className="cursor-pointer nav-underline">Event</li></Link>
            <Link href={`/jobfacilator/postajob/${id}`}><li className="cursor-pointer nav-underline">Post a New Job</li></Link>
 
            

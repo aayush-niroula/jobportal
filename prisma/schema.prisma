@@ -22,6 +22,7 @@ model User {
   facilitator     JobFacilitator?   
   seeker          JobSeeker?       
   notifications   Notifications[]
+  event_registration EventRegistrations[]
 
   @@map("User")
 }
@@ -71,6 +72,7 @@ model JobFacilitator {
   company_logo    String?
   gallery_images    String[]
   features          String[]
+  events            Events[]
  
 
   @@map("Job_facilitator")
@@ -257,6 +259,45 @@ model Interviews {
   notes           String?
   created_at      DateTime @default(now())
   application     Applications @relation(fields: [application_id], references: [id])
+}
+
+model Events{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  facilitator_id String @db.ObjectId
+  facilitator  JobFacilitator @relation(fields: [facilitator_id],references: [id])
+  title String
+  description String
+  date  DateTime
+  time String
+  location String
+  capacity Int
+  duration String
+  category String
+  price   String
+  prerequisites  String[]
+  whatYouWillLearn   String[]
+  requirments       String[]
+
+  image_url      String?
+  created_at    DateTime @default(now())
+  registrations  EventRegistrations[]
+
+  @@map("Events")
+}
+
+model EventRegistrations {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  event_id    String   @db.ObjectId
+  user_id     String   @db.ObjectId   
+
+  role        String   
+  registered_at DateTime @default(now())
+
+  event       Events @relation(fields: [event_id], references: [id])
+  user        User   @relation(fields: [user_id], references: [id])
+
+  @@unique([event_id, user_id])
+  @@map("Event_Registrations")
 }
 
 enum InterviewType {

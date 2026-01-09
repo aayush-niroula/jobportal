@@ -46,6 +46,9 @@ router.push('/')
           <Link href="/findjobs">
             <li className="cursor-pointer nav-underline">Find Jobs</li>
           </Link>
+          <Link href="/jobseeker/events">
+            <li className="cursor-pointer nav-underline">Events</li>
+          </Link>
 
           <div className="flex gap-4 items-center">
             <Notification />
