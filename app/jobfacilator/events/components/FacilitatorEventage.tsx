@@ -11,10 +11,8 @@ export const FacilitatorEventsPage = () => {
 
   const fetchEvents = async () => {
     const res = await fetch("/api/events");
-    const data = await res.json();
-    console.log(data);
-    
-    setEvents(data);
+    const data = await res.json(); 
+    setEvents(data.events || []);
   };
 
   useEffect(() => {
@@ -66,7 +64,7 @@ export const FacilitatorEventsPage = () => {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {events.map((ev) => (
+        {events?.map((ev) => (
           <div key={ev.id} className="border p-4 rounded shadow-md">
             <h3 className="font-bold text-lg">{ev.title}</h3>
             <p>{ev.description}</p>

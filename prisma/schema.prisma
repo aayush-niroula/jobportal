@@ -273,6 +273,7 @@ model Events{
   capacity Int
   duration String
   category String
+  field     String?
   price   String
   prerequisites  String[]
   whatYouWillLearn   String[]

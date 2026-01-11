@@ -1,97 +1,113 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { CalendarRange, MapPin } from "lucide-react";
-import React, { useState } from "react";
+import { CalendarRange, Clock, MapPin, Users } from "lucide-react";
+import React, { useState, useEffect } from "react";
 import EventForm from "./EventForm";
 import EventLearnMore from "./EventLearnMore";
+import { useAuthStore } from "@/app/store/useAuthStore";
 
-const EventCard = () => {
-  const eventDetails = {
-  title: "Career Fair 2026",
-  description:
-    "Career Fair 2026 brings together leading companies, startups, and industry experts under one roof. Participants will get the opportunity to explore job openings, attend skill-building workshops, interact directly with recruiters, and expand their professional network. This event is ideal for students, fresh graduates, and early-career professionals looking to grow their careers.",
+interface EventProps {
+  event: {
+    id: string;
+    title: string;
+    description: string;
+    date: string;
+    time: string;
+    location: string;
+    capacity: number;
+    category?: string;
+    image_url?: string;
+    price: string;
+    duration: string;
+    whatYouWillLearn: string[];
+    reqiurements: string[];
+    prerequisites: string[];
+    facilitator: {
+      company_name: string;
+    };
+    registrations?: { user_id: string }[]; 
+  };
+}
 
-  date: "January 5, 2026",
-  time: "10:00 AM – 4:00 PM",
-  location: "Biratnagar",
-  capacity: 250,
+const EventCard = ({ event }: EventProps) => {
+  const user = useAuthStore((state) => state.user);
+  const [isRegistered, setIsRegistered] = useState(false);
+   const [registeredCount,setRegisteredCount] = useState(event.registrations?.length || 0)
 
-  duration: "6 hours",
-  category: "Career & Networking",
-  organizer: "Nepal Career Network",
-  price: "Free",
+    useEffect(() => {
+    const checkRegistration = async () => {
+      try {
+        const res = await fetch(`/api/events/register?eventId=${event.id}`,{
+          method:"GET",
+          headers:{
+            Authorization:`Bearer ${user?.token}`,
+            "Content-Type":"application/json"
+          }
+        });
+        const data = await res.json();
+        if (res.ok) setIsRegistered(data.registered);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    checkRegistration();
+  }, [event.id,user]);
 
-  prerequisites: [
-    "Bring an updated CV (digital or printed)",
-    "Basic understanding of your career interests",
-    "Professional attire recommended",
-  ],
 
-  whatYouWillLearn: [
-    "How to approach recruiters confidently",
-    "Current job market trends in Nepal",
-    "Effective CV and interview strategies",
-    "How to build a strong professional network",
-  ],
+ 
+  const handleRegistrationSuccess = () => {
+    setIsRegistered(true);
+    setRegisteredCount(prev =>prev +1 )
+  };
 
-  agenda: [
-    { time: "10:00 AM", activity: "Registration & Welcome Session" },
-    { time: "10:30 AM", activity: "Company Booth Visits" },
-    { time: "12:00 PM", activity: "Career Guidance Workshop" },
-    { time: "01:30 PM", activity: "Lunch Break" },
-    { time: "02:00 PM", activity: "Resume Review Session" },
-    { time: "03:30 PM", activity: "Networking & Closing Remarks" },
-  ],
-
-  requirements: [
-    "Valid registration confirmation",
-    "Notebook or digital device for notes",
-    "Positive attitude and willingness to network",
-  ],
-};
-
-  const [open, setOpen] = useState(false);
   return (
     <div className="bg-white border border-black w-full flex flex-col-reverse lg:flex-row p-4 font-playfair gap-4 max-w-7xl mx-auto rounded-2xl">
       <div className="flex-1 flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-          <h1 className="font-bold text-xl sm:text-2xl">
-            Event Name - Career Fair
-          </h1>
+          <h1 className="font-bold text-xl sm:text-2xl">{event.title}</h1>
           <div className="border border-black p-2 sm:p-3 rounded-sm w-fit text-sm sm:text-base">
-            Workshop
+            {event.category}
           </div>
         </div>
 
         <div className="bg-[#FEEFEF] p-3 rounded-md">
-          <p className="font-light text-sm sm:text-base">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-            veniam consectetur vero neque consequatur consequuntur suscipit
-            explicabo, eveniet libero voluptatum facere error totam itaque quis,
-            labore perferendis aperiam? Minus, quibusdam.
-          </p>
+          <p className="font-light text-sm sm:text-base">{event.description}</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm sm:text-base">
           <p className="flex items-center gap-2">
-            <CalendarRange /> January 5, 2026
+            <CalendarRange /> {new Date(event.date).toDateString()}
           </p>
           <p className="flex items-center gap-2">
-            <MapPin /> 10AM-4PM
+            <Clock /> {event.time}
           </p>
           <p className="flex items-center gap-2">
-            <MapPin /> Biratnagar
+            <MapPin /> {event.location}
           </p>
           <p className="flex items-center gap-2">
-            <MapPin /> 250 registered
+            <Users /> {registeredCount}/ {event.capacity} registered
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-2">
-          <EventForm />
+          <EventForm
+            eventId={event.id}
+            isRegistered={isRegistered} 
+            onSuccess={handleRegistrationSuccess}
+          />
           <EventLearnMore
-
-           {...eventDetails}
+            title={event.title}
+            date={event.date}
+            description={event.description}
+            location={event.location}
+            time={event.time}
+            prerequisites={event.prerequisites}
+            capacity={event.capacity}
+            category={event.category}
+            duration={event.duration}
+            requirements={event.reqiurements}
+            price={event.price}
+            whatYouWillLearn={event.whatYouWillLearn}
           />
         </div>
       </div>
@@ -99,9 +115,9 @@ const EventCard = () => {
       {/* Image */}
       <div className="shrink-0 mt-4 lg:mt-0 lg:ml-4">
         <img
-          src="/Logo.jpg"
+          src={event.image_url}
           alt="Event Logo"
-          className="object-cover w-full  max-w-50 rounded-2xl mx-auto lg:mx-0"
+          className="object-cover w-full max-w-50 rounded-2xl mx-auto lg:mx-0"
         />
       </div>
     </div>

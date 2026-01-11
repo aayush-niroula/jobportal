@@ -1,12 +1,40 @@
-import React from 'react'
+"use client"
 import EventSearchBar from './_components/EventSearchBar'
 import { Button } from '@/components/ui/button'
 import EventCard from './_components/EventCard'
 import FilterSection from '@/app/_components/FilterSection'
 import PastEventCard from './_components/PastEventCard'
 import Footer from '@/app/_components/Footer'
+import { useSearchParams } from 'next/navigation'
+import { useEvents } from '@/app/hooks/useEvents'
+import CategoryFilter from './_components/CategoryFilter'
+import FeaturedOrganizations from './_components/FeaturedOrganizations'
+import Pagination from './_components/Pagination'
 
 const page = () => {
+  const params = useSearchParams();
+  const search = params.get("search") || "";
+  const category = params.get("category") || "";
+  const page = Number(params.get("page") || 1);
+
+  const {events,loading,error,totalPages,fieldCounts,categoryCounts} =useEvents({search,category,page})
+console.log(events);
+
+
+   const now = new Date();
+
+  const upcoming = events.filter(
+    (e) => new Date(e.date) >= now
+  );
+
+  const past = events.filter(
+    (e) => new Date(e.date) < now
+  );
+
+
+  
+ 
+
   return (
     <div className='flex flex-col justify-center items-center bg-[#F1F5F9] font-playfair p-10'>
         <EventSearchBar/>
@@ -16,27 +44,34 @@ const page = () => {
                 <h1 className='font-medium text-2xl'>Upcomming Events</h1>
                 <Button variant={'outline'} className='p-6 border-black mb-2'>View All</Button>
                 </div>
+                 {loading && <p>Loading...</p>}
+             {error && <p>{error}</p>}
                 <div className='flex flex-col gap-4'>
-                <EventCard/>
-                <EventCard/>
-                <EventCard/>
-                <EventCard/>
+                  {
+                    upcoming.map((event)=>(
+                        <EventCard key={event.id} event={event}/>
+                    ))
+                  }
+            
                 </div>
+                <Pagination
+                page={page}
+                totalPages={totalPages}
+                />
             </div>
             {/* right section  */}
             <div className='flex flex-col gap-6 shrink-0 w-full lg:w-87.5'>
-            <div className="bg-white border border-black rounded-2xl p-6 flex flex-col gap-4">
-            <h1 className="font-bold text-2xl">Event Categories</h1>
-            {['Career Fair', 'Workshop', 'Training', 'Webinar'].map((cat, idx) => (
-              <div key={idx} className="p-3 border border-black w-full flex justify-between">
-                <p>{cat}</p>
-                <span>(5)</span>
-              </div>
-            ))}
-          </div>
+
+            <CategoryFilter
+            categoryCounts={categoryCounts}
+            />
+          
              <FilterSection
-            title="Related Fileds"
+            title="Related Fields"
             showLocation={false}
+            queryKey='field'
+            counts={fieldCounts}
+
             options={[
               { label: "Technology", count: 180 },
               { label: "Business", count: 42 },
@@ -46,31 +81,10 @@ const page = () => {
             ]}
           />
 
-          {/* Featured Organization starts here */}
-              <div className="bg-white border border-black rounded-2xl p-4">
-            <h1 className="text-2xl sm:text-3xl font-medium text-center mb-4">Featured Organization</h1>
-            {Array(4).fill(0).map((_, idx) => (
-              <div key={idx} className="flex items-center gap-4 p-4 border-b last:border-b-0">
-                <img src="/Logo.jpg" alt="logo" className="h-[60px] w-[60px] sm:h-[73px] sm:w-[73px] rounded-full object-contain" />
-                <div className="flex flex-col gap-1">
-                  <h2 className="font-medium text-lg sm:text-xl">Organization Name</h2>
-                  <p className="text-sm font-light">14 events</p>
-                </div>
-              </div>
-            ))}
-          </div>
+  <FeaturedOrganizations/>
 
           {/* ends here  */}
 
-          {/* host an event starts here  */}
-
-          <div className='bg-white p-6 flex flex-col border border-black rounded-2xl gap-4'>
-            <h1 className='text-3xl font-bold '>Host an Event</h1>
-            <p className='text-md font-light'>Share your expertise and connect with professionals</p>
-            <Button className='p-6'>Create Event</Button>
-          </div>
-
-          {/* ends here */}
 
             </div>
 
@@ -80,20 +94,28 @@ const page = () => {
 {/* next section start vayo  */}
   <div className='w-full max-w-7xl bg-white sm:p-10 rounded-2xl mt-6'>
     <p className='flex justify-between items-center text-xl font-bold mb-4'>Past Events <Button>View All</Button></p>
-    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+   <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 
-    <PastEventCard/>
-    <PastEventCard/>
-    <PastEventCard/>
-    <PastEventCard/>
-    <PastEventCard/>
-    <PastEventCard/>
+  {past.length === 0 ? (
+    <div className="col-span-full text-center text-gray-500 py-10">
+      <p className="text-lg font-medium">No past events found</p>
+      <p className="text-sm">Check back later for completed events</p>
     </div>
+  ) : (
+    past.map((event) => (
+      <PastEventCard key={event.id} event={event} />
+    ))
+  )}
+
+</div>
+
   </div>
 
   {/* section finished  */}
 
   <Footer/>
+
+
 
 
 

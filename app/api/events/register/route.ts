@@ -10,11 +10,16 @@ export async function PATCH(req: NextRequest) {
 
   try {
     const { eventId } = await req.json();
-
     if (!eventId) {
       return NextResponse.json({ error: "Event ID is required" }, { status: 400 });
     }
 
+    const seeker = await prisma.jobSeeker.findUnique({ where: { user_id: auth.userId } });
+    if (!seeker) {
+      return NextResponse.json({ error: "Only Job Seekers can register for events" }, { status: 403 });
+    }
+
+   
     const existing = await prisma.eventRegistrations.findUnique({
       where: {
         event_id_user_id: {
@@ -28,16 +33,12 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Already registered" }, { status: 400 });
     }
 
-    const seeker = await prisma.jobSeeker.findUnique({ where: { user_id: auth.userId } });
-    const facilitator = await prisma.jobFacilitator.findUnique({ where: { user_id: auth.userId } });
-
-    const role = seeker ? "JobSeeker" : facilitator ? "Facilitator" : "User";
-
+   
     const registration = await prisma.eventRegistrations.create({
       data: {
         event_id: eventId,
         user_id: auth.userId,
-        role,
+        role: "JobSeeker", 
       },
     });
 
@@ -46,7 +47,42 @@ export async function PATCH(req: NextRequest) {
     console.error(error);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
+};
+
+
+export async function GET(req: NextRequest) {
+ 
+  const auth = await authenticate(req);
+  if (!auth || !("userId" in auth)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    
+    const url = new URL(req.url);
+    const eventId = url.searchParams.get("eventId");
+    if (!eventId) {
+      return NextResponse.json({ error: "Event ID required" }, { status: 400 });
+    }
+
+   
+    const registration = await prisma.eventRegistrations.findUnique({
+      where: {
+        event_id_user_id: {
+          event_id: eventId,
+          user_id: auth.userId,
+        },
+      },
+    });
+
+ 
+    return NextResponse.json({ registered: !!registration });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+  }
 }
+
 
 
 export async function PUT(req: NextRequest) {

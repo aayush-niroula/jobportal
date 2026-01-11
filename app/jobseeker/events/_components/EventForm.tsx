@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   Dialog,
@@ -16,104 +14,133 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuthStore } from "@/app/store/useAuthStore";
 
-const EventForm = () => {
+interface EventFormProps {
+  eventId: string;
+  isRegistered: boolean;
+  onSuccess?: () => void;
+}
+
+const EventForm = ({ eventId, isRegistered: initialRegistered, onSuccess }: EventFormProps) => {
   const [loading, setLoading] = useState(false);
+  const [registered, setRegistered] = useState(initialRegistered);
 
+  const user = useAuthStore((state) => state.user);
+
+  useEffect(() => {
+    const checkRegistration = async () => {
+      try {
+        const res = await fetch(`/api/events/register?eventId=${eventId}`,{
+          method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
+        },
+        });
+        const data = await res.json();
+        setRegistered(data.registered);
+      } catch (err) {
+        console.error("Error checking registration:", err);
+      }
+    };
+    checkRegistration();
+  }, [eventId]);
+  
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+   if(registered) return 
     setLoading(true);
+    try {
+      const res = await fetch("/api/events/register", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify({ eventId }),
+      });
 
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+      const data = await res.json();
 
-    console.log("Event Registration Data:", data);
+      if (!res.ok) throw new Error(data.error || "Failed to register");
 
-    setTimeout(() => {
-      setLoading(false);
+      setRegistered(true); 
+      alert("Successfully registered for the event!");
+      onSuccess?.(); 
       e.currentTarget.reset();
-      alert("Registered successfully!");
-    }, 800);
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Register</Button>
+        <Button disabled={registered}>
+          {registered ? "Registered" : "Register"}
+        </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle>Event Registration</DialogTitle>
-        </DialogHeader>
+      {!registered && (
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Event Registration</DialogTitle>
+          </DialogHeader>
 
-        <Card className="border-none shadow-none">
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input id="name" name="name" required />
-              </div>
+          <Card className="border-none shadow-none">
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    defaultValue={user?.name || ""}
+                    required
+                    disabled
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" type="email" required />
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    defaultValue={user?.email || ""}
+                    required
+                    disabled
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input id="phone" name="phone" type="tel" />
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <Input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    defaultValue={user?.phone || ""}
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label>Event</Label>
-                <Select name="event" required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select an event" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="tech-conference">
-                      Tech Conference
-                    </SelectItem>
-                    <SelectItem value="workshop">Workshop</SelectItem>
-                    <SelectItem value="meetup">Community Meetup</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="notes">Additional Notes</Label>
+                  <Textarea id="notes" name="notes" />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="tickets">Number of Tickets</Label>
-                <Input
-                  id="tickets"
-                  name="tickets"
-                  type="number"
-                  min={1}
-                  defaultValue={1}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="notes">Additional Notes</Label>
-                <Textarea id="notes" name="notes" />
-              </div>
-
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Registering..." : "Register Now"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </DialogContent>
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? "Registering..." : "Register Now"}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </DialogContent>
+      )}
     </Dialog>
   );
 };

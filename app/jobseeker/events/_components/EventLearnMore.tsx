@@ -217,12 +217,6 @@ const EventLearnMore = ({
             </div>
           )}
 
-          {/* Register Button */}
-          <div className="pt-4 border-t-2 border-gray-100">
-            <Button className="w-full bg-linear-to-r from-slate-700 to-slate-900 hover:from-slate-800 hover:to-black text-white font-semibold py-6 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105">
-              Register for this Event
-            </Button>
-          </div>
         </div>
       </DialogContent>
     </Dialog>

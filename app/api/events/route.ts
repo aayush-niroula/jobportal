@@ -34,6 +34,7 @@ export async function POST(req:NextRequest) {
       capacity: Number(body.capacity),
       duration: body.duration,
       category: body.category,
+      field:body.field,
       price: body.price,
       prerequisites: body.prerequisites,
       whatYouWillLearn: body.whatYouWillLearn,
@@ -59,29 +60,68 @@ export async function GET(req: NextRequest) {
   const category = searchParams.get("category");
   const location = searchParams.get("location");
   const date = searchParams.get("date");
+  const field = searchParams.get("field");
+  const page = Number(searchParams.get("page") || 1);
+  const limit = 5;
+  const skip = (page - 1) * limit;
 
-  const events = await prisma.events.findMany({
-    where: {
-      AND: [
-        search
-          ? {
-              OR: [
-                { title: { contains: search, mode: "insensitive" } },
-                { description: { contains: search, mode: "insensitive" } },
-              ],
-            }
-          : {},
-        category ? { category } : {},
-        location ? { location } : {},
-        date ? { date: new Date(date) } : {},
-      ],
+ 
+  const where: any = {
+    AND: [
+      search
+        ? {
+            OR: [
+              { title: { contains: search, mode: "insensitive" } },
+              { description: { contains: search, mode: "insensitive" } },
+            ],
+          }
+        : undefined,
+      category ? { category: { equals: category, mode: "insensitive" } } : undefined,
+      field ? { field: { equals: field, mode: "insensitive" } } : undefined,
+      location ? { location: { contains: location, mode: "insensitive" } } : undefined,
+      date ? { date: new Date(date) } : undefined,
+    ].filter(Boolean),
+  };
+
+  const [events, total, categoryCountsRaw, fieldCountsRaw] = await Promise.all([
+    prisma.events.findMany({
+      where,
+      include: { facilitator: true, registrations: true },
+      orderBy: { date: "asc" },
+      skip,
+      take: limit,
+    }),
+    prisma.events.count({ where }),
+    prisma.events.groupBy({
+      by: ["category"],
+      _count: { category: true },
+    }),
+    prisma.events.groupBy({
+      by: ["field"],
+      _count: { field: true },
+    }),
+  ]);
+
+  const categoryCounts = categoryCountsRaw.reduce(
+    (acc, c) => ({ ...acc, [c.category]: c._count.category }),
+    {}
+  );
+
+ const fieldCounts = fieldCountsRaw.reduce(
+    (acc: Record<string, number>, f) => {
+      if (f.field) acc[f.field] = f._count.field;
+      return acc;
     },
-    include: {
-      facilitator: true,
-      registrations: true,
-    },
-    orderBy: { created_at: "desc" },
+    {}
+  );
+
+  return NextResponse.json({
+    events,
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+    categoryCounts,
+    fieldCounts,
   });
-
-  return NextResponse.json(events);
 }
+
