@@ -7,9 +7,41 @@ import RecentApplications from "./_components/RecentApplications";
 import Footer from "../_components/Footer";
 import VerificationPending from "./_components/VerificationPending";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useAuthStore } from "../store/useAuthStore";
 
 const page = () => {
   const router = useRouter()
+  const user = useAuthStore(state=>state.user)
+  const [jobsDetails,setJobDetails] =useState<any[]>([])
+
+  useEffect(()=>{
+   const fetchApplicationDetails = async()=>{
+    const res = await fetch(`/api/jobfacilator/jobapplications`,{
+      method:"GET",
+      headers:{
+        Authorization:`Bearer ${user?.token}`,
+        "Content-Type":"application/json"
+      }
+    })
+
+    const data = await res.json()
+    console.log(data.jobs);
+    setJobDetails(data.jobs)
+    
+   }
+   fetchApplicationDetails()
+  },[user?.token])
+
+    const totalApplications = jobsDetails?.reduce(
+    (sum, job) => sum + (job.totalApplications || 0),
+    0
+  );
+
+  const totalPending = jobsDetails?.reduce(
+    (sum, job) => sum + (job.statusCounts?.PENDING || 0),
+    0
+  );
   return (
     <div className="min-h-screen font-playfair bg-[#F1F5F9]">
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-10">
@@ -18,9 +50,9 @@ const page = () => {
           <VerificationPending />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Information title="Active Jobs" number={20} lastline="2 expiring soon" />
-          <Information title="Total Applications" number={20} lastline="+20 this week" />
-          <Information title="Pending Reviews" number={20} lastline="Requires action" />
+          <Information title="Active Jobs" number={jobsDetails?.length || 0} lastline="2 expiring soon" />
+          <Information title="Total Applications" number={totalApplications} lastline="+20 this week" />
+          <Information title="Pending Reviews" number={totalPending} lastline="Requires action" />
           <Information title="Profile Views" number={200} lastline="Last 20 days" />
         </div>
 
@@ -32,15 +64,16 @@ const page = () => {
             </div>
 
             <div className="flex flex-col gap-4">
-              {[1, 2, 3, 4].map((_, i) => (
+              {jobsDetails?.map((job, i) => (
                 <JobPostingCard
                   key={i}
-                  ApplicationNo={144}
-                  JobName="React Developer"
-                  Location="New York"
-                  JobType="Onsite"
-                  ReviewedNo={24}
-                  ShortlistedNo={14}
+
+                  ApplicationNo={job.totalApplications}
+                  JobName={job.jobName}
+                  Location={job.location}
+                  JobType={job.workmode}
+                  ReviewedNo={job?.statusCounts?.SCREENING}
+                  ShortlistedNo={job?.statusCounts?.INTERVIEW}
                   ViewsNo={2222}
                 />
               ))}

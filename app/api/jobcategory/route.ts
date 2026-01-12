@@ -35,9 +35,23 @@ export async function POST(req:NextRequest){
 export async function GET() {
   try {
     const categories = await prisma.job_Category.findMany({
-      select: { id: true, category_name: true },
+      select: {
+        id: true, 
+        category_name: true,
+        _count:{
+          select:{
+            jobs:true
+          }
+        }
+       },
     });
-    return NextResponse.json(categories);
+
+      const mappedCategories = categories.map(cat => ({
+      id: cat.id,
+      category_name: cat.category_name,
+      jobs_count: cat._count.jobs,
+    }));
+    return NextResponse.json(mappedCategories);
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Failed to fetch categories" }, { status: 500 });

@@ -25,11 +25,11 @@ import Footer from "@/app/_components/Footer";
 import { candidateData } from "@/lib/candidateData";
 import { ChevronLeft, ChevronRight, Filter } from "lucide-react";
 import { useAuthStore } from "@/app/store/useAuthStore";
+import { useSearchParams } from "next/navigation";
 const page = () => {
   const [currentPage,setCurrentPage]= useState(1)
 
   const [candidates,setCandidates]= useState<any[]>([])
-  const [showFilters, setShowFilters] = useState(false);
   const candidatesPerPage = 4;
   const indexOfLastCandidate = currentPage * candidatesPerPage;
   const indexOfFirstCandidate = indexOfLastCandidate - candidatesPerPage;
@@ -45,16 +45,18 @@ const page = () => {
     }
   };
 
+  const searchParms = useSearchParams();
+
   useEffect(()=>{
     const fetchAllCandidates = async() =>{
-      const res = await fetch('/api/jobseeker')
+      const res = await fetch(`/api/jobseeker?${searchParms.toString()}`)
       const data = await res.json()
       console.log(data);
       setCandidates(data.candidates)
       
     }
     fetchAllCandidates()
-  },[user?.id])
+  },[user?.id,searchParms])
   const getPageNumbers = () => {
     const pageNumbers = [];
     const maxVisiblePages = 5;
@@ -157,34 +159,37 @@ const page = () => {
                 <FilterSection
                   title="Experience level"
                   showLocation={false}
+                  queryKey="experience"
                   options={[
-                    { label: "Entry Level", count: 180 },
-                    { label: "Mid Level", count: 42 },
-                    { label: "Senior", count: 30 },
-                    { label: "Expert", count: 20 },
+                    { label: "Entry Level",value:"ENTRY", count: 180 },
+                    { label: "Mid Level", value:"MID",count: 42 },
+                    { label: "Senior",value:"SENIOR", count: 30 },
+                    { label: "Expert",value:"LEAD", count: 20 },
                   ]}
+
                 />
 
                 <FilterSection
                   title="Education level"
                   showLocation={false}
                   options={[
-                    { label: "High School", count: 180 },
-                    { label: "Associate's", count: 42 },
-                    { label: "Bachelor", count: 30 },
-                    { label: "Master's", count: 20 },
-                    { label: "PhD", count: 20 },
+                    { label: "High School", value:"SCHOOL",count: 180 },
+                    { label: "Associate's", value:"ASSOCIATE", count: 42 },
+                    { label: "Bachelor",  value:"BACHELOR",count: 30 },
+                    { label: "Master's", value:"MASTER", count: 20 },
+                    { label: "PhD",  value:"PHD",count: 20 },
                   ]}
                 />
 
                 <FilterSection
                   title="Skills"
                   showLocation={false}
+                  queryKey="skills"
                   options={[
-                    { label: "JavaScript", count: 180 },
-                    { label: "Java", count: 42 },
-                    { label: "Python", count: 30 },
-                    { label: "C#", count: 20 },
+                    { label: "JavaScript", value:"JavaScript", count: 180 },
+                    { label: "Java", value:"Java", count: 42 },
+                    { label: "Python", value:"Python", count: 30 },
+                    { label: "C#", value:"C#", count: 20 },
                   ]}
                 />
               </div>
@@ -242,38 +247,38 @@ const page = () => {
               <FilterSection
                 title="Experience level"
                 showLocation={false}
+                queryKey="experience"
                 options={[
-                  { label: "Entry Level", count: 180 },
-                  { label: "Mid Level", count: 42 },
-                  { label: "Senior", count: 30 },
-                  { label: "Expert", count: 20 },
-                ]}
+                    { label: "Entry Level",value:"ENTRY", count: 180 },
+                    { label: "Mid Level", value:"MID",count: 42 },
+                    { label: "Senior",value:"SENIOR", count: 30 },
+                    { label: "Expert",value:"LEAD", count: 20 },
+                  ]}
               />
 
               <FilterSection
                 title="Education level"
                 showLocation={false}
-                options={[
-                  { label: "High School", count: 180 },
-                  { label: "Associate's", count: 42 },
-                  { label: "Bachelor", count: 30 },
-                  { label: "Master's", count: 20 },
-                  { label: "PhD", count: 20 },
-                ]}
+                queryKey="education"
+      options={[
+                    { label: "High School", value:"SCHOOL",count: 180 },
+                    { label: "Associate's", value:"ASSOCIATE", count: 42 },
+                    { label: "Bachelor",  value:"BACHELOR",count: 30 },
+                    { label: "Master's", value:"MASTER", count: 20 },
+                    { label: "PhD",  value:"PHD",count: 20 },
+                  ]}
               />
 
               <FilterSection
                 title="Skills"
                 showLocation={false}
-                options={[
-                  { label: "JavaScript", count: 180 },
-                  { label: "Java", count: 42 },
-                  { label: "Python", count: 30 },
-                  { label: "C#", count: 20 },
-                  { label: "React", count: 150 },
-                  { label: "Node.js", count: 120 },
-                  { label: "AWS", count: 90 },
-                ]}
+                queryKey="skills"
+         options={[
+                    { label: "JavaScript", value:"JAVASCRIPT", count: 180 },
+                    { label: "Java", value:"JAVA", count: 42 },
+                    { label: "Python", value:"PYTHON", count: 30 },
+                    { label: "C#", value:"C#", count: 20 },
+                  ]}
               />
             </div>
           </div>

@@ -45,26 +45,47 @@ const jobsPerPage = 9;
 const page = () => {
   const router = useRouter();
   const params = useSearchParams();
-
   const [jobs, setJobs] = useState<Job[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
-
-
+  const [categories, setCategories] = useState<
+    { id: string; category_name: string }[]
+  >([]);
   const industryFilter = params.get("industry") || "all";
   const jobTypeFilter = params.get("jobType") || "all";
   const workModeFilter = params.get("workMode") || "all";
-
-  const totalPages = Math.ceil(jobs.length / jobsPerPage);
+  const [totalPages, setTotalPages] = useState(1);
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
   const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
+  const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>(
+    {}
+  );
+  const [jobTypeCounts, setJobTypeCounts] = useState<Record<string, number>>(
+    {}
+  );
+  const [workModeCounts, setWorkModeCounts] = useState<Record<string, number>>(
+    {}
+  );
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
     window.scrollTo({ top: 500, behavior: "smooth" });
   };
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/jobcategory");
+        const data = await res.json();
+        setCategories(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -86,8 +107,26 @@ const page = () => {
           setJobs([]);
           return;
         }
+        const mapCounts = (arr: any[], key: string) => {
+          const obj: Record<string, number> = {};
+          let total = 0;
+          arr.forEach((item) => {
+            const count = item._count?._all || 0;
+            obj[item[key]] = count;
+            total += count;
+          });
+          obj["all"] = total;
+          return obj;
+        };
+
+        setCategoryCounts(mapCounts(data.counts.category, "category_id"));
+        setJobTypeCounts(mapCounts(data.counts.jobType, "job_type"));
+        setWorkModeCounts(mapCounts(data.counts.workMode, "work_mode"));
 
         setJobs(data.data);
+        console.log(data);
+
+        setTotalPages(data.pagination.totalPages);
       } catch (err) {
         console.error(err);
         setJobs([]);
@@ -97,12 +136,12 @@ const page = () => {
     fetchJobs();
   }, [currentPage, search, industryFilter, jobTypeFilter, workModeFilter]);
 
-
   const industryOptions: FilterOption[] = [
     { label: "All", value: "all" },
-    { label: "IT", value: "IT" },
-    { label: "Medicine", value: "Medicine" },
-    { label: "Automobile", value: "Automobile" },
+    ...categories.map((cat) => ({
+      label: cat.category_name,
+      value: cat.id,
+    })),
   ];
 
   const jobTypeOptions: FilterOption[] = [
@@ -136,13 +175,12 @@ const page = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
-       
           <div className="hidden lg:flex flex-col gap-10 shrink-0">
             <div className="flex justify-between items-center">
               <h1>Advance Filter</h1>
               <Button
                 onClick={() => {
-                  router.push("/findjobs"); 
+                  router.push("/findjobs");
                   setCurrentPage(1);
                   setSearch("");
                 }}
@@ -156,26 +194,29 @@ const page = () => {
                 title="Industry"
                 options={industryOptions}
                 queryKey="industry"
+                counts={categoryCounts}
               />
               <FilterSection
                 title="Job Type"
                 options={jobTypeOptions}
                 queryKey="jobType"
+                counts={jobTypeCounts}
               />
               <FilterSection
                 title="Work Mode"
                 options={workModeOptions}
                 queryKey="workMode"
+                counts={workModeCounts}
               />
             </div>
           </div>
 
           {/* Jobs & mobile filters */}
           <div className="flex-1">
-          
             <div className="flex justify-between items-center lg:hidden mb-6">
               <p className="text-sm">
-                Showing {indexOfFirstJob + 1}-{Math.min(indexOfLastJob, jobs.length)} of {jobs.length}
+                Showing {indexOfFirstJob + 1}-
+                {Math.min(indexOfLastJob, jobs.length)} of {jobs.length}
               </p>
 
               <Sheet>
@@ -187,9 +228,21 @@ const page = () => {
                     <SheetTitle>Advance Filters</SheetTitle>
                   </SheetHeader>
                   <div className="flex flex-col gap-6 mt-6">
-                    <FilterSection title="Industry" options={industryOptions} queryKey="industry" />
-                    <FilterSection title="Job Type" options={jobTypeOptions} queryKey="jobType" />
-                    <FilterSection title="Work Mode" options={workModeOptions} queryKey="workMode" />
+                    <FilterSection
+                      title="Industry"
+                      options={industryOptions}
+                      queryKey="industry"
+                    />
+                    <FilterSection
+                      title="Job Type"
+                      options={jobTypeOptions}
+                      queryKey="jobType"
+                    />
+                    <FilterSection
+                      title="Work Mode"
+                      options={workModeOptions}
+                      queryKey="workMode"
+                    />
                   </div>
                 </SheetContent>
               </Sheet>
@@ -225,7 +278,11 @@ const page = () => {
                         e.preventDefault();
                         if (currentPage > 1) handlePageChange(currentPage - 1);
                       }}
-                      className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                      className={
+                        currentPage === 1
+                          ? "pointer-events-none opacity-50"
+                          : ""
+                      }
                     />
                   </PaginationItem>
 
@@ -234,7 +291,8 @@ const page = () => {
                     if (
                       pageNumber === 1 ||
                       pageNumber === totalPages ||
-                      (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+                      (pageNumber >= currentPage - 1 &&
+                        pageNumber <= currentPage + 1)
                     ) {
                       return (
                         <PaginationItem key={pageNumber}>
@@ -250,7 +308,10 @@ const page = () => {
                           </PaginationLink>
                         </PaginationItem>
                       );
-                    } else if (pageNumber === currentPage - 2 || pageNumber === currentPage + 2) {
+                    } else if (
+                      pageNumber === currentPage - 2 ||
+                      pageNumber === currentPage + 2
+                    ) {
                       return (
                         <PaginationItem key={pageNumber}>
                           <PaginationEllipsis />
@@ -265,9 +326,14 @@ const page = () => {
                       href="#"
                       onClick={(e) => {
                         e.preventDefault();
-                        if (currentPage < totalPages) handlePageChange(currentPage + 1);
+                        if (currentPage < totalPages)
+                          handlePageChange(currentPage + 1);
                       }}
-                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                      className={
+                        currentPage === totalPages
+                          ? "pointer-events-none opacity-50"
+                          : ""
+                      }
                     />
                   </PaginationItem>
                 </PaginationContent>

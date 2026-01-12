@@ -66,6 +66,22 @@ export async function GET(req: NextRequest) {
       isBookmarked: job.bookmarks?.length > 0,
     }));
 
+   const categoryCounts = await prisma.jobs.groupBy({
+  by: ["category_id"],
+  _count: { _all: true }
+});
+
+const jobTypeCounts = await prisma.jobs.groupBy({
+  by: ["job_type"],
+  _count: { _all: true }
+});
+
+const workModeCounts = await prisma.jobs.groupBy({
+  by: ["work_mode"],
+  _count: { _all: true }
+});
+
+
     return NextResponse.json({
       data: jobWithBookMark,
       pagination: {
@@ -74,6 +90,11 @@ export async function GET(req: NextRequest) {
         limit,
         totalPages: Math.ceil(totalJobs / limit),
       },
+      counts:{
+    category: categoryCounts,
+    jobType: jobTypeCounts,
+    workMode: workModeCounts
+      }
     });
   } catch (error) {
     console.log(error);

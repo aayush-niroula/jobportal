@@ -8,7 +8,8 @@ import { useAuthStore } from "@/app/store/useAuthStore";
 const RecentApplications = () => {
   const user = useAuthStore(state =>state.user)
   const [recentapplication,setRecentApplications] = useState<any[]>([])
-console.log("recentapplication",recentapplication);
+console.log(recentapplication);
+
 
 
 useEffect(() => {
@@ -48,10 +49,11 @@ useEffect(() => {
     id={application?.seeker?.id}
     name={application?.seeker?.user?.name}  
     appliedfor={application?.job?.job_name}
-    appliedtime={new Date(application?.appliedAt).getTime()}
+    appliedtime={new Date(application?.applied_at).getHours()}
     skills = {application?.seeker?.soft_skills}
     seeker_image={application?.seeker.profile_image}
     applicationId={application?.id}
+    status ={application.status}
   />
 ))}
 

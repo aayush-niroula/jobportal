@@ -14,9 +14,10 @@ type RecentApplication={
     appliedtime:number,
     skills:string[],
     seeker_image:string
+    status: "PENDING" | "SCREENING" | "REJECTED" | "INTERVIEW";
 }
 
-const RecentApplicationCard = ({id,name,appliedfor,appliedtime,skills,seeker_image,applicationId}:RecentApplication) => {
+const RecentApplicationCard = ({id,name,appliedfor,appliedtime,skills,seeker_image,applicationId,status}:RecentApplication) => {
     const router = useRouter()
      const user = useAuthStore(state => state.user)
   const socket = useSocket()

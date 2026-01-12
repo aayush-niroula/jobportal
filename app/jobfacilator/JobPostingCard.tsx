@@ -17,9 +17,6 @@ const JobPostingCard = ({JobName,Location,JobType,ApplicationNo,ReviewedNo,Short
            <h1 className='text-xl font-bold'>{JobName}</h1>
            <p className='text-sm flex gap-8 font-medium'>{Location} <span>{JobType}</span></p>
         </div>
-        <div>
-            <Button variant={'outline'}>Edit</Button>
-        </div>
     </div>
     <div className='grid grid-cols-2 sm:grid-cols-4 gap-6 '>
         <div className='flex flex-col gap-2'>

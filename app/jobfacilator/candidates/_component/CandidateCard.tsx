@@ -19,7 +19,7 @@ const CandidateCard = ({name,location,education,description,role,skill1,skill2,s
   return (
     <div className="w-full bg-white font-playfair p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-200 flex flex-col lg:flex-row gap-6">
         <div className="flex justify-center lg:justify-start">
-            <img src={image || "/goat.jpg"} alt="candidate-image"  className="w-28 h-28 sm:w-36 sm:h-36 lg:w-48 lg:h-48 rounded-full object-cover"/>
+            <img src={image || "cn"} alt="candidate-image"  className="w-28 h-28 sm:w-36 sm:h-36 lg:w-48 lg:h-48 rounded-full object-cover"/>
         </div>
         <div className="flex flex-col gap-2 flex-1">
             <h1 className="font-bold text-xl">{name}</h1>

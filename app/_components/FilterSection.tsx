@@ -40,6 +40,8 @@ const FilterSection = ({
     newParams.set("page", "1"); 
     router.push(`?${newParams.toString()}`);
   };
+  console.log(counts);
+  
   return (
     <div
       className="
@@ -73,13 +75,13 @@ const FilterSection = ({
             <div className="flex items-center gap-2">
               <input
                type="checkbox" 
-               checked ={selected === item.label}
-               onChange={()=>handleFilter(item.label)}
+               checked ={selected === item.value}
+               onChange={()=>handleFilter(item?.value)}
                />
               <label>{item.label}</label>
             </div>
 
-            <p className="bg-green-300 px-3 py-1 rounded-2xl">{counts[item.label] || 0 }</p>
+            <p className="bg-green-300 px-3 py-1 rounded-2xl">{counts[item.value] || 0 }</p>
           </div>
         ))}
       </div>
