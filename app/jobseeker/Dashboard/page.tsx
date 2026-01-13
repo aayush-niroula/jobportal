@@ -18,6 +18,32 @@ const page = () => {
   const [profileData,setProfileData]= useState<Candidate | null>(null)
   const [featuredJobs,setFeaturedJobs]= useState<Job[]>([])
   const [recentApplications,setRecentApplications] = useState<Application[]>([])
+  const [bookmarkedJobs,setBookmarkedJobs] = useState<Job[]>([])
+
+    const fetchBookmarkedJobs = async () => {
+      if (!user?.token) return;
+  
+      try {
+  
+        const res = await fetch("/api/bookmark", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const data:Job[] = await res.json();
+        
+    
+        setBookmarkedJobs(data);
+      } catch (err) {
+        console.error("Failed to fetch bookmarked jobs:", err);
+      }
+    };
+    useEffect(() => {
+    fetchBookmarkedJobs();
+  }, [user?.token]);
+
 const fetchJobs = useCallback(async()=>{
  const res = await fetch('/api/jobseeker/jobs')
  const data = await res.json()
@@ -107,13 +133,19 @@ const bookmarkCount = profileData?.bookmarks?.length ?? 0
             {featuredJobs?.map((job, i) => (
               <ApplyCard key={i} 
                 job={job}
-                onToggleBookmark = {fetchJobs}
+                onToggleBookmark = {()=>{
+                  fetchJobs()
+                  fetchBookmarkedJobs()
+                }}
 
 
               />
             ))}
 
-              <BookmarkedJobs/>
+              <BookmarkedJobs
+              bookmarkedJobs = {bookmarkedJobs}
+              fetchBookmarkedJobs = {fetchBookmarkedJobs}
+              />
           </div>
           {/* Right: Sidebar */}
           <div className="space-y-6 lg:col-span-1 lg:mt-15">

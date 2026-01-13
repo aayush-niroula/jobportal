@@ -53,6 +53,7 @@ model JobFacilitator {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   company_name    String   
   company_email   String
+  company_phone   String?
   user_id         String   @unique @db.ObjectId
   role_id         String   @db.ObjectId
   created_at      DateTime @default(now())
@@ -84,7 +85,7 @@ model Facilitator_verification {
   document_url      String
   registration_no   String
   status            String
-  submitted_at      DateTime
+  submitted_at      DateTime  @default(now())
   facilitator       JobFacilitator @relation(fields: [facilitator_id], references: [id])
 
   @@map("facilitator_verification")

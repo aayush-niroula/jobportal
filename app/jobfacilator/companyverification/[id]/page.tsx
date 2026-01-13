@@ -1,3 +1,4 @@
+"use client"
 import { Button } from '@/components/ui/button'
 import CompanyInformation from '../_components/CompanyInformation'
 import VerificationDocuments from '../_components/VerificationDocuments'
@@ -5,7 +6,18 @@ import VerificationRequired from '../_components/VerificationRequired'
 import RequiredDocuments from '../_components/RequiredDocuments'
 import VerificationProcess from '../_components/VerificationProcess'
 import Footer from '@/app/_components/Footer'
+import { useState } from 'react'
 const page = () => {
+    const [companyInfo, setCompanyInfo] = useState({
+    company_name: "",
+    registration_no: "",
+    email: "",
+    phone: "",
+    address: "",
+    website: "",
+    status:"",
+    document_url:""
+  });
   return (
     <div className='bg-[#F1F5F9] font-playfair p-10 flex flex-col gap-8 '>
       <div className='flex flex-col gap-2 mb-4 text-center'> 
@@ -19,16 +31,9 @@ const page = () => {
 
       <div className='grid gap-6 lg:grid-cols-[1fr_350px] max-w-[1200px] mx-auto '>
         <div className='flex flex-col gap-6'>
-          <CompanyInformation/>
-          <VerificationDocuments/>
-          <div className='bg-white rounded-2xl p-6 max-w-[755px]'>
-            <h1>Additional Information</h1>
-            <textarea className='lg:w-full lg:h-full md:w-full h-auto border border-black p-2'/>
-          </div>
-          <div className='flex justify-between max-w-[755px]'>
-            <Button variant={'outline'} className='p-6'>Cancel</Button>
-            <Button className='p-6'>Submit</Button>
-          </div>
+      <CompanyInformation setCompanyInfo={setCompanyInfo} />
+          <VerificationDocuments companyInfo={companyInfo} />
+          
         </div>
         {/* right section suru */}
         <div className='flex flex-col items-center w-auto  gap-4 lg:w-[335px] lg:flex lg:gap-8 '>

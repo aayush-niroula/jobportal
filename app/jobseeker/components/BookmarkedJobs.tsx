@@ -6,37 +6,14 @@ import { useAuthStore } from "@/app/store/useAuthStore";
 import { useEffect, useState } from "react";
 import { Job } from "@/app/types/types";
 
-const BookmarkedJobs = () => {
-  const user = useAuthStore(state => state.user);
-  const [bookmarkedJobs, setBookmarkedJobs] = useState<Job[]>([]);
-console.log(bookmarkedJobs);
+interface BookmarkedJobsProps {
+  bookmarkedJobs: Job[];
+  fetchBookmarkedJobs: () => void;
+}
 
+const BookmarkedJobs = ({bookmarkedJobs,fetchBookmarkedJobs}:BookmarkedJobsProps) => {
 
-  const fetchBookmarkedJobs = async () => {
-    if (!user?.token) return;
-
-    try {
-
-      const res = await fetch("/api/bookmark", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const data:Job[] = await res.json();
-      
   
-      setBookmarkedJobs(data);
-    } catch (err) {
-      console.error("Failed to fetch bookmarked jobs:", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchBookmarkedJobs();
-  }, [user?.token]);
-
   return (
     <section className="space-y-4">
       <div className="flex items-center justify-between">

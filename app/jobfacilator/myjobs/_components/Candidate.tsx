@@ -105,7 +105,7 @@ const [meetingLink, setMeetingLink] = useState("");
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      message: "Interview scheduled for your application",
+      message: `Interview scheduled for your application`,
       type: "INTERVIEW",
       applicationId,
       status: "INTERVIEW"
@@ -115,7 +115,7 @@ const [meetingLink, setMeetingLink] = useState("");
    socket?.emit("send-notification", {
     notification: {
       userId:jobseekerId,
-      message: "Interview scheduled for your application",
+      message: `Interview scheduled for your application at date ${dateTime} and note ${notes} `,
       type: "INTERVIEW",
       created_at: new Date(),
       is_read: false,

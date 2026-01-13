@@ -56,7 +56,7 @@ const Notifications = () => {
             Authorization: `Bearer ${user?.token}`,
           },
         });
-        if (!res.ok) throw new Error("Failed to fetch notifications");
+     if(!res.ok) return 
         const data = await res.json();
         const mapped = data.map(normalizeNotification);
         setNotifications(mapped);
