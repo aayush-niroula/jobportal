@@ -22,7 +22,7 @@ router.push('/')
   return (
     <nav className="w-full bg-[#F8F9FA] text-black font-playfair px-6 py-4 shadow-md">
       <div className="flex justify-between items-center w-full">
-        <div className="flex items-center gap-3">
+        <Link href={'/jobseeker/Dashboard'}><div className="flex items-center gap-3">
           <img
             src="/Talent.png"
             alt="logo"
@@ -30,13 +30,10 @@ router.push('/')
           />
           <h1 className="font-bold text-xl">TALENT LOOP</h1>
         </div>
+        </Link>
 
     
         <ul className="hidden md:flex gap-10 items-center text-lg">
-          <Link href="/jobseeker/Dashboard">
-            <li className="cursor-pointer nav-underline">Dashboard</li>
-          </Link>
-
          <Link href={'/jobseeker/myapplicatons'}> <li className="cursor-pointer nav-underline">My Applications</li></Link>
 
           <Link href="/jobseeker/uploadresume">
@@ -51,7 +48,7 @@ router.push('/')
           </Link>
 
           <div className="flex gap-4 items-center">
-            <Notification />
+            
             <AvatarDropDown/>
           </div>
 

@@ -132,7 +132,9 @@ const bookmarkCount = profileData?.bookmarks?.length ?? 0
             <h1 className="font-playfair text-xl lg:text-4xl lg:font-bold">Featured jobs</h1>
             {featuredJobs?.map((job, i) => (
               <ApplyCard key={i} 
-                job={job}
+                job={{
+                  ...job,isBookmarked:bookmarkedJobs?.some(b=>b.id ===job?.id)
+                }}
                 onToggleBookmark = {()=>{
                   fetchJobs()
                   fetchBookmarkedJobs()

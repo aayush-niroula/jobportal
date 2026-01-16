@@ -30,7 +30,10 @@ import {
 interface Job {
   id: string;
   job_name: string;
-  facilitator: { company_name: string };
+  facilitator: {
+    company_name: string 
+    company_logo:string
+  };
   location: string;
   salary_max: number;
   salary_min: number;
@@ -102,6 +105,8 @@ const page = () => {
 
         const res = await fetch(`/api/jobseeker/jobs?${query.toString()}`);
         const data = await res.json();
+        console.log(data);
+        
 
         if (!res.ok || !Array.isArray(data.data)) {
           setJobs([]);
@@ -163,7 +168,6 @@ const page = () => {
   return (
     <div className="p-4 md:p-6 lg:p-10 font-playfair flex flex-col items-center bg-[#F1F5F9]">
       <div className="w-full max-w-7xl">
-        {/* Search */}
         <div className="mb-6 md:mb-8">
           <Searchbar
             value={search}
@@ -263,6 +267,7 @@ const page = () => {
                   posted={job.created_at}
                   description={job.description.join(" ")}
                   skills={job.skills}
+                  company_logo={job.facilitator.company_logo}
                 />
               ))}
             </div>

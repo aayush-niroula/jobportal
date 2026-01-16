@@ -94,17 +94,18 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Jobseeker not found" }, { status: 404 });
     }
 
-  
     const bookmarks = await prisma.bookmarks.findMany({
-      where: { jobseeker_id: jobseeker.id },
-      select: { 
-        job: true,
+      where:{jobseeker_id:jobseeker.id},
+      select:{
+        job:{
+          include:{
+            facilitator:true
+          }
+        },
         created_at:true
-     },
-     
- 
-    });
-
+      }
+    })
+    
     const bookmarkedJobs = bookmarks.map(b => ({
       ...b.job,
       isBookmarked: true,

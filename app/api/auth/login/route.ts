@@ -43,7 +43,7 @@ export async function POST(req:NextRequest){
         expiresIn:'5h'
      })
     
-    return NextResponse.json({token,user:{id:user.id,email:user.email,name:user.name,phone:user.phone,role:user.role.role_name,facilitatorId:user.facilitator?.id || null, seekerId:user.seeker?.id}})
+    return NextResponse.json({token,user:{id:user.id,email:user.email,name:user.name,phone:user.phone,role:user.role.role_name,facilitatorId:user.facilitator?.id || null, seekerId:user.seeker?.id,profileImage:user.seeker?.profile_image || user.facilitator?.company_logo || ""}})
 
 
 

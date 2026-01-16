@@ -11,7 +11,7 @@ export async function GET(req:NextRequest) {
 
     const job_seeker = await prisma.jobSeeker.findUnique({
         where:{
-            id:userId
+            user_id:userId
         },
     })
         const applications = await prisma.applications.findMany({

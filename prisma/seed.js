@@ -1,61 +1,29 @@
+import { PrismaClient } from "@prisma/client";
 
-import {MongoClient} from 'mongodb'
-
-const DATABASE_URL = "mongodb+srv://aayushniroula645:ayush@cluster0.ntj2h3i.mongodb.net/job-portal?retryWrites=true&w=majority&appName=Cluster0"
-
-if (!DATABASE_URL) {
-  throw new Error("DATABASE_URL is not set");
-}
+const prisma = new PrismaClient();
 
 async function main() {
-  const client = new MongoClient(DATABASE_URL);
+  console.log("Seeding default views...");
 
-  try {
-    await client.connect();
-    console.log("✅ Connected to MongoDB");
+  const facilitatorResult = await prisma.jobFacilitator.updateMany({
+    data: { profile_views: 0 },
+  });
+  console.log(`Updated ${facilitatorResult.count} facilitators`);
 
-    const db = client.db(); // uses db from connection string
-    const jobs = db.collection("Jobs");
 
-    const fieldsToFix = [
-      "description",
-      "responsibilities",
-      "requirements",
-      "preferred_qualifications",
-      "benefits",
-      "skills",
-    ];
+  const jobResult = await prisma.jobs.updateMany({
+    data: { views: 0 },
+  });
+  console.log(`Updated ${jobResult.count} jobs`);
 
-    for (const field of fieldsToFix) {
-      const result = await jobs.updateMany(
-        { [field]: { $type: "string" } },
-        [
-          {
-            $set: {
-              [field]: {
-                $cond: {
-                  if: { $eq: [{ $type: `$${field}` }, "string"] },
-                  then: [`$${field}`],
-                  else: `$${field}`,
-                },
-              },
-            },
-          },
-        ]
-      );
-
-      console.log(
-        `🔧 Fixed ${result.modifiedCount} documents for field: ${field}`
-      );
-    }
-
-    console.log("🎉 Jobs data normalized successfully");
-  } catch (error) {
-    console.error("❌ Seed failed:", error);
-  } finally {
-    await client.close();
-    console.log("🔌 MongoDB connection closed");
-  }
+  console.log("Seeding complete ✅");
 }
 
-main();
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

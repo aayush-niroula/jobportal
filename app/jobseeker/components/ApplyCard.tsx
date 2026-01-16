@@ -33,6 +33,19 @@ const ApplyCard = ({job,onToggleBookmark}:ApplyCardProps) => {
  }
 };
 
+const handleApply =async()=>{
+
+  await fetch(`/api/jobseeker/increment-views`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({jobId:job_id}),
+    keepalive:true
+  })
+  
+
+ router.push(`/jobseeker/applynow/${job.id}`)
+}
+
 
 
 
@@ -104,7 +117,7 @@ const ApplyCard = ({job,onToggleBookmark}:ApplyCardProps) => {
           <Button
             size="lg"
             className="px-6 py-3 sm:px-8"
-            onClick={() => router.push(`/jobseeker/applynow/${job.id}`)}
+            onClick={handleApply }
           >
             Apply Now
           </Button>

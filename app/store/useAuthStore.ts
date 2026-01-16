@@ -8,7 +8,8 @@ interface User {
   name?:string;
   facilitatorId?:string
   seekerId?:string
-  token:string
+  token:string,
+  profileImage?:string
 }
 
 interface AuthState {

@@ -22,59 +22,133 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-type Userdata ={
+type Userdata = {
   name: string;
   email: string;
   phone?: string;
   password: string;
   role_name: string;
-}
+};
 
 export default function RegisterPage() {
-  const [name,setName]= useState("")
-  const [email,setEmail]=useState("")
-  const [phone,setPhone]=useState("")
-  const [password,setPassword]=useState("")
-  const [confirmpassword,setConfirmPassword]=useState("")
-  const [role_name,setRoleName]=useState('')
- const router = useRouter()
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmpassword, setConfirmPassword] = useState("");
+  const [role_name, setRoleName] = useState("");
+  const [errors, setErrors] = useState({
+    name: false,
+    email: false,
+    phone: false,
+    password: false,
+    confirmpassword: false,
+    role_name: false,
+  });
 
-  async function registerUser(userData:Userdata) {
-    const res = await fetch("/api/auth/register",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(userData)
-    })
+  const router = useRouter();
 
-    if(!res.ok) throw new Error("failed to register")
+  async function registerUser(userData: Userdata) {
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    });
 
-    return res.json()
+    if (!res.ok) throw new Error("failed to register");
+
+    return res.json();
   }
 
-  const handleRegister = async (e: React.FormEvent)=>{
+  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const validatePhone = (phone: string) => /^\+?\d{7,15}$/.test(phone);
+
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-   if(!name || !email || !password || !confirmpassword){
-    return toast.error("All fields are required")
-   }
-   if(password !== confirmpassword){
-    return toast.message("Password and confirnm password doesnot match")
-   }
-   if(!role_name){
-    return toast.message("please select the role_name")
-  }
-  const data = {name,email,phone,password,role_name}
-try {
-  
-  const res =await registerUser(data)
-   toast.success("User registered successfully")
-    router.push('/login')
-   
-  
-} catch (error) {
-  
-}
 
-  }
+ 
+    setErrors({
+      name: false,
+      email: false,
+      phone: false,
+      password: false,
+      confirmpassword: false,
+      role_name: false,
+    });
+
+    let hasError = false;
+
+    if (!name) {
+      setErrors((prev) => ({ ...prev, name: true }));
+      toast.error("Full name is required");
+      hasError = true;
+    }
+
+    if (!email) {
+      setErrors((prev) => ({ ...prev, email: true }));
+      toast.error("Email is required");
+      hasError = true;
+    } else if (!validateEmail(email)) {
+      setErrors((prev) => ({ ...prev, email: true }));
+      toast.error("Please enter a valid email address");
+      hasError = true;
+    }
+
+    if (phone && !validatePhone(phone)) {
+      setErrors((prev) => ({ ...prev, phone: true }));
+      toast.error("Please enter a valid phone number");
+      hasError = true;
+    }
+
+    if (!password) {
+      setErrors((prev) => ({ ...prev, password: true }));
+      toast.error("Password is required");
+      hasError = true;
+    } else if (password.length < 8) {
+      setErrors((prev) => ({ ...prev, password: true }));
+      toast.error("Password must be at least 8 characters");
+      hasError = true;
+    }
+
+    if (!confirmpassword) {
+      setErrors((prev) => ({ ...prev, confirmpassword: true }));
+      toast.error("Confirm password is required");
+      hasError = true;
+    } else if (password !== confirmpassword) {
+      setErrors((prev) => ({ ...prev, password: true, confirmpassword: true }));
+      toast.error("Password and confirm password do not match");
+      hasError = true;
+    }
+
+    if (!role_name) {
+      setErrors((prev) => ({ ...prev, role_name: true }));
+      toast.error("Please select a role");
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    const data = { name, email, phone, password, role_name };
+
+    try {
+      await registerUser(data);
+      toast.success("User registered successfully");
+      router.push("/login");
+    } catch (error: any) {
+      if (error.message.includes("User already exists")) {
+        setErrors((prev) => ({ ...prev, email: true }));
+        toast.error("This email is already registered");
+      }
+      toast.error(error?.message || "Registration failed");
+    }
+  };
+
+  const inputClass = (hasError: boolean) =>
+    hasError
+      ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+      : "";
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
       <Card className="w-full max-w-md">
@@ -98,12 +172,12 @@ try {
                 type="text"
                 placeholder="John Doe"
                 value={name}
-                onChange={(e)=>setName(e.target.value)}
-                required
+                onChange={(e) => setName(e.target.value)}
+                className={inputClass(errors.name)}
               />
             </div>
 
-            {/* Email */}
+          
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -111,70 +185,68 @@ try {
                 name="email"
                 type="email"
                 placeholder="you@example.com"
-                required
                 value={email}
-                onChange={(e)=>setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
+                className={inputClass(errors.email)}
               />
             </div>
 
-            {/* Phone */}
+           
             <div className="space-y-2">
               <Label htmlFor="phone">Phone (optional)</Label>
               <Input
                 id="phone"
                 name="phone"
                 type="tel"
-                placeholder=""
                 value={phone}
-                onChange={(e)=>setPhone(e.target.value)}
+                onChange={(e) => setPhone(e.target.value)}
+                className={inputClass(errors.phone)}
               />
             </div>
 
-            {/* Password */}
+         
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 name="password"
                 type="password"
-                required
                 value={password}
-                onChange={(e)=>setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
+                className={inputClass(errors.password)}
               />
               <p className="text-sm text-muted-foreground">
                 Must be at least 8 characters.
               </p>
             </div>
 
-            {/* Confirm Password */}
+      
             <div className="space-y-2">
               <Label htmlFor="confirm_password">Confirm Password</Label>
               <Input
                 id="confirm_password"
                 name="confirm_password"
                 type="password"
-                required
                 value={confirmpassword}
-                onChange={(e)=>setConfirmPassword(e.target.value)}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className={inputClass(errors.confirmpassword)}
               />
             </div>
 
-            {/* Role */}
+         
             <div className="space-y-2">
               <Label htmlFor="role">I am registering as</Label>
               <Select
-               name="role"
-               value={role_name}
-               onValueChange={(value)=>setRoleName(value)}
-                required>
-                <SelectTrigger id="role">
+                name="role"
+                value={role_name}
+                onValueChange={(value) => setRoleName(value)}
+              >
+                <SelectTrigger id="role" className={inputClass(errors.role_name)}>
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="JobSeeker">JobSeeker</SelectItem>
-                  <SelectItem value="JobFacilitator">
-                    JobFacilitator
-                  </SelectItem>
+                  <SelectItem value="JobFacilitator">JobFacilitator</SelectItem>
                 </SelectContent>
               </Select>
             </div>

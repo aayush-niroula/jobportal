@@ -32,6 +32,7 @@ export interface EventType {
   whatYouWillLearn?: string[];
   requirments?: string[];
   image_url?: string;
+  isMine?:boolean
 }
 
 interface EventFormProps {

@@ -87,6 +87,7 @@ export interface Job {
     job_id:string;
     jobseeker_id:string
   }
+    views?: number;
 }
 
 export type Application = {

@@ -15,6 +15,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useRouter } from "next/navigation";
+import { Job } from "../types/types";
 
 interface Category {
   id: string;
@@ -26,6 +27,8 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const router  = useRouter()
   const [categories, setCategories] = useState<Category[]>([]);
+  const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
+  const [loadingFeatured, setLoadingFeatured] = useState(true);
 
   const popularSearches = ["Designer", "Web Developer"];
 
@@ -59,6 +62,29 @@ export default function Home() {
     };
 
     fetchCategories();
+  }, []);
+
+    useEffect(() => {
+    const fetchFeaturedJobs = async () => {
+      setLoadingFeatured(true);
+      try {
+        const res = await fetch("/api/featuredjobs"); 
+        const allJobs: Job[] = await res.json();
+
+        const sortedByViews = allJobs?.featuredJobs?.sort((a, b) => (b.views || 0) - (a.views || 0));
+
+       
+        const topJobs = sortedByViews.slice(0, 3);
+
+        setFeaturedJobs(topJobs);
+      } catch (err) {
+        console.error("Failed to fetch jobs:", err);
+      } finally {
+        setLoadingFeatured(false);
+      }
+    };
+
+    fetchFeaturedJobs();
   }, []);
 
   return (
@@ -115,11 +141,22 @@ export default function Home() {
       </div>
 
       {/* Featured Jobs */}
-      <h1 className="text-4xl font-medium pt-8 font-playfair">Featured Jobs</h1>
-      <div className="grid gap-6">
-        <FeaturedJob />
-        <FeaturedJob />
-        <FeaturedJob />
+ <h1 className="text-4xl font-medium pt-8 font-playfair">Featured Jobs</h1>
+      <div className="grid gap-6 w-full max-w-7xl px-4 sm:px-0">
+        {loadingFeatured ? (
+          Array(3)
+            .fill(0)
+            .map((_, idx) => (
+              <div
+                key={idx}
+                className="w-full h-32 bg-gray-200 animate-pulse rounded-2xl"
+              />
+            ))
+        ) : featuredJobs.length > 0 ? (
+          featuredJobs.map((job) => <FeaturedJob key={job.id} job={job} />)
+        ) : (
+          <p>No featured jobs available</p>
+        )}
       </div>
 
       {/* Why Choose Us */}

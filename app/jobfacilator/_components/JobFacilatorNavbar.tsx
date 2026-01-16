@@ -1,14 +1,13 @@
 "use client";
 
 import AvatarDropDown from "@/app/jobseeker/components/AvatarDropDown";
-import Notification from "@/app/jobseeker/components/Notfication";
 import { useAuthStore } from "@/app/store/useAuthStore";
 import { Button } from "@/components/ui/button";
 import { Bell, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 const JobFacilatorNavbar = () => {
   const [open, setOpen] = useState(false);
@@ -25,7 +24,7 @@ router.push('/')
   return (
     <nav className="w-full bg-[#F8F9FA] text-black font-playfair px-6 py-4 shadow-sm relative">    
       <div className="flex items-center justify-between lg:justify-center">
-        <div className="flex items-center gap-3 shrink-0">
+      <Link href={'/jobfacilator'}>  <div className="flex items-center gap-3 shrink-0">
           <img
             src="/Talent.png"
             alt="logo"
@@ -35,9 +34,9 @@ router.push('/')
             TALENT <br /> LOOP
           </h1>
         </div>
+        </Link>
         <div className="hidden lg:flex flex-1 justify-center">
           <ul className="flex items-center gap-3 md:gap-5 lg:gap-10 text-sm md:text-base lg:text-lg">
-           <Link href={'/jobfacilator'}> <li className="cursor-pointer nav-underline">Dashboard</li></Link>
            <Link href={`/jobfacilator/myjobs/${user?.id}`}> <li className="cursor-pointer nav-underline">My Jobs</li></Link>
         <Link href={'/jobfacilator/candidates'}><li className="cursor-pointer nav-underline">Candidates</li></Link> 
           <Link href={'/jobfacilator/events'}><li className="cursor-pointer nav-underline">Event</li></Link>
@@ -51,7 +50,7 @@ router.push('/')
       
         <div className="hidden lg:flex lg:gap-4 items-center">
            <div className="flex items-center gap-3 sm:gap-4 ml-2 sm:ml-4">
-             <Notification />
+           
             <AvatarDropDown/>
               <h1 className="text-xl font-medium whitespace-nowrap">
                 {user?.name}
@@ -81,7 +80,7 @@ router.push('/')
           <Link href="/jobfacilator/candidates">
             <span className="cursor-pointer nav-underline">Candidates</span>
           </Link>
-          <Link href="/jobseeker/events">
+          <Link href="/jobfacilator/events">
             <span className="cursor-pointer nav-underline">Events</span>
           </Link>
           <Link href={`/jobfacilator/postajob/${id}`}>

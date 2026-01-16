@@ -14,6 +14,22 @@ const page = () => {
   const router = useRouter()
   const user = useAuthStore(state=>state.user)
   const [jobsDetails,setJobDetails] =useState<any[]>([])
+  const [profileViews, setProfileViews] = useState(0);
+  console.log(jobsDetails);
+  
+
+useEffect(() => {
+  const fetchProfileViews = async () => {
+    const res = await fetch("/api/jobfacilator/profile-views", {
+      headers: { Authorization: `Bearer ${user?.token}` },
+    });
+    const data = await res.json();
+    setProfileViews(data.profileViews ?? 0);
+  };
+
+  if (user?.token) fetchProfileViews();
+}, [user?.token]);
+
 
   useEffect(()=>{
    const fetchApplicationDetails = async()=>{
@@ -26,7 +42,7 @@ const page = () => {
     })
 
     const data = await res.json()
-    console.log(data.jobs);
+  
     setJobDetails(data.jobs)
     
    }
@@ -53,7 +69,7 @@ const page = () => {
           <Information title="Active Jobs" number={jobsDetails?.length || 0} lastline="2 expiring soon" />
           <Information title="Total Applications" number={totalApplications} lastline="+20 this week" />
           <Information title="Pending Reviews" number={totalPending} lastline="Requires action" />
-          <Information title="Profile Views" number={200} lastline="Last 20 days" />
+          <Information title="Profile Views" number={profileViews} lastline="Last 20 days" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -74,7 +90,7 @@ const page = () => {
                   JobType={job.workmode}
                   ReviewedNo={job?.statusCounts?.SCREENING}
                   ShortlistedNo={job?.statusCounts?.INTERVIEW}
-                  ViewsNo={2222}
+                  ViewsNo={job.views}
                 />
               ))}
             </div>

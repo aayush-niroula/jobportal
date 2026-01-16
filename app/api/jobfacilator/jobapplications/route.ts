@@ -22,7 +22,8 @@ export async function GET(req: NextRequest) {
             company_name:true,
             company_logo:true,
             department:true,
-            id:true
+            id:true,
+            profile_views:true
         }
     })
 
@@ -33,6 +34,7 @@ export async function GET(req: NextRequest) {
         job_name: true,
         location:true,
         work_mode:true,
+        views:true,
         applications: {
           select: {
             status: true,
@@ -74,6 +76,7 @@ export async function GET(req: NextRequest) {
         location:job.location,
         workmode:job.work_mode,
         facilitator:facilitator,
+        views:job.views,
         totalApplications: job.applications.length,
         statusCounts,
       };

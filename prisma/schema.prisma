@@ -74,6 +74,7 @@ model JobFacilitator {
   gallery_images    String[]
   features          String[]
   events            Events[]
+  profile_views     Int @default(0)
  
 
   @@map("Job_facilitator")
@@ -186,6 +187,8 @@ model Jobs {
   benefits           String[]
   skills             String[]
   bookmarks          Bookmarks[]
+  is_featured        Boolean @default(false)
+  views              Int @default(0)
   
   @@map("Jobs")
 }
@@ -295,7 +298,7 @@ model EventRegistrations {
   role        String   
   registered_at DateTime @default(now())
 
-  event       Events @relation(fields: [event_id], references: [id])
+  event       Events @relation(fields: [event_id], references: [id],onDelete:Cascade)
   user        User   @relation(fields: [user_id], references: [id])
 
   @@unique([event_id, user_id])
