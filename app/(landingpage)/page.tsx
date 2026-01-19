@@ -68,10 +68,10 @@ export default function Home() {
     const fetchFeaturedJobs = async () => {
       setLoadingFeatured(true);
       try {
-        const res = await fetch("/api/featuredjobs"); 
-        const allJobs: Job[] = await res.json();
+        const res = await fetch("/api/featuredjobs");
+        const data: { featuredJobs: Job[] } = await res.json();
 
-        const sortedByViews = allJobs?.featuredJobs?.sort((a, b) => (b.views || 0) - (a.views || 0));
+        const sortedByViews = data?.featuredJobs?.sort((a, b) => (b.views || 0) - (a.views || 0));
 
        
         const topJobs = sortedByViews.slice(0, 3);

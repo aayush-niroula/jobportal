@@ -85,6 +85,11 @@ const viewResume = async () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if(!user){
+      setShowLoginModal(true)
+      return
+    }
+
     setUploading(true);
     setError(null);
 
