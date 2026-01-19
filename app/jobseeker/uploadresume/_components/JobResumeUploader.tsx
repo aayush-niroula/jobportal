@@ -207,17 +207,19 @@ const generateRecommendations = async () => {
                   className="flex items-center gap-2"
                   onClick={viewResume}
                 >
-                  👁 View
+                   View
                 </Button>
 
-                {/* Download Resume */}
+            
+            
                 <Button asChild variant="secondary" size="sm">
                   <a href={resume.url} download className="flex items-center gap-2">
-                    ⬇️ Download
+                     Download
                   </a>
                 </Button>
 
-                {/* Replace Resume */}
+          
+          
                 <Button asChild variant="outline" size="sm" disabled={uploading}>
                   <label className="cursor-pointer flex items-center gap-2">
                     {uploading ? (
