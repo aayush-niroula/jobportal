@@ -25,24 +25,38 @@ const JobResumeUploader = () => {
   const [error, setError] = useState<string | null>(null);
 
 
-  console.log(recommendations);
   
+    if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 font-playfair">
+        <h1 className="text-2xl font-semibold mb-4">You must be logged in to upload your resume</h1>
+        <p className="text-gray-600 mb-6">Please log in to access this feature.</p>
+        <Button onClick={() => (window.location.href = "/login")} className="py-2 px-4">
+          Go to Login
+        </Button>
+      </div>
+    );
+  }
 
-  const viewResume = async () => {
+const viewResume = async () => {
   if (!user?.token) return;
 
   const res = await fetch("/api/jobseeker/currentresume/preview", {
     headers: { Authorization: `Bearer ${user.token}` },
   });
+  console.log(res);
+  
 
-console.log(res);
-
-  if (!res.ok) return alert("Unauthorized");
+  if (!res.ok) {
+    const err = await res.json();
+    return alert(err.error || "Failed to load resume");
+  }
 
   const blob = await res.blob();
   const url = window.URL.createObjectURL(blob);
   window.open(url, "_blank");
 };
+
 
   useEffect(() => {
     if (!user?.token) return;
@@ -85,12 +99,15 @@ console.log(res);
         method: "POST",
         headers: {
           Authorization: `Bearer ${user?.token}`,
-          "Content-Type":"application/json"
         },
         body: formData,
       });
 
-      if (!res.ok) throw new Error("Upload failed");
+      if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || "Upload failed");
+    }
+
 
       const data = await res.json();
 

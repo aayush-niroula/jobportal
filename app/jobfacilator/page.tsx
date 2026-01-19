@@ -9,6 +9,8 @@ import VerificationPending from "./_components/VerificationPending";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowRight, Briefcase } from "lucide-react";
 
 const page = () => {
   const router = useRouter()
@@ -66,35 +68,61 @@ useEffect(() => {
           <VerificationPending />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Information title="Active Jobs" number={jobsDetails?.length || 0} lastline="2 expiring soon" />
-          <Information title="Total Applications" number={totalApplications} lastline="+20 this week" />
-          <Information title="Pending Reviews" number={totalPending} lastline="Requires action" />
-          <Information title="Profile Views" number={profileViews} lastline="Last 20 days" />
+          <Information title="Active Jobs" number={jobsDetails?.length || 0}  />
+          <Information title="Total Applications" number={totalApplications}  />
+          <Information title="Pending Reviews" number={totalPending}  />
+          <Information title="Profile Views" number={profileViews}  />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold">Active Job Postings</h2>
-              <Button size="sm">View All</Button>
-            </div>
+      <Card className="lg:col-span-2 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <CardHeader className="pb-4 border-b-2 border-black">
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  <Briefcase className="h-5 w-5 text-black" />
+                  Active Job Postings
+                </CardTitle>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => router.push('/jobfacilator/jobs')}
+                  className="gap-1 border-black hover:bg-black hover:text-white"
+                >
+                  View All
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardHeader>
 
-            <div className="flex flex-col gap-4">
-              {jobsDetails?.map((job, i) => (
-                <JobPostingCard
-                  key={i}
-
-                  ApplicationNo={job.totalApplications}
-                  JobName={job.jobName}
-                  Location={job.location}
-                  JobType={job.workmode}
-                  ReviewedNo={job?.statusCounts?.SCREENING}
-                  ShortlistedNo={job?.statusCounts?.INTERVIEW}
-                  ViewsNo={job.views}
-                />
-              ))}
-            </div>
-          </div>
+            <CardContent className="space-y-4 pt-6">
+              {jobsDetails?.length === 0 ? (
+                <div className="text-center py-12 border-2 border-dashed border-gray-300">
+                  <Briefcase className="h-16 w-16 mx-auto mb-4 text-gray-300" />
+                  <p className="text-lg font-medium mb-1 text-black">No active job postings</p>
+                  <p className="text-sm mb-4 text-gray-600">Create your first job posting to get started</p>
+                  <Button 
+                    onClick={() => router.push('/jobfacilator/create-job')}
+                    className="bg-black text-white hover:bg-gray-800"
+                  >
+                    Create Job Posting
+                  </Button>
+                </div>
+              ) : (
+                jobsDetails?.map((job, i) => (
+                  <JobPostingCard
+                    key={i}
+                    ApplicationNo={job.totalApplications}
+                    JobName={job.jobName}
+                    Location={job.location}
+                    JobType={job.workmode}
+                    ReviewedNo={job?.statusCounts?.SCREENING}
+                    ShortlistedNo={job?.statusCounts?.INTERVIEW}
+                    ViewsNo={job.views}
+                  />
+                ))
+              )}
+            </CardContent>
+          </Card>
 
           <div className="flex flex-col gap-6">
             <QuickActions />

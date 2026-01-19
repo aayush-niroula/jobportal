@@ -189,6 +189,7 @@ model Jobs {
   bookmarks          Bookmarks[]
   is_featured        Boolean @default(false)
   views              Int @default(0)
+  is_expired         Boolean @default(false)
   
   @@map("Jobs")
 }

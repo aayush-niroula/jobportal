@@ -14,12 +14,14 @@ import { useParams, useRouter } from "next/navigation";
 import ApplyForm from "./Applyform";
 import { useEffect, useState } from "react";
 import { Job } from "@/app/types/types";
+import { useAuthStore } from "@/app/store/useAuthStore";
 
 const ApplyNow = () => {
   const router = useRouter();
   const params = useParams();
  const id = params.id;
  const [jobs,setJobs]= useState<Job | null>(null)
+   const user = useAuthStore((state) => state.user);
 
 
  useEffect(()=>{
@@ -35,6 +37,18 @@ const ApplyNow = () => {
   }
   fetchJobWithId()
  },[id])
+
+   if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center font-playfair p-6">
+        <h1 className="text-2xl font-semibold mb-4">You must be logged in to apply for this job</h1>
+        <p className="text-gray-600 mb-6">Please log in to access the job details and apply.</p>
+        <Button onClick={() => router.push("/login")} className="py-2 px-4">
+          Go to Login
+        </Button>
+      </div>
+    );
+  }
 
 
   return (

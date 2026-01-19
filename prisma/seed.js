@@ -3,20 +3,14 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("Seeding default views...");
+  console.log("🌱 Setting all jobs to is_expired = false...");
 
-  const facilitatorResult = await prisma.jobFacilitator.updateMany({
-    data: { profile_views: 0 },
+  const result = await prisma.jobs.updateMany({
+    where: {},
+    data: { is_expired: false },
   });
-  console.log(`Updated ${facilitatorResult.count} facilitators`);
 
-
-  const jobResult = await prisma.jobs.updateMany({
-    data: { views: 0 },
-  });
-  console.log(`Updated ${jobResult.count} jobs`);
-
-  console.log("Seeding complete ✅");
+  console.log(`✅ Updated ${result.count} jobs.`);
 }
 
 main()

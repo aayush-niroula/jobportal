@@ -120,6 +120,7 @@ export async function GET(req: NextRequest) {
         select:{
         name:true,
         email:true,
+        phone:true,
         }
       },
       applications:true,

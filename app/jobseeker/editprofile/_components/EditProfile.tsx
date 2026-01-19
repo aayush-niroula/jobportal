@@ -49,6 +49,7 @@ export default function EditProfile() {
   const [expectedSalaryMax, setExpectedSalaryMax] = useState<number | "">("");
   const [jobType, setJobType] = useState("");
   const [workMode, setWorkMode] = useState("");
+const [resumeUrl, setResumeUrl] = useState<string | null>(null);
 
   const [linkedin, setLinkedin] = useState("");
   const [portfolio, setPortfolio] = useState("");
@@ -106,23 +107,34 @@ export default function EditProfile() {
     const fd = new FormData();
     fd.append("file", file);
     fd.append("userId", user?.id || "");
-    await fetch("/api/jobseeker/upload/resume", { method: "POST", body: fd });
+    await fetch("/api/jobseeker/upload/resume", { method: "POST",headers:{
+     Authorization:`Bearer ${user?.token}`
+    }, body: fd });
   };
 
-  useEffect(()=>{
-    if(!user?.token) return
+useEffect(() => {
+  if (!user?.token) return;
 
-    const fetchData = async()=>{
-      const res = await fetch("/api/jobseeker/profile",{
-        method:"GET",
-        headers:{
-          Authorization:`Bearer ${user.token}`
-        }
-      })
-      const data = await res.json()
-      console.log(data);
-      
-     setProfileImage(data.profile_image)
+  const fetchData = async () => {
+    const res = await fetch("/api/jobseeker/profile", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+
+    const data = await res.json();
+
+    console.log(data);
+
+
+    setName(data.user?.name ?? "");
+    setEmail(data.user?.email ?? "");
+    setPhone(data.user?.phone ?? ""); 
+    setLocation(data.user?.location ?? "");
+
+  
+    setProfileImage(data.profile_image);
     setExperienceLevel(data.experience_level ?? "");
     setSummary(data.professional_summary ?? "");
     setTechnicalSkills(data.technical_skills?.join(", ") ?? "");
@@ -135,11 +147,23 @@ export default function EditProfile() {
     setLinkedin(data.linkedin_url ?? "");
     setPortfolio(data.portfolio_url ?? "");
     setEducations(data.educations ?? []);
-      
-    }
-    fetchData()
-   
-  },[user?.id])
+    setWorkExperiences(data.experiences ?? []);
+    setResumeUrl(data.resume_url ?? null);
+
+  };
+
+  fetchData();
+}, [user?.token]);
+
+const getFileName = (url: string) => {
+  try {
+    return decodeURIComponent(url.split("/").pop() || "resume.pdf");
+  } catch {
+    return "resume.pdf";
+  }
+};
+
+
 
   const handleSave = async () => {
     try {
@@ -340,26 +364,63 @@ export default function EditProfile() {
         </Card>
 
         {/* RESUME */}
-        <Card className="rounded-2xl">
-          <CardHeader><CardTitle>Resume</CardTitle></CardHeader>
-          <CardContent className="flex items-center gap-6">
-            <Button variant="outline" onClick={() => resumeInputRef.current?.click()}>
-              <Upload className="h-4 w-4 mr-2" /> Upload Resume
-            </Button>
-            {resumeFile && <span>{resumeFile.name}</span>}
-            <input
-              ref={resumeInputRef}
-              type="file"
-              accept=".pdf,.doc,.docx"
-              hidden
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-                setResumeFile(file);
-              }}
-            />
-          </CardContent>
-        </Card>
+<Card className="rounded-2xl">
+  <CardHeader><CardTitle>Resume</CardTitle></CardHeader>
+
+  <CardContent className="flex flex-col gap-4">
+
+    {/* Show current resume */}
+{resumeUrl && (
+  <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border">
+    <div>
+      <p className="text-sm font-semibold">
+        {getFileName(resumeUrl)}
+      </p>
+      <p className="text-xs text-gray-500">Uploaded resume</p>
+    </div>
+
+    <div className="flex gap-2">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => window.open(resumeUrl, "_blank")}
+      >
+        View
+      </Button>
+
+      <Button asChild variant="secondary" size="sm">
+        <a href={resumeUrl} download>
+          Download
+        </a>
+      </Button>
+    </div>
+  </div>
+)}
+
+
+
+    <div className="flex items-center gap-6">
+      <Button variant="outline" onClick={() => resumeInputRef.current?.click()}>
+        <Upload className="h-4 w-4 mr-2" /> Replace Resume
+      </Button>
+
+      {resumeFile && <span>{resumeFile.name}</span>}
+
+      <input
+        ref={resumeInputRef}
+        type="file"
+        accept=".pdf,.doc,.docx"
+        hidden
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          setResumeFile(file);
+        }}
+      />
+    </div>
+  </CardContent>
+</Card>
+
 
       </div>
     </div>

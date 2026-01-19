@@ -1,19 +1,33 @@
 import { Button } from "@/components/ui/button"
-import { Bell, ChartBar, Plus, Search } from "lucide-react"
+import { Bell, BarChart3, Plus, Search } from "lucide-react"
 
 const QuickActions = () => {
-  return (
-    <div className="w-full max-w-2xl mx-auto">
-    <div className="h-auto bg-white border border-black rounded-2xl p-6 sm:p-8 lg:p-10 shadow-sm">
-        <h1 className="text-lg sm:text-xl font-bold mb-6">Quick Actions</h1>
-        <div className="grid grid-cols-2 lg:grid-cols-1 gap-4 ">
-        <Button className="p-6 flex justify-start text-base font-medium items-center w-full h-14 sm:h-16  hover:shadow-md transition-shadow"><Plus/>Post a New Job</Button>
-        <Button className="p-6 flex justify-start text-base font-medium items-center w-full h-14 sm:h-16  hover:shadow-md transition-shadow "><Search/>Search Candidates</Button>
-        <Button className="p-6 flex justify-start text-base font-medium items-center w-full h-14 sm:h-16  hover:shadow-md transition-shadow "><ChartBar/>View Analytics</Button>
-       <Button className="p-6 flex justify-start text-base font-medium items-center w-full h-14 sm:h-16  hover:shadow-md transition-shadow "><Bell/>Notifications</Button>
+  const actions = [
+    { icon: Plus, label: "Post a New Job" },
+    { icon: Search, label: "Search Candidates" },
+    { icon: BarChart3, label: "View Analytics" },
+    { icon: Bell, label: "Notifications" }
+  ]
 
+  return (
+    <div className="w-full">
+      <div className="h-auto bg-white border-2 border-black rounded-lg p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <h2 className="text-lg font-bold mb-5 text-black">Quick Actions</h2>
+        <div className="grid grid-cols-2 lg:grid-cols-1 gap-3">
+          {actions.map((action, index) => {
+            const Icon = action.icon
+            return (
+              <Button 
+                key={index}
+                className="p-4 flex justify-start text-sm font-medium items-center w-full h-12 bg-white text-black border-2 border-black hover:bg-black hover:text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all gap-2"
+              >
+                <Icon className="h-4 w-4" />
+                {action.label}
+              </Button>
+            )
+          })}
         </div>
-    </div>
+      </div>
     </div>
   )
 }

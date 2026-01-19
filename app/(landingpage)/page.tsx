@@ -46,7 +46,7 @@ export default function Home() {
         console.log("Acutal category",data);
         
 
-        const mappedCategories = data.map((cat: any) => ({
+        const mappedCategories = data?.map((cat: any) => ({
           id: cat.id,
           category_name: cat.category_name,
           jobs_count: cat.jobs_count || 0,

@@ -4,7 +4,7 @@ import { Job } from '@/app/types/types';
 import { Button } from '@/components/ui/button';
 import { Bookmark } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import {useState } from 'react';
 
 interface ApplyCardProps {
   job: Job;

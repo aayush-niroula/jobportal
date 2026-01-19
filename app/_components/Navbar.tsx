@@ -13,7 +13,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "HOME", href: "/" },
     { name: "EVENTS", href: "/jobseeker/events" },
-    { name: "UPLOAD CV", href: "/uploadcv" },
+    { name: "UPLOAD CV", href: "/jobseeker/uploadresume" },
     { name: "FIND JOBS", href: "/findjobs" },
   ];
 

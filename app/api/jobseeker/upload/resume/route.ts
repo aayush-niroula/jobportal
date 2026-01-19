@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { authenticate } from "@/app/utils/auth";
 
 export async function POST(req: NextRequest) {
+  console.log("AUTH HEADER:", req.headers.get("authorization"));
+
   try {
     const auth = await authenticate(req)
     if(!auth || "userId" in auth === false){
