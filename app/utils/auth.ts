@@ -19,7 +19,6 @@ export async function authenticate(req: NextRequest) {
       process.env.JWT_SECRET!
     ) as { userId: string };
 
-    console.log("Decoded",decoded);
     
 
     return { userId: decoded.userId};

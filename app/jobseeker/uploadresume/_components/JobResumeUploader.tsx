@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import RecommendedJobs from "./RecommendedJobs";
 import { useAuthStore } from "@/app/store/useAuthStore";
 import { Loader2, Upload, FileText } from "lucide-react";
+import LoginModal from "@/app/login/_components/LoginModal";
 
 interface Resume {
   name: string;
@@ -23,20 +24,11 @@ const JobResumeUploader = () => {
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+    const [showLoginModal, setShowLoginModal] = useState(false);
 
 
   
-    if (!user) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6 font-playfair">
-        <h1 className="text-2xl font-semibold mb-4">You must be logged in to upload your resume</h1>
-        <p className="text-gray-600 mb-6">Please log in to access this feature.</p>
-        <Button onClick={() => (window.location.href = "/login")} className="py-2 px-4">
-          Go to Login
-        </Button>
-      </div>
-    );
-  }
+
 
 const viewResume = async () => {
   if (!user?.token) return;
@@ -57,6 +49,11 @@ const viewResume = async () => {
   window.open(url, "_blank");
 };
 
+  useEffect(() => {
+    if (!user) {
+      setShowLoginModal(true);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!user?.token) return;
@@ -169,6 +166,11 @@ const generateRecommendations = async () => {
 
   return (
 <div className="max-w-lg mx-auto p-4">
+    <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        redirectTo="/jobseeker/uploadresume" 
+      />
       <Card className="bg-white shadow-lg">
         <CardHeader>
           <CardTitle className="text-xl">Your Resume & Job Matches</CardTitle>

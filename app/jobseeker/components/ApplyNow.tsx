@@ -15,6 +15,7 @@ import ApplyForm from "./Applyform";
 import { useEffect, useState } from "react";
 import { Job } from "@/app/types/types";
 import { useAuthStore } from "@/app/store/useAuthStore";
+import LoginModal from "@/app/login/_components/LoginModal";
 
 const ApplyNow = () => {
   const router = useRouter();
@@ -22,10 +23,17 @@ const ApplyNow = () => {
  const id = params.id;
  const [jobs,setJobs]= useState<Job | null>(null)
    const user = useAuthStore((state) => state.user);
+    const [showLoginModal, setShowLoginModal] = useState(false);
 
+
+   useEffect(()=>{
+        if(!user){
+          setShowLoginModal(true)
+          return
+        }
+   },[user])
 
  useEffect(()=>{
-
   const fetchJobWithId = async()=>{
     const res = await fetch(`/api/jobseeker/applynow/${id}`,{
       method:"GET"
@@ -36,23 +44,15 @@ const ApplyNow = () => {
     
   }
   fetchJobWithId()
- },[id])
-
-   if (!user) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center font-playfair p-6">
-        <h1 className="text-2xl font-semibold mb-4">You must be logged in to apply for this job</h1>
-        <p className="text-gray-600 mb-6">Please log in to access the job details and apply.</p>
-        <Button onClick={() => router.push("/login")} className="py-2 px-4">
-          Go to Login
-        </Button>
-      </div>
-    );
-  }
-
+ },[id,user])
 
   return (
     <div className="font-playfair px-4 sm:px-6 lg:px-10 py-10 space-y-10 font-playfair">
+      <LoginModal
+      isOpen ={showLoginModal}
+      onClose={()=>setShowLoginModal(false)}
+      redirectTo={`jobseeker/applynow/${id}`}
+      />
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 justify-center">
         {/* Left Column */}
         <div className="flex flex-col gap-6 w-full lg:w-2/3">

@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -39,6 +39,8 @@ export default function Login() {
     role_name: false,
   });
 
+   const params = useSearchParams();
+  const redirect = params.get("redirect") || "/";
   const setUser = useAuthStore((state) => state.setUser);
   const router = useRouter();
 
@@ -128,6 +130,8 @@ export default function Login() {
       } else {
         router.push("/");
       }
+
+      router.push(redirect)
     } catch (error: any) {
       const msg = error.message || "Login failed";
 
