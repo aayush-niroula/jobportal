@@ -14,20 +14,20 @@ import { Calendar, CalendarX, Search } from 'lucide-react'
 
 const EmptyState = ({ type = 'upcoming' }) => {
   const isUpcoming = type === 'upcoming';
-  
+
   return (
-    <div className="text-center py-12 px-4">
-      <div className="flex justify-center mb-4">
-        {isUpcoming ? (
-          <Calendar className="w-16 h-16 text-gray-300" />
-        ) : (
-          <CalendarX className="w-16 h-16 text-gray-300" />
-        )}
-      </div>
-      <h3 className="text-lg font-semibold text-gray-700 mb-2">
+    <div className="flex flex-col items-center justify-center py-12 px-4 w-full">
+      {/* Large image for desktop, smaller on mobile */}
+      <img
+        src={isUpcoming ? "/no-event-image.png" : "/images/no-past-events.svg"}
+        alt={isUpcoming ? "No upcoming events" : "No past events"}
+        className="w-full max-w-md md:max-w-4xl lg:max-w-5xl xl:max-w-6xl object-contain mb-6 opacity-80"
+      />
+
+      <h3 className="text-2xl md:text-3xl font-semibold text-gray-700 mb-2">
         {isUpcoming ? 'No Upcoming Events' : 'No Past Events'}
       </h3>
-      <p className="text-sm text-gray-500 max-w-sm mx-auto">
+      <p className="text-base md:text-lg text-gray-500 max-w-2xl text-center">
         {isUpcoming 
           ? 'There are no upcoming events at the moment. Check back soon for new and exciting events!'
           : 'No past events to display yet. Completed events will appear here.'}
@@ -35,6 +35,8 @@ const EmptyState = ({ type = 'upcoming' }) => {
     </div>
   );
 };
+
+
 
 const LoadingState = () => (
   <div className="space-y-4">
